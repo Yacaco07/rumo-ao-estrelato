@@ -70,3 +70,9 @@ Consultadas em 10/11/2026:
 - <https://github.com/actions/setup-node/releases/tag/v7.1.0>
 
 As versões efetivas estão fixadas em `package.json` e `package-lock.json`. O ambiente suportado do projeto é Node.js 24 LTS.
+
+## Etapa 02B — alcance das relações
+
+O schema 1 aceita o campo opcional `roster.scope`: `club-list` para uma relação do clube e `competition-athletes` para a lista histórica da competição filtrada por clube atual. Snapshots anteriores sem esse campo mantêm a semântica de relação do clube. Pesquisa pendente não pode declarar alcance. Não houve mudança de schema do perfil nem de IndexedDB.
+
+A interface apresenta o alcance e as notas de curadoria e permite filtrar posições ainda desconhecidas. `sourceListedCount` representa a quantidade importada após curadoria; o relatório registra também a quantidade publicada antes das exclusões. A relação da competição pode incluir base e não habilita a carreira. Categorias explícitas plurais e rótulos como “Defensor”, “Meia” e “Meio Campo” são agrupados sem inferir uma função específica do criador.

@@ -29,7 +29,9 @@ describe("Importação do universo", () => {
     expect(world.gameplayReady).toBe(false);
     expect(world.players.every((player) => player.nationality === null && player.dateOfBirth === null)).toBe(true);
     expect(world.clubs.every((club) => club.crest === null && !club.roster.registrationVerified)).toBe(true);
-    expect(world.players.every((player) => player.clubId === "br-palmeiras")).toBe(true);
+    expect(world.clubs.every((club) => club.roster.status === "listed")).toBe(true);
+    expect(world.clubs.filter((club) => club.roster.scope === "competition-athletes").map((club) => club.id).sort()).toEqual(["br-athletico-paranaense", "br-corinthians"]);
+    expect(world.players.filter((player) => player.clubId === "br-palmeiras").map((player) => player.id)).toEqual(Array.from({ length: 25 }, (_, index) => `player-${String(index + 1).padStart(4, "0")}`));
     expect(getWorldCoverage(world).pendingRosters + getWorldCoverage(world).listedRosters).toBe(world.clubs.length);
   });
 
@@ -57,6 +59,8 @@ describe("Importação do universo", () => {
     ["cobertura de clubes incorreta", (world) => { world.competitions[0].expectedClubCount = 3; }],
     ["lista de jogadores incompleta", (world) => { world.clubs[0].roster.sourceListedCount = 3; }],
     ["elenco pendente com lista", (world) => { world.clubs[0].roster.status = "pending"; }],
+    ["alcance publicado em pesquisa pendente", (world) => { world.clubs[1].roster.scope = "competition-athletes"; }],
+    ["alcance não reconhecido", (world) => { Object.assign(world.clubs[0].roster, { scope: "registered-squad" }); }],
     ["camisa repetida no clube", (world) => { world.players[1].shirtNumber = 1; }],
     ["camisa fora do intervalo", (world) => { world.players[0].shirtNumber = 0; }],
     ["posição inferida indevidamente", (world) => { world.players[1].positionGroup = "midfielder"; }],
@@ -86,6 +90,36 @@ describe("Importação do universo", () => {
     Object.assign(world.players[0], { shirtNumber: null, positionLabel: null, positionGroup: null });
     Object.assign(world.players[0].provenance, { shirtNumber: null, positionLabel: null });
     expect(parseWorldSnapshot(world).players[0].shirtNumber).toBeNull();
+  });
+
+  it("aceita atletas da competição sem declarar elenco principal ou inscrição", () => {
+    const world = fixture();
+    world.clubs[0].roster.scope = "competition-athletes";
+    const parsed = parseWorldSnapshot(world);
+    expect(parsed.clubs[0].roster.scope).toBe("competition-athletes");
+    expect(parsed.clubs[0].roster.registrationVerified).toBe(false);
+    expect(parseWorldSnapshot(fixture()).clubs[0].roster.scope).toBeUndefined();
+  });
+
+  it.each([
+    ["Goleiros", "goalkeeper"], ["Defensor", "defender"], ["Laterais", "defender"],
+    ["Lateral-direita", "defender"], ["Lateral Esquerdo", "defender"],
+    ["Meio Campo", "midfielder"], ["Meio-campo", "midfielder"],
+    ["Meio-campistas", "midfielder"], ["Meia", "midfielder"],
+    ["Volantes", "midfielder"], ["Atacantes", "forward"], ["Centro-avante", "forward"],
+  ])("agrupa a categoria explícita %s sem inventar função específica", (label, group) => {
+    expect(positionGroupFromLabel(label)).toBe(group);
+  });
+
+  it("preserva lacunas e decisões de curadoria das fontes conflitantes", () => {
+    const world = parseWorldSnapshot(rawWorld);
+    const remo = world.players.filter((player) => player.clubId === "br-remo");
+    for (const name of ["João Lucas", "Matheus Alexandre", "Leonel Picco", "Vitor Bueno"]) {
+      expect(remo.find((player) => player.name === name)).toMatchObject({ shirtNumber: null, provenance: { shirtNumber: null } });
+    }
+    expect(world.players.filter((player) => player.clubId === "br-mirassol").map((player) => player.name)).not.toEqual(expect.arrayContaining(["Tiquinho Soares"]));
+    expect(world.players.filter((player) => player.clubId === "br-gremio").some((player) => ["Viery", "Gabriel Mec", "Monsalve", "Leonel Pérez"].includes(player.name))).toBe(false);
+    expect(world.players.filter((player) => player.clubId === "br-botafogo").every((player) => player.shirtNumber === null)).toBe(true);
   });
 
   it("não transforma uma categoria ampla em posição específica", () => {

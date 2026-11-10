@@ -2,20 +2,19 @@
 
 ## Estado em 10/11/2026
 
-A versão 0.2 contém um primeiro catálogo pesquisado: **20 participantes da Série A 2026 e 25 jogadores da relação principal publicada pelo Palmeiras**, consultados em 10/11/2026. Os outros 19 elencos e as outras 13 ligas aguardam pesquisa. Inscrições e contratos ainda não foram auditados; o snapshot não libera o início da carreira. Nenhum escudo foi importado. Atributos-base do criador continuam parâmetros de jogo, separados dos fatos reais.
+A versão **0.2.1** contém **20 clubes e 660 jogadores**, em 18 relações de clubes e duas listas de atletas da competição (Athletico e Corinthians, podendo incluir base). Os outros 19 clubes solicitados foram pesquisados; isso não certifica elencos principais completos. Há **152 posições e 262 camisas desconhecidas**, preservadas como `null`. As outras 13 ligas aguardam pesquisa. Inscrições e contratos não foram auditados, e a carreira continua indisponível. Nenhum escudo foi importado.
 
 ## Snapshot atual
 
-Arquivo: `src/data/world/br-serie-a-2026.json`. ID: `br-serie-a-2026-2026-11-10`. Versão: `2026.11.10-01`. Schema: `1`.
+Arquivo: `src/data/world/br-serie-a-2026.json`. ID: `br-serie-a-2026-2026-11-10`. Versão: `2026.11.10-02`. Schema: `1`.
 
-| Fonte primária | Consulta | Campos usados | Atualização publicada |
-| --- | --- | --- | --- |
-| [CBF — Série A 2026](https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026) | 10/11/2026 | Nome dos 20 participantes e temporada | 10/11/2026 |
-| [Palmeiras — Futebol Profissional](https://www.palmeiras.com.br/elenco/) | 10/11/2026 | Nome publicado, posição publicada, camisa e presença na seção principal | Não informada; `null` no catálogo |
+O relatório [PESQUISA_SERIE_A_2026.md](PESQUISA_SERIE_A_2026.md) registra os 19 clubes, URLs, alcance, campos pendentes, dados públicos dos filtros e decisões de curadoria. O JSON registra 38 fontes com proveniência por campo, publicador, URL e datas. A data de corte e consulta é 10/11/2026. A data de atualização só é preenchida quando explicitamente publicada; para as novas relações ela permanece `null`.
 
-O site do Palmeiras apresenta nove atletas emprestados em uma seção distinta; eles foram excluídos da relação principal importada. Nomes publicados foram mantidos, com normalização de capitalização. Não foram completados nomes civis, nacionalidades, nascimentos, contratos, salários ou ratings. “Atacante” permanece uma categoria ampla, sem inferir ponta ou centroavante.
+Os 25 registros e IDs do Palmeiras foram preservados. A seção separada de nove emprestados permanece excluída. Não foram completados nomes civis, nacionalidades, nascimentos, contratos, salários ou ratings por suposição. Rótulos explícitos são agrupados apenas para apresentação: “Defensor” não se transforma em lateral, nem “Atacante” em ponta.
 
-Os [termos da CBF](https://www.cbf.com.br/termos-de-uso), consultados em 10/11/2026, reservam direitos de reprodução. O cadastro factual independente não inclui tabelas, classificações, estatísticas, imagens, layouts, textos editoriais ou documentos dessas páginas e não declara licença concedida pelos publicadores. Nenhum ativo de marca está autorizado por esta consulta. Para detalhes e fontes descartadas, consultar [ETAPA_02_UNIVERSO.md](ETAPA_02_UNIVERSO.md).
+As listas da CBF podem manter participações históricas e não equivalem ao elenco atual. Nas duas usadas como fallback, entraram apenas nomes distintos com Clube Atual correspondente, sem conflito interno. Isaac Rodrigues de Lima ficou fora por divergência na própria fonte. As outras relações foram conferidas com a CBF; as diferenças encontradas e anúncios de apoio estão no relatório. A conferência não é uma auditoria exaustiva de vínculos ou do BID.
+
+Os [termos da CBF](https://www.cbf.com.br/termos-de-uso), consultados em 10/11/2026, reservam direitos de reprodução. O cadastro factual não incorpora tabelas de resultados, estatísticas, imagens, layouts, textos editoriais ou documentos de terceiros, nem declara licença concedida pelos publicadores. Nenhum ativo de marca está autorizado por esta consulta.
 
 ## Pesquisa inicial da fundação (referências para futuras etapas)
 
@@ -29,7 +28,7 @@ Nenhuma dessas referências é usada para inventar ratings, salários ou contrat
 
 ## Registro obrigatório por snapshot
 
-Para cada fonte: ID, URL, responsável/publicador, campos que fundamenta, temporada, data de atualização quando disponível, data de consulta e observações de qualidade. Para cada entidade real: ID estável, nome, proveniência por campo, contexto temporal e cobertura explícita. No contrato atual, `pending` significa elenco ainda não pesquisado e `listed` significa relação publicada consultada. Isso não marca toda a entidade como integralmente atualizada. Conflitos devem ser resolvidos e documentados antes da importação; referências e contagens incompatíveis são rejeitadas pelo validador.
+Para cada fonte: ID, URL, responsável/publicador, campos que fundamenta, temporada, data de atualização quando disponível, data de consulta e observações de qualidade. Para cada entidade real: ID estável, nome, proveniência por campo, contexto temporal e cobertura explícita. No contrato atual, `pending` significa elenco ainda não pesquisado e `listed` significa relação publicada consultada. O campo opcional `roster.scope` distingue `club-list` de `competition-athletes`; sua ausência preserva a semântica anterior de relação do clube. `sourceListedCount` conta nomes importados após a curadoria; a contagem original e as exclusões estão no relatório. Isso não marca toda a entidade como integralmente atualizada. Conflitos devem ser resolvidos e documentados antes da importação; referências e contagens incompatíveis são rejeitadas pelo validador.
 
 Para cada snapshot: versão, data de corte, competições incluídas, cobertura de clubes e jogadores, lacunas, revisor e data da revisão. `reviewedBy` identifica a conferência feita por Codex e a aprovação editorial ainda pendente. A validação estrutural com Zod não comprova a verdade factual: é preciso conferir as fontes. `gameplayReady` e `registrationVerified` continuam falsos nesta etapa.
 

@@ -27,7 +27,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="sidebar-divider" />
       <p className="nav-label">SEU JOGO. SUA HISTÓRIA.</p>
       <nav aria-label="Menu principal">{navigation.map((item) => <Link key={item.href} href={item.href} className={`nav-item ${pathname === item.href ? "active" : ""}`} aria-current={pathname === item.href ? "page" : undefined} onClick={(event) => guardNavigation(event, item.href)}><Icon name={item.icon} size={19} /><span>{item.label}</span>{pathname === item.href && <span className="nav-active-dot" />}</Link>)}</nav>
-      <div className="sidebar-bottom"><div className="early-access"><span className="status-dot" />EM DESENVOLVIMENTO</div><p>Uma carreira começa<br />muito antes do primeiro gol.</p><span className="sidebar-version">UNIVERSO · V0.2</span></div>
+      <div className="sidebar-bottom"><div className="early-access"><span className="status-dot" />EM DESENVOLVIMENTO</div><p>Uma carreira começa<br />muito antes do primeiro gol.</p><span className="sidebar-version">UNIVERSO · V0.2.1</span></div>
     </aside>
     <div className="workspace">
       <header className="topbar"><div className="breadcrumb">Rumo ao Estrelato <span>/</span><strong>{current?.label ?? "Página"}</strong></div><div className="topbar-profile"><span className="topbar-status">{loading ? "Carregando perfil" : saved ? "Perfil salvo neste navegador" : "Um novo começo"}</span><span className="avatar">{saved?.athlete.name.slice(0, 2).toUpperCase() || <Icon name="person" size={16} />}</span></div></header>

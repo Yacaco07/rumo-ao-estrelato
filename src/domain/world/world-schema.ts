@@ -23,9 +23,15 @@ export function normalizeWorldText(value: string): string {
 export function positionGroupFromLabel(label: string | null): PositionGroup | null {
   if (label === null) return null;
   const labels: Record<string, PositionGroup> = {
-    goleiro: "goalkeeper", zagueiro: "defender", "lateral-direito": "defender",
-    "lateral-esquerdo": "defender", "meio-campista": "midfielder", volante: "midfielder",
-    atacante: "forward",
+    goleiro: "goalkeeper", goleiros: "goalkeeper",
+    zagueiro: "defender", zagueiros: "defender", defensor: "defender",
+    lateral: "defender", laterais: "defender", "lateral-direito": "defender",
+    "lateral-esquerdo": "defender", "lateral direito": "defender", "lateral esquerdo": "defender",
+    "lateral-direita": "defender", "lateral-esquerda": "defender",
+    "meio-campista": "midfielder", "meio-campistas": "midfielder", "meio campo": "midfielder",
+    "meio-campo": "midfielder", "meio campista": "midfielder", meia: "midfielder",
+    "meias": "midfielder", volante: "midfielder", volantes: "midfielder",
+    atacante: "forward", atacantes: "forward", "centro-avante": "forward",
   };
   return labels[normalizeWorldText(label)] ?? null;
 }
@@ -54,6 +60,8 @@ const clubSchema = z.object({
   provenance: z.object({ name: id, competitionId: id }).strict(),
   roster: z.object({
     status: z.enum(["pending", "listed"]),
+    // Ausência mantém a semântica dos snapshots v1 anteriores: relação do clube.
+    scope: z.enum(["club-list", "competition-athletes"]).optional(),
     sourceId: id.nullable(),
     sourceListedCount: z.number().int().positive().nullable(),
     registrationVerified: z.literal(false),
@@ -132,6 +140,7 @@ export const worldSnapshotSchema = z.object({
     checkSource(club.provenance.competitionId, "competitionMembership", club.competitionId, "competition-list", ["clubs", index, "provenance", "competitionId"]);
     const count = world.players.filter((player) => player.clubId === club.id).length;
     if (club.roster.status === "pending") {
+      if (club.roster.scope !== undefined) issue(["clubs", index, "roster", "scope"], "Pesquisa pendente não pode declarar alcance de uma relação.");
       if (club.roster.sourceId !== null || club.roster.sourceListedCount !== null || count !== 0) issue(["clubs", index, "roster"], "Cobertura pendente não pode declarar lista ou jogadores verificados.");
     } else {
       if (!club.roster.sourceId || club.roster.sourceListedCount === null || count !== club.roster.sourceListedCount) issue(["clubs", index, "roster"], "Relação publicada incompatível com os jogadores importados.");
@@ -157,7 +166,7 @@ export const worldSnapshotSchema = z.object({
     if (player.dateOfBirth && player.dateOfBirth > world.asOfDate) issue(["players", index, "dateOfBirth"], "Nascimento posterior à data de corte.");
     if (player.shirtNumber !== null) {
       const numberKey = `${player.clubId}:${player.shirtNumber}`;
-      if (numbers.has(numberKey)) issue(["players", index, "shirtNumber"], "Camisa repetida no elenco principal do mesmo clube.");
+      if (numbers.has(numberKey)) issue(["players", index, "shirtNumber"], "Camisa repetida na relação do mesmo clube.");
       numbers.add(numberKey);
     }
   });

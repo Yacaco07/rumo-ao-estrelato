@@ -1,5 +1,7 @@
 # Etapa 02 — primeiro catálogo real do universo
 
+Esta página registra a primeira publicação (0.2.0). A continuação autorizada está em [ETAPA_02B_ELENCOS.md](ETAPA_02B_ELENCOS.md), com resultados em [PESQUISA_SERIE_A_2026.md](PESQUISA_SERIE_A_2026.md).
+
 ## Plano aprovado para execução
 
 O usuário autorizou avançar após a publicação da fundação em `main`. Esta etapa implementa o próximo marco do plano: contratos de dados, pesquisa de um recorte e importação verificável. Todo o trabalho continua em `Yacaco07/rumo-ao-estrelato`, branch `main`.
