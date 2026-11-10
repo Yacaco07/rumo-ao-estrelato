@@ -13,9 +13,11 @@ Data: 10/11/2026. Destino exclusivo: `Yacaco07/rumo-ao-estrelato`.
 
 ## Permissões
 
-Leitura pública confirmada. Na auditoria inicial, `gh auth status` informou ausência de sessão autenticada, e o conector GitHub não estava conectado. Portanto, **escrita, regras de proteção e permissão para push não puderam ser confirmadas**. Foi solicitada a conexão do GitHub ao usuário. Preparação local ocorre somente neste clone do repositório oficial. Não alegar que commits locais foram enviados sem confirmação do servidor.
+Leitura pública confirmada na auditoria inicial. O terminal local não possuía autenticação própria, o que não determina o estado da conexão GitHub da conversa.
 
-Atualizar a verificação de acesso e o resultado do envio na documentação de validação ao concluir a etapa. Antes do push, verificar novamente o remoto para preservar eventual trabalho criado em paralelo. Nunca forçar push.
+Na verificação autenticada de 10/11/2026, a conexão GitHub retornou a conta `Yacaco07`. Os metadados do repositório confirmaram `push: true` e `admin: true`; a consulta da permissão de colaborador retornou `admin`. O remoto continuava vazio antes da primeira gravação autenticada. A branch `main` foi inicializada e recebeu os arquivos por essa conexão, sem criar outro repositório.
+
+A atualização de `main` usou o SHA esperado e `force: false`, preservando alterações concorrentes. A árvore completa publicada correspondeu ao hash `d7cfaac8281796256169841dd54961b10c2a6510`, idêntico ao snapshot local validado. O resultado da publicação e os commits remotos estão documentados em [VALIDACAO.md](VALIDACAO.md).
 
 ## Restrições respeitadas
 

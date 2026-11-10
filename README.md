@@ -4,7 +4,7 @@ Simulador de carreira de jogador de futebol para navegador. **Versão 0.1: funda
 
 Repositório oficial e exclusivo: <https://github.com/Yacaco07/rumo-ao-estrelato> · branch `main`.
 
-**Situação desta entrega:** implementação e commits preparados no clone local oficial; envio remoto pendente. Consulte [a validação](docs/VALIDACAO.md). Os comandos de clone abaixo pressupõem que os commits já tenham sido enviados. No checkout preparado ou no pacote de código, comece por `npm ci`.
+**Situação desta entrega:** código e documentação da fundação publicados na branch `main` do repositório oficial. Consulte os resultados dos testes e as pendências de revisão em [VALIDACAO.md](docs/VALIDACAO.md).
 
 ## Executar
 
@@ -50,7 +50,7 @@ npm test
 npm run build
 ```
 
-Ou `npm run check` para os três passos em sequência. `npm run test:watch` acompanha os testes durante o desenvolvimento. O workflow em `.github/workflows/ci.yml` executa instalação reproduzível e verificações em pushes e pull requests para `main` quando estiver disponível no GitHub.
+Ou `npm run check` para os três passos em sequência. `npm run test:watch` acompanha os testes durante o desenvolvimento. O workflow em `.github/workflows/ci.yml` executa instalação reproduzível e verificações em pushes e pull requests para `main`.
 
 Os testes incluem limites e conservação dos dez pontos, atributos por posição, identidade, conclusão, recuperação após reabertura, corrupção, versão incompatível, concorrência entre abas, falha de espaço e fluxo do criador. IndexedDB é testado com `fake-indexeddb`; isso não equivale a um teste de navegador real. Consulte os resultados e limites em [VALIDACAO.md](docs/VALIDACAO.md).
 
