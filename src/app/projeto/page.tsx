@@ -1,0 +1,16 @@
+import type { Metadata } from "next";
+import { Icon } from "@/components/icon";
+
+export const metadata: Metadata = { title: "Sobre o jogo" };
+
+const roadmap = [
+  { number: "01", title: "O primeiro passo", tag: "NESTA VERSÃO", text: "Identidade do jogo, criação de atleta, atributos por posição e perfil salvo neste navegador." },
+  { number: "02", title: "Um mundo para entrar em campo", tag: "PRÓXIMA PROPOSTA", text: "Pesquisa, revisão e importação gradual de clubes e elencos reais. Fontes e permissões verificadas antes de cada inclusão." },
+  { number: "03", title: "Sua primeira oportunidade", tag: "PLANEJADA", text: "Cinco propostas de clubes elegíveis, negociação e seu primeiro contrato profissional." },
+  { number: "04", title: "A vida dentro de campo", tag: "PLANEJADA", text: "Calendário, treinos, partidas simuladas e progressão. Cada sistema será testado antes da expansão." },
+  { number: "05", title: "Um mundo que segue em frente", tag: "PLANEJADA", text: "Temporadas, transferências, empréstimos, insatisfação, competições, seleções, premiações e histórico." },
+];
+
+export default function ProjectPage() {
+  return <><div className="page-heading"><div><p className="eyebrow">SOBRE O JOGO</p><h1>Uma carreira se constrói<span className="lime-text">.</span></h1><p>Um simulador profundo começa com uma fundação bem feita.</p></div><span className="chapter-pill">VERSÃO 0.1 · FUNDAÇÃO</span></div><section className="project-intro panel"><div className="project-star"><Icon name="star" size={40} /></div><div><span className="eyebrow">RUMO AO ESTRELATO</span><h2>Seu jogo. Suas escolhas. Seu legado.</h2><p>Crie um atleta e construa uma carreira em um universo de futebol que evolui com o tempo. Do primeiro contrato à última temporada, suas decisões deverão ter consequências dentro e fora de campo.</p><p>A construção acontece em etapas pequenas: planejar, implementar, testar, revisar e aprovar.</p></div></section><section className="roadmap-section"><div className="section-heading"><div><span className="eyebrow">O CAMINHO À FRENTE</span><h2>Passo a passo, rumo ao estrelato.</h2></div></div><ol className="roadmap">{roadmap.map((item, index) => <li key={item.number} className={index === 0 ? "current" : ""}><span className="roadmap-number">{item.number}</span><div><span className="roadmap-tag">{item.tag}</span><h3>{item.title}</h3><p>{item.text}</p></div>{index === 0 && <Icon name="check" size={21} />}</li>)}</ol></section><section className="project-facts"><div><Icon name="save" /><h3>Seu perfil, neste navegador.</h3><p>O salvamento é local. Trocar de dispositivo ou limpar os dados do site não transfere seu perfil.</p></div><div><Icon name="shield" /><h3>Dados reais, com origem.</h3><p>Clubes e elencos serão pesquisados. Desempenhos gerados durante a carreira serão identificados como simulação.</p></div><div><Icon name="ball" /><h3>O futebol em primeiro lugar.</h3><p>Sistemas construídos em etapas. Você acompanha a evolução do jogo a cada versão.</p></div></section><div className="project-repo"><span>Repositório oficial do projeto</span><a href="https://github.com/Yacaco07/rumo-ao-estrelato" target="_blank" rel="noreferrer">Yacaco07/rumo-ao-estrelato<Icon name="arrow" size={16} /></a></div></>;
+}
