@@ -44,7 +44,19 @@ O motor futuro recebe estado, comando e fonte de aleatoriedade; devolve novo est
 
 ## Limites
 
-Um slot local de perfil, sem sincronização entre dispositivos, exportação ou migração de carreira nesta etapa. Sem dados de clubes e sem motor de partidas. Não existe compatibilidade prometida para um save de carreira porque a carreira ainda não é implementada.
+Um slot local de perfil, sem sincronização entre dispositivos, exportação ou migração de carreira nesta etapa. O catálogo da etapa 02 é somente para consulta e não altera o perfil persistido. Sem motor de partidas ou início de carreira.
+
+## Etapa 02 — catálogo real
+
+`src/domain/world/world-schema.ts` define e valida o contrato independente de React e do navegador. `world-queries.ts` consulta sem modificar a base. `src/data/world/` contém o JSON versionado e sua validação na entrada do aplicativo; `src/features/world/` apresenta a consulta.
+
+Cada snapshot informa ID, versão, data de corte, revisor e fontes por campo. A competição traz uma contagem declarada dos participantes. O status de um elenco é `pending` (quantidade desconhecida) ou `listed` (relação publicada consultada, com contagem verificável); nenhum deles comprova inscrição ou contrato. `gameplayReady` e `registrationVerified` só aceitam `false` nesta etapa.
+
+Jogadores têm IDs do projeto que não dependem do clube e permanecem estáveis em atualizações. Posição ampla publicada e categoria de apresentação são distintas das posições específicas do criador. A normalização de “Atacante” para o grupo `forward` não define ponta ou centroavante. Campos biográficos sem fonte ficam `null`.
+
+O verificador `npm run data:check` lê o JSON sem alterá-lo, rejeitando referências inválidas, IDs/nomes repetidos, camisas duplicadas dentro do clube, datas incoerentes e divergências de cobertura. O CLI usa a execução nativa de TypeScript do Node.js 24. A mesma validação roda no build e na suíte. Nenhuma consulta externa ocorre no jogo.
+
+A versão do snapshot é independente da versão do aplicativo e do schema do perfil. IndexedDB continua na versão existente e os saves da fundação não recebem alterações. Congelar uma versão de mundo dentro de uma carreira permanece uma etapa futura.
 
 ## Referências técnicas
 

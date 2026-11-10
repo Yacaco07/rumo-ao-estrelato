@@ -6,6 +6,7 @@
 - Manter regras puras em `src/domain`, interação em `features`, persistência em `infrastructure`. Não importar React ou IndexedDB no domínio.
 - Não apresentar propostas, notícias, resultados, clubes ou elencos fictícios como dados reais ou sistemas prontos. Seguir `docs/DADOS_E_FONTES.md`; não incluir fotos de jogadores nem estaduais brasileiros.
 - Escudos exigem evidência de permissão por ativo. Não presumir licença com base em acesso público.
+- Antes de incluir ou atualizar bases do mundo, ler `docs/ETAPA_02_UNIVERSO.md`, registrar a origem dos campos e executar `npm run data:check`. `listed` significa relação publicada consultada, sem comprovar inscrição. Campos desconhecidos continuam `null`; elencos pendentes não são elencos vazios.
 - Não sobrescrever saves ilegíveis. Manter validação, versões e proteção de concorrência; criar migrações antes de mudanças incompatíveis.
 - Não introduzir chaves, tokens, arquivos `.env` ou dados privados nos commits.
 - Antes de concluir uma alteração de lógica, executar os testes pertinentes e `npm run typecheck`; antes de entregar a aplicação, executar `npm run build`. Documentar limites reais de verificação sem alegar aprovação ou envio inexistente.

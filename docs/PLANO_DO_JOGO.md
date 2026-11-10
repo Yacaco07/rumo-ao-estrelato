@@ -75,3 +75,9 @@ São 14 ligas em 13 países e 3 continentes. A lista descreve o escopo, não uma
 ## Próxima etapa proposta
 
 Após aprovação da fundação: criar o processo de pesquisa e importação de um recorte verificável do universo, com contratos de dados, validação e revisão de licenças. Expandir liga por liga. O sistema das cinco propostas começa somente quando houver cobertura suficiente para gerar propostas verdadeiras dentro do snapshot do jogo.
+
+## Etapa 02 autorizada — universo inicial
+
+A continuação foi autorizada pelo usuário após a publicação da fundação. O primeiro recorte é a Série A 2026: 20 participantes identificados pela CBF e 25 jogadores da relação principal publicada pelo Palmeiras, com fontes consultadas em 10/11/2026. A publicação de um elenco não equivale à verificação de inscrições ou contratos.
+
+Detalhes de escopo, pesquisa e aceite em [ETAPA_02_UNIVERSO.md](ETAPA_02_UNIVERSO.md). A interface permite consultar clubes e jogadores e distinguir os 19 elencos ainda não pesquisados. Os outros campeonatos continuam planejados. Propostas e temporadas continuam fora desta etapa.

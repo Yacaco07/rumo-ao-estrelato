@@ -1,9 +1,11 @@
 {
   "name": "rumo-ao-estrelato",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=24.15.0 <25" },
+  "engines": {
+    "node": ">=24.15.0 <25"
+  },
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
@@ -11,7 +13,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run typecheck && npm test && npm run build"
+    "check": "npm run data:check && npm run typecheck && npm test && npm run build",
+    "data:check": "node scripts/verify-world.mjs"
   },
   "dependencies": {
     "@tailwindcss/postcss": "4.3.5",

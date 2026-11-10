@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 
 const paths = {
+  search: "M20 20l-5-5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z",
   arrow: "M7 17 17 7M7 7h10v10",
   right: "M4 12h16m-6-6 6 6-6 6",
   left: "M20 12H4m6-6-6 6 6 6",

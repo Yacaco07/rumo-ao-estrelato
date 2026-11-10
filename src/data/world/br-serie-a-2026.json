@@ -1,0 +1,848 @@
+{
+  "schemaVersion": 1,
+  "id": "br-serie-a-2026-2026-11-10",
+  "version": "2026.11.10-01",
+  "asOfDate": "2026-11-10",
+  "reviewedOn": "2026-11-10",
+  "reviewedBy": "Codex — conferência de fontes primárias; aprovação editorial pendente",
+  "gameplayReady": false,
+  "sources": [
+    {
+      "id": "cbf-serie-a-2026",
+      "publisher": "Confederação Brasileira de Futebol",
+      "url": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026",
+      "kind": "competition-list",
+      "subjectId": "br-a-2026",
+      "season": "2026",
+      "accessedOn": "2026-11-10",
+      "updatedOn": "2026-11-10",
+      "fields": [
+        "clubName",
+        "competitionMembership"
+      ],
+      "notes": "Somente identificação dos 20 participantes e temporada. Sem reprodução de tabela, pontuação, estatísticas, imagens ou textos. Nomes normalizados apenas em capitalização; nenhuma licença de marca ou imagem é presumida."
+    },
+    {
+      "id": "palmeiras-elenco-2026-11-10",
+      "publisher": "Sociedade Esportiva Palmeiras",
+      "url": "https://www.palmeiras.com.br/elenco/",
+      "kind": "squad-list",
+      "subjectId": "br-palmeiras",
+      "season": null,
+      "accessedOn": "2026-11-10",
+      "updatedOn": null,
+      "fields": [
+        "playerName",
+        "playerClub",
+        "positionLabel",
+        "shirtNumber"
+      ],
+      "notes": "25 jogadores na seção principal consultada. Nove nomes da seção separada de emprestados foram excluídos. A página não declara data de atualização nem temporada do elenco; a consulta não comprova inscrição, contrato ou completude regulatória."
+    }
+  ],
+  "competitions": [
+    {
+      "id": "br-a-2026",
+      "leagueId": "br-a",
+      "name": "Série A",
+      "season": "2026",
+      "countryCode": "BR",
+      "expectedClubCount": 20,
+      "sourceId": "cbf-serie-a-2026"
+    }
+  ],
+  "clubs": [
+    {
+      "id": "br-flamengo",
+      "name": "Flamengo",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-palmeiras",
+      "name": "Palmeiras",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "listed",
+        "sourceId": "palmeiras-elenco-2026-11-10",
+        "sourceListedCount": 25,
+        "registrationVerified": false,
+        "notes": "Relação principal publicada pelo clube; emprestados excluídos. Inscrições e contratos ainda não auditados."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-cruzeiro",
+      "name": "Cruzeiro",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-fluminense",
+      "name": "Fluminense",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-athletico-paranaense",
+      "name": "Athletico Paranaense",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-bahia",
+      "name": "Bahia",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-atletico-mineiro",
+      "name": "Atlético Mineiro",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-red-bull-bragantino",
+      "name": "Red Bull Bragantino",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-santos",
+      "name": "Santos FC",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-sao-paulo",
+      "name": "São Paulo",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-botafogo",
+      "name": "Botafogo",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-coritiba",
+      "name": "Coritiba SAF",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-vasco-da-gama",
+      "name": "Vasco da Gama SAF",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-mirassol",
+      "name": "Mirassol",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-vitoria",
+      "name": "Vitória",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-internacional",
+      "name": "Internacional",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-corinthians",
+      "name": "Corinthians",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-gremio",
+      "name": "Grêmio",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-remo",
+      "name": "Remo",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    },
+    {
+      "id": "br-chapecoense",
+      "name": "Chapecoense",
+      "competitionId": "br-a-2026",
+      "provenance": {
+        "name": "cbf-serie-a-2026",
+        "competitionId": "cbf-serie-a-2026"
+      },
+      "roster": {
+        "status": "pending",
+        "sourceId": null,
+        "sourceListedCount": null,
+        "registrationVerified": false,
+        "notes": "Relação de jogadores ainda não pesquisada neste snapshot."
+      },
+      "crest": null
+    }
+  ],
+  "players": [
+    {
+      "id": "player-0001",
+      "name": "Bruno Bertinato",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Goleiro",
+      "positionGroup": "goalkeeper",
+      "shirtNumber": 21,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0002",
+      "name": "Carlos Miguel",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Goleiro",
+      "positionGroup": "goalkeeper",
+      "shirtNumber": 1,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0003",
+      "name": "Marcelo Lomba",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Goleiro",
+      "positionGroup": "goalkeeper",
+      "shirtNumber": 14,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0004",
+      "name": "Alexander Barboza",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Zagueiro",
+      "positionGroup": "defender",
+      "shirtNumber": 2,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0005",
+      "name": "Benedetti",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Zagueiro",
+      "positionGroup": "defender",
+      "shirtNumber": 43,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0006",
+      "name": "Bruno Fuchs",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Zagueiro",
+      "positionGroup": "defender",
+      "shirtNumber": 3,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0007",
+      "name": "Gustavo Gómez",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Zagueiro",
+      "positionGroup": "defender",
+      "shirtNumber": 15,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0008",
+      "name": "Murilo",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Zagueiro",
+      "positionGroup": "defender",
+      "shirtNumber": 26,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0009",
+      "name": "Agustín Giay",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Lateral-direito",
+      "positionGroup": "defender",
+      "shirtNumber": 4,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0010",
+      "name": "Khellven",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Lateral-direito",
+      "positionGroup": "defender",
+      "shirtNumber": 12,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0011",
+      "name": "Arthur",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Lateral-esquerdo",
+      "positionGroup": "defender",
+      "shirtNumber": 56,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0012",
+      "name": "Jefté",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Lateral-esquerdo",
+      "positionGroup": "defender",
+      "shirtNumber": 6,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0013",
+      "name": "Joaquín Piquerez",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Lateral-esquerdo",
+      "positionGroup": "defender",
+      "shirtNumber": 22,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0014",
+      "name": "Andreas Pereira",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Meio-campista",
+      "positionGroup": "midfielder",
+      "shirtNumber": 8,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0015",
+      "name": "Emiliano Martínez",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Meio-campista",
+      "positionGroup": "midfielder",
+      "shirtNumber": 32,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0016",
+      "name": "Felipe Anderson",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Meio-campista",
+      "positionGroup": "midfielder",
+      "shirtNumber": 7,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0017",
+      "name": "Larson",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Meio-campista",
+      "positionGroup": "midfielder",
+      "shirtNumber": 48,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0018",
+      "name": "Lucas Evangelista",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Meio-campista",
+      "positionGroup": "midfielder",
+      "shirtNumber": 30,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0019",
+      "name": "Marlon Freitas",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Meio-campista",
+      "positionGroup": "midfielder",
+      "shirtNumber": 17,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0020",
+      "name": "Mauricio",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Meio-campista",
+      "positionGroup": "midfielder",
+      "shirtNumber": 18,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0021",
+      "name": "Jhon Arias",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Atacante",
+      "positionGroup": "forward",
+      "shirtNumber": 11,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0022",
+      "name": "López",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Atacante",
+      "positionGroup": "forward",
+      "shirtNumber": 42,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0023",
+      "name": "Paulinho",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Atacante",
+      "positionGroup": "forward",
+      "shirtNumber": 10,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0024",
+      "name": "Ramón Sosa",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Atacante",
+      "positionGroup": "forward",
+      "shirtNumber": 19,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    },
+    {
+      "id": "player-0025",
+      "name": "Vitor Roque",
+      "clubId": "br-palmeiras",
+      "positionLabel": "Atacante",
+      "positionGroup": "forward",
+      "shirtNumber": 9,
+      "nationality": null,
+      "dateOfBirth": null,
+      "provenance": {
+        "name": "palmeiras-elenco-2026-11-10",
+        "clubId": "palmeiras-elenco-2026-11-10",
+        "positionLabel": "palmeiras-elenco-2026-11-10",
+        "shirtNumber": "palmeiras-elenco-2026-11-10",
+        "nationality": null,
+        "dateOfBirth": null
+      }
+    }
+  ]
+}
