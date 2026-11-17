@@ -1,5 +1,9 @@
 # Dados reais, fontes e direitos de uso
 
+## Revisão de 17/11/2026
+
+O catálogo `2026.11.17-01` contém 659 jogadores, 20 clubes e 111 fontes. Todas as posições foram preenchidas. O campo opcional `shirtObservation` registra números de partidas específicas quando a camisa do elenco está a confirmar. A fonte, a data e a competição acompanham a observação. [Revisão de posições e camisas](REVISAO_SERIE_A_2026.md)
+
 ## Estado em 10/11/2026
 
 A versão **0.2.1** contém **20 clubes e 660 jogadores**, em 18 relações de clubes e duas listas de atletas da competição (Athletico e Corinthians, podendo incluir base). Os outros 19 clubes solicitados foram pesquisados; isso não certifica elencos principais completos. Há **152 posições e 262 camisas desconhecidas**, preservadas como `null`. As outras 13 ligas aguardam pesquisa. Inscrições e contratos não foram auditados, e a carreira continua indisponível. Nenhum escudo foi importado.

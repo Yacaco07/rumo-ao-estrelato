@@ -76,6 +76,12 @@ const playerSchema = z.object({
   positionLabel: text.nullable(),
   positionGroup: z.enum(positionGroups).nullable(),
   shirtNumber: z.number().int().min(1).max(99).nullable(),
+  shirtObservation: z.object({
+    number: z.number().int().min(1).max(99),
+    competition: text,
+    matchDate: date,
+    sourceId: id,
+  }).strict().optional(),
   nationality: text.nullable(),
   dateOfBirth: date.nullable(),
   provenance: z.object({
@@ -164,6 +170,14 @@ export const worldSnapshotSchema = z.object({
     }
     if (player.positionGroup !== positionGroupFromLabel(player.positionLabel)) issue(["players", index, "positionGroup"], "Categoria não corresponde à posição explícita da fonte.");
     if (player.dateOfBirth && player.dateOfBirth > world.asOfDate) issue(["players", index, "dateOfBirth"], "Nascimento posterior à data de corte.");
+    if (player.shirtObservation) {
+      const observation = player.shirtObservation;
+      const path = ["players", index, "shirtObservation"];
+      checkSource(observation.sourceId, "shirtNumber", player.clubId, "squad-list", [...path, "sourceId"]);
+      const latestDate = sources.get(observation.sourceId)?.accessedOn ?? world.asOfDate;
+      if (observation.matchDate > latestDate) issue([...path, "matchDate"], "Partida posterior à data de consulta.");
+      if (player.shirtNumber !== null) issue(path, "A observação é usada quando a camisa do elenco está a confirmar.");
+    }
     if (player.shirtNumber !== null) {
       const numberKey = `${player.clubId}:${player.shirtNumber}`;
       if (numbers.has(numberKey)) issue(["players", index, "shirtNumber"], "Camisa repetida na relação do mesmo clube.");

@@ -11,7 +11,8 @@ try {
   console.log(`Snapshot válido: ${world.id} · versão ${world.version}`);
   console.log(`${world.clubs.length} clubes · ${world.players.length} jogadores listados · ${listed} relação(ões) consultada(s)`);
   console.log(`${listed - competitionLists} relações de clubes · ${competitionLists} listas de atletas da competição (podem incluir base)`);
-  console.log(`Campos desconhecidos: ${world.players.filter((player) => player.positionLabel === null).length} posições · ${world.players.filter((player) => player.shirtNumber === null).length} camisas`);
+  const observations = world.players.filter((player) => player.shirtObservation).length;
+  console.log(`Campos a confirmar: ${world.players.filter((player) => player.positionLabel === null).length} posições · ${world.players.filter((player) => player.shirtNumber === null).length} camisas do elenco · ${observations} camisas documentadas em partidas`);
   console.log(`Data de corte: ${world.asOfDate} · ${world.sources.length} fontes · inscrições e carreiras ainda não liberadas`);
 } catch (error) {
   console.error("Snapshot rejeitado; nenhum arquivo foi alterado.");

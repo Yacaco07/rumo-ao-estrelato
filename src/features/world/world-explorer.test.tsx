@@ -59,7 +59,7 @@ describe("Explorador do universo", () => {
     expect(within(screen.getByRole("region", { name: "Detalhes do clube" })).getByRole("heading", { name: "Flamengo" })).toBeInTheDocument();
   });
 
-  it("explica o alcance da CBF e permite consultar posições desconhecidas", async () => {
+  it("explica o alcance da CBF e filtra as posições pesquisadas", async () => {
     const user = userEvent.setup();
     render(<WorldExplorer world={CURRENT_WORLD} />);
     await user.click(screen.getByRole("button", { name: "Ver Corinthians" }));
@@ -68,9 +68,10 @@ describe("Explorador do universo", () => {
     expect(within(details).getByText(/Não representa um elenco principal completo/)).toBeInTheDocument();
     expect(within(details).queryByText("Relação do clube consultada")).not.toBeInTheDocument();
     await user.selectOptions(screen.getByLabelText("Posição", { exact: true }), "goalkeeper");
-    expect(within(details).getByRole("status")).toHaveTextContent("Nenhum jogador listado nesta posição.");
+    const table = within(details).getByRole("table", { name: /Relação consultada de Corinthians/ });
+    expect(within(table).getByRole("rowheader", { name: "Hugo de Souza Nogueira" })).toBeInTheDocument();
+    expect(within(table).queryByRole("rowheader", { name: "Memphis Depay" })).not.toBeInTheDocument();
     await user.selectOptions(screen.getByLabelText("Posição", { exact: true }), "unknown");
-    expect(screen.getByRole("table")).toHaveAccessibleName(/Relação consultada de Corinthians/);
-    expect(within(details).getAllByRole("cell").every((cell) => cell.textContent === "A confirmar")).toBe(true);
+    expect(within(details).getByRole("status")).toHaveTextContent("Nenhum jogador listado nesta posição.");
   });
 });

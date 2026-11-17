@@ -114,12 +114,16 @@ describe("Importação do universo", () => {
   it("preserva lacunas e decisões de curadoria das fontes conflitantes", () => {
     const world = parseWorldSnapshot(rawWorld);
     const remo = world.players.filter((player) => player.clubId === "br-remo");
-    for (const name of ["João Lucas", "Matheus Alexandre", "Leonel Picco", "Vitor Bueno"]) {
-      expect(remo.find((player) => player.name === name)).toMatchObject({ shirtNumber: null, provenance: { shirtNumber: null } });
-    }
+    expect(remo.find((player) => player.name === "João Lucas")).toMatchObject({
+      shirtNumber: null, shirtObservation: { number: 2, competition: "Série A", matchDate: "2026-03-15" },
+    });
+    expect(remo.find((player) => player.name === "Matheus Alexandre")?.shirtNumber).toBe(2);
+    expect(remo.find((player) => player.name === "Leonel Picco")?.shirtNumber).toBe(14);
+    expect(remo.find((player) => player.name === "Vitor Bueno")?.shirtNumber).toBe(15);
+    expect(world.players.every((player) => player.shirtNumber !== null || player.shirtObservation)).toBe(true);
     expect(world.players.filter((player) => player.clubId === "br-mirassol").map((player) => player.name)).not.toEqual(expect.arrayContaining(["Tiquinho Soares"]));
     expect(world.players.filter((player) => player.clubId === "br-gremio").some((player) => ["Viery", "Gabriel Mec", "Monsalve", "Leonel Pérez"].includes(player.name))).toBe(false);
-    expect(world.players.filter((player) => player.clubId === "br-botafogo").every((player) => player.shirtNumber === null)).toBe(true);
+    expect(world.players.find((player) => player.name === "Gabriel Batista de Souza")?.shirtNumber).toBe(12);
   });
 
   it("não transforma uma categoria ampla em posição específica", () => {

@@ -7,6 +7,17 @@ import { POSITION_GROUP_LABELS, positionGroups, type PositionGroup, type WorldSn
 
 function formatDate(value: string) { return value.split("-").reverse().join("/"); }
 
+function ShirtCell({ player }: { player: WorldSnapshot["players"][number] }) {
+  if (player.shirtNumber !== null) return <td>{String(player.shirtNumber).padStart(2, "0")}</td>;
+  if (!player.shirtObservation) return <td>A confirmar</td>;
+
+  const { number, competition, matchDate } = player.shirtObservation;
+  return <td>
+    <span>{String(number).padStart(2, "0")}</span>
+    <small className="shirt-observation">{competition} · {formatDate(matchDate)}<br />Elenco atual a confirmar</small>
+  </td>;
+}
+
 function SourceLink({ source }: { source: WorldSource }) {
   return <div className="catalog-source">
     <a href={source.url} target="_blank" rel="noreferrer">{source.publisher}<Icon name="arrow" size={13} /></a>
@@ -26,13 +37,16 @@ export function WorldExplorer({ world }: { world: WorldSnapshot }) {
   const players = selected ? getClubPlayers(world, selected.id) : [];
   const visiblePlayers = players.filter((player) => positionFilter === "all" || (positionFilter === "unknown" ? player.positionGroup === null : player.positionGroup === positionFilter));
   const membershipSource = world.sources.find((source) => source.id === selected?.provenance.competitionId);
-  const rosterSources = world.sources.filter((source) => source.kind === "squad-list" && source.subjectId === selected?.id);
+  const rosterSource = world.sources.find((source) => source.id === selected?.roster.sourceId);
+  const supportingSources = world.sources.filter((source) =>
+    source.kind === "squad-list" && source.subjectId === selected?.id && source.id !== rosterSource?.id
+  );
   const competitionAthletes = selected?.roster.scope === "competition-athletes";
   const hasFilters = query !== "" || rosterFilter !== "all";
 
   return <>
     <section className="catalog-banner" aria-labelledby="catalog-title">
-      <div><span className="catalog-kicker"><span className="status-dot" />SÉRIE A · FONTES CONSULTADAS</span><h2 id="catalog-title">Brasil. Série A. {competition.season}<span>.</span></h2><p>Os primeiros clubes e jogadores já têm nome.<br />A construção do seu universo começa por aqui.</p><span className="catalog-date"><Icon name="clock" size={13} />Dados consultados em {formatDate(world.asOfDate)}</span></div>
+      <div><span className="catalog-kicker"><span className="status-dot" />SÉRIE A · FONTES CONSULTADAS</span><h2 id="catalog-title">Brasil. Série A. {competition.season}<span>.</span></h2><p>Os primeiros clubes e jogadores já têm nome.<br />A construção do seu universo começa por aqui.</p><span className="catalog-date"><Icon name="clock" size={13} />Revisado em {formatDate(world.reviewedOn)}</span></div>
       <div className="catalog-numbers"><div><strong>{coverage.clubs}</strong><span>clubes identificados</span></div><div><strong>{coverage.listedRosters}</strong><span>{coverage.listedRosters === 1 ? "relação consultada" : "relações consultadas"}</span></div><div><strong>{coverage.players}</strong><span>jogadores listados</span></div></div>
     </section>
     <div className="catalog-scope"><Icon name="info" size={17} /><p>Catálogo para consulta. {coverage.pendingRosters > 0 ? `Há ${coverage.pendingRosters} elencos aguardando pesquisa.` : "Todos os clubes têm fontes consultadas; o alcance das listas e os campos pendentes estão indicados por clube."} Inscrições, contratos e propostas continuam nas próximas etapas.</p></div>
@@ -55,14 +69,18 @@ export function WorldExplorer({ world }: { world: WorldSnapshot }) {
             {selected.roster.status === "listed" ? <div className="club-roster">
               {competitionAthletes && <p className="roster-no-results">Esta lista da competição pode incluir atletas da base. Não representa um elenco principal completo. Posições e camisas não confirmadas permanecem desconhecidas.</p>}
               <div className="roster-heading"><div><h4>Jogadores listados</h4><p>{visiblePlayers.length} de {players.length} nomes na relação consultada</p></div><div className="roster-position-filter"><label htmlFor="player-position">Posição</label><select id="player-position" value={positionFilter} onChange={(event) => setPositionFilter(event.target.value as PositionGroup | "unknown" | "all")}><option value="all">Todas as posições</option>{positionGroups.map((group) => <option key={group} value={group}>{POSITION_GROUP_LABELS[group]}</option>)}<option value="unknown">Posição a confirmar</option></select></div></div>
-              {visiblePlayers.length ? <div className="roster-table-wrap"><table className="roster-table"><caption className="sr-only">Relação consultada de {selected.name}, consultada em {formatDate(world.asOfDate)}</caption><thead><tr><th scope="col">Camisa</th><th scope="col">Jogador</th><th scope="col">Posição publicada</th></tr></thead><tbody>{visiblePlayers.map((player) => <tr key={player.id}><td>{player.shirtNumber === null ? "A confirmar" : String(player.shirtNumber).padStart(2, "0")}</td><th scope="row">{player.name}</th><td>{player.positionLabel ?? "A confirmar"}</td></tr>)}</tbody></table></div> : <p className="roster-no-results" role="status">Nenhum jogador listado nesta posição.</p>}
+              {visiblePlayers.length ? <div className="roster-table-wrap"><table className="roster-table"><caption className="sr-only">Relação consultada de {selected.name}</caption><thead><tr><th scope="col">Camisa</th><th scope="col">Jogador</th><th scope="col">Posição publicada</th></tr></thead><tbody>{visiblePlayers.map((player) => <tr key={player.id}><ShirtCell player={player} /><th scope="row">{player.name}</th><td>{player.positionLabel ?? "A confirmar"}</td></tr>)}</tbody></table></div> : <p className="roster-no-results" role="status">Nenhum jogador listado nesta posição.</p>}
               <div className="roster-note"><Icon name="info" size={15} /><p>{selected.roster.notes}</p></div>
             </div> : <div className="pending-roster"><span className="pending-roster-icon"><Icon name="person" size={28} /></span><h4>O elenco está no próximo capítulo.</h4><p>Este clube está confirmado entre os participantes. Sua relação de jogadores ainda aguarda pesquisa em fontes oficiais.</p><span>JOGADORES: A PESQUISAR</span></div>}
-            <footer className="club-detail-sources"><span className="eyebrow">CONFIRA A ORIGEM DOS DADOS</span>{membershipSource && <SourceLink source={membershipSource} />}{rosterSources.map((source) => <SourceLink key={source.id} source={source} />)}</footer>
+            <footer className="club-detail-sources"><span className="eyebrow">CONFIRA A ORIGEM DOS DADOS</span>{membershipSource && <SourceLink source={membershipSource} />}{rosterSource && <SourceLink source={rosterSource} />}
+              {supportingSources.length > 0 && <details key={selected.id} className="catalog-source-details">
+                <summary>Fontes complementares ({supportingSources.length})</summary>
+                {supportingSources.map((source) => <SourceLink key={source.id} source={source} />)}
+              </details>}</footer>
           </> : <div className="catalog-empty"><Icon name="ball" size={27} /><h3>Um clube, muitas possibilidades.</h3><p>Ajuste a busca para consultar os participantes.</p></div>}
         </section>
       </div>
     </section>
-    <section className="catalog-footnote"><Icon name="shield" size={20} /><div><strong>Dados com origem. Um mundo em construção.</strong><p>Este catálogo representa a consulta de {formatDate(world.asOfDate)}. Novas consultas podem alterar estas relações. As outras ligas continuam em pesquisa.</p></div></section>
+    <section className="catalog-footnote"><Icon name="shield" size={20} /><div><strong>Dados com origem. Um mundo em construção.</strong><p>Cada fonte informa sua data de consulta. Novas consultas podem alterar estas relações. As outras ligas continuam em pesquisa.</p></div></section>
   </>;
 }
