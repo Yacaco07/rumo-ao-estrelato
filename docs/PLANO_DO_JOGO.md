@@ -87,3 +87,7 @@ Detalhes de escopo, pesquisa e aceite em [ETAPA_02_UNIVERSO.md](ETAPA_02_UNIVERS
 O usuário pediu pesquisar os outros 19 clubes antes do próximo sistema. Na versão 0.2.1, os 20 participantes têm resultado de consulta documentado: 660 nomes em 18 relações de clubes e duas listas da competição, estas últimas podendo incluir base. Há campos pendentes; não se declara elenco principal completo ou inscrição verificada. Os sistemas de propostas e temporadas continuam planejados.
 
 Plano em [ETAPA_02B_ELENCOS.md](ETAPA_02B_ELENCOS.md), pesquisa em [PESQUISA_SERIE_A_2026.md](PESQUISA_SERIE_A_2026.md) e validação em [VALIDACAO_ETAPA_02B.md](VALIDACAO_ETAPA_02B.md). Os relatos anteriores descrevem suas respectivas versões.
+
+## Etapa 03 — Comparação das cinco propostas
+
+Um perfil concluído pode gerar cinco propostas simuladas com base nas relações consultadas da Série A. A seleção considera o setor do atleta e gera condições de jogo identificadas como simuladas. As regras, os testes e o escopo de negociação estão em [ETAPA_03_PROPOSTAS.md](ETAPA_03_PROPOSTAS.md).

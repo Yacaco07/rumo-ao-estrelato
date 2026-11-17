@@ -395,3 +395,20 @@ fieldset { padding: 0; margin: 0; border: none; }
 
 .catalog-source-details > summary { cursor: pointer; font-size: 12px; font-weight: 600; margin-block: 12px; }
 .shirt-observation { display: block; font-size: 0.7rem; font-weight: 400; line-height: 1.4; }
+
+.offer-profile { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+.offer-profile h2 { font-size: 22px; overflow-wrap: anywhere; }
+.offer-profile p, .offer-context, .offer-empty p { color: #5a654e; font-size: 13px; line-height: 1.6; }
+.offer-empty { padding: 24px; }
+.offer-empty h2 { font-size: 20px; }
+.offer-empty p { margin: 8px 0 18px; }
+.offer-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px; }
+.offer-card { padding: 18px; min-width: 0; }
+.offer-club { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.offer-club .outline-icon { flex-shrink: 0; }
+.offer-club h3 { font-size: 17px; overflow-wrap: anywhere; }
+.offer-card dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; border-top: 1px solid var(--line); padding: 8px 0; font-size: 12px; }
+.offer-card dt { color: #5a654e; }
+.offer-card dd { font-weight: 600; text-align: right; }
+.offer-context { margin-top: 16px; }
+.offer-context .text-link { text-decoration: underline; }

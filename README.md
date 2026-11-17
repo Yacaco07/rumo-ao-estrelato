@@ -1,10 +1,10 @@
 # RUMO AO ESTRELATO
 
-Simulador de carreira de jogador de futebol para navegador. **Versão 0.2.2: criação de perfil e pesquisa dos 20 clubes da Série A.**
+Simulador de carreira de jogador de futebol para navegador. **Versão 0.3.0 com criação de atleta, catálogo da Série A e cinco propostas iniciais simuladas.**
 
 Repositório oficial e exclusivo: <https://github.com/Yacaco07/rumo-ao-estrelato> · branch `main`.
 
-**Situação desta entrega:** código e documentação do projeto publicados na branch `main` do repositório oficial. Consulte os resultados dos testes e as pendências de revisão em [REVISAO_SERIE_A_2026.md](docs/REVISAO_SERIE_A_2026.md).
+**Situação desta entrega:** código e documentação do projeto publicados na branch `main` do repositório oficial. As regras das primeiras propostas estão em [ETAPA_03_PROPOSTAS.md](docs/ETAPA_03_PROPOSTAS.md). A pesquisa de numeração está em [REVISAO_SERIE_A_2026.md](docs/REVISAO_SERIE_A_2026.md).
 
 ## Executar
 
@@ -40,8 +40,9 @@ O projeto ainda não tem hospedagem configurada. GitHub Pages não executa o ser
 - Busca de clubes sem distinção de acentos, filtro por cobertura e posição, seleção de clube e fontes com datas.
 - Cobertura explícita: 18 relações de clubes e duas listas da CBF, que podem incluir base. Os 659 jogadores têm posição e camisa documentada. Em 13 casos, a numeração vem de uma partida identificada e a atribuição atual ainda está a confirmar. As outras 13 ligas seguem planejadas.
 - Snapshot versionado validado por Zod, com referências por campo e verificador de importação.
+- Cinco propostas simuladas em `/propostas`. Conclua o perfil e selecione **Ver minhas propostas** para comparar clubes, concorrência no setor, papel e duração simulados.
 
-O perfil salvo **ainda não inicia uma carreira**. O catálogo real é parcial e somente para consulta: uma relação publicada não comprova inscrições ou contratos. Propostas, contratos, escudos, partidas, calendários, transferências e temporadas continuam planejados. O escopo total tem 14 ligas, sem estaduais brasileiros. Dados desconhecidos não são preenchidos com estimativas.
+A assinatura do contrato e o início da carreira serão tratados em outra etapa. As propostas são simuladas com base nas relações publicadas e nas posições documentadas. Escudos, partidas, calendários, transferências e temporadas continuam planejados. O escopo total tem 14 ligas, sem estaduais brasileiros. Dados desconhecidos não são preenchidos com estimativas.
 
 Há um slot local. O perfil fica associado ao endereço, navegador e dispositivo usados. Limpar os dados do site remove o save. Exportação, sincronização e migrações de carreiras serão implementadas antes de saves longos. As alterações são salvas pelos botões; não há salvamento automático silencioso.
 
@@ -72,7 +73,9 @@ Os testes incluem limites e conservação dos dez pontos, atributos por posiçã
 | [docs/PESQUISA_SERIE_A_2026.md](docs/PESQUISA_SERIE_A_2026.md) | Resultado dos 19 clubes, fontes, curadoria e lacunas |
 | [docs/ETAPA_02B_ELENCOS.md](docs/ETAPA_02B_ELENCOS.md) | Plano da ampliação do catálogo |
 | [docs/VALIDACAO_ETAPA_02B.md](docs/VALIDACAO_ETAPA_02B.md) | Verificações da versão 0.2.2 |
-| `src/app/` | Rotas `/`, `/atleta`, `/universo`, `/projeto`, layout e CSS |
+| [docs/ETAPA_03_PROPOSTAS.md](docs/ETAPA_03_PROPOSTAS.md) | Regras das propostas simuladas, escopo e verificações |
+| `src/app/` | Rotas `/`, `/atleta`, `/propostas`, `/universo`, `/projeto`, layout e CSS |
+| `src/domain/career/`, `src/features/career/` | Seleção determinística e interface das cinco propostas |
 | `src/domain/athlete/` | Schemas e regras puras de atleta |
 | `src/features/athlete/` | Criador, central e contexto do perfil |
 | `src/infrastructure/storage/` | Adaptador transacional de IndexedDB e testes |
@@ -86,7 +89,7 @@ Stack: Next.js, React, TypeScript, Tailwind CSS, Zod, Vitest e IndexedDB via `id
 
 ## Próximo marco
 
-Revisar as lacunas documentadas, conferir inscrições, distinguir profissional/base nas listas da competição e completar os dados necessários à simulação. A revisão visual em navegador real continua pendente. Expandir com fontes e direitos de uso registrados antes de iniciar o sistema das cinco propostas.
+Preparar a negociação e o primeiro contrato. A pesquisa de inscrições e das demais ligas continua em etapas próprias, com fontes e datas registradas.
 
 Os termos de licença do código do projeto ainda dependem de decisão do titular. Nenhum direito de terceiros sobre marcas, dados ou imagens é presumido.
 

@@ -74,4 +74,15 @@ describe("Explorador do universo", () => {
     await user.selectOptions(screen.getByLabelText("Posição", { exact: true }), "unknown");
     expect(within(details).getByRole("status")).toHaveTextContent("Nenhum jogador listado nesta posição.");
   });
+  it("mostra a camisa observada com competição, data e situação no elenco", async () => {
+    const user = userEvent.setup();
+    render(<WorldExplorer world={CURRENT_WORLD} />);
+    await user.click(screen.getByRole("button", { name: "Ver Remo" }));
+    const player = screen.getByRole("rowheader", { name: /^João Lucas$/ });
+    const shirt = within(player.closest("tr")!).getAllByRole("cell")[0];
+    expect(within(shirt).getByText("02")).toBeInTheDocument();
+    expect(shirt).toHaveTextContent("Série A · 15/03/2026");
+    expect(shirt).toHaveTextContent("Elenco atual a confirmar");
+  });
+
 });

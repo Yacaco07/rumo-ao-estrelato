@@ -43,4 +43,4 @@ As relações de Athletico e Corinthians vieram da tabela de atletas da CBF e po
 
 ## Validação
 
-`npm run check` passou na verificação dos dados, TypeScript, 89 testes e build. A verificação cobre a exibição da camisa histórica do Remo e preserva a distinção em relação à camisa atual. Revisão visual em navegador real pendente.
+`npm run check` passou na verificação dos dados, TypeScript, 89 testes e build. Os testes da versão 0.2.2 verificam o registro de numeração do Remo no catálogo. A versão 0.3.0 acrescenta um teste da exibição da camisa observada e da situação no elenco. Revisão visual em navegador real pendente.
