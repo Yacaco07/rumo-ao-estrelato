@@ -36,3 +36,7 @@ A rodada final arquiva a edição e monta a seguinte na mesma transação. Duran
 ## Treinamento individual
 
 Antes de treinar, escolha um dos seis atributos da posição. Exercícios técnicos e físicos desenvolvem esse atributo com intensidades e custos de fadiga distintos. Minutos e nota da partida também contribuem. A idade regula a velocidade de evolução e o potencial limita o ganho. Recuperação melhora a condição física, preservando a evolução entre temporadas.
+
+## Partidas e disponibilidade
+
+Gols em ordem de minuto geram o placar da partida. A linha do tempo registra participação do atleta, assistências, defesas, substituições, cartões e lesões. O tempo em campo delimita os lances individuais e informa a nota. Cada terceiro amarelo ou vermelho gera suspensão, e lesões bloqueiam a escalação até o fim do prazo. Rodadas anteriores à atualização mantêm seus placares e estatísticas.

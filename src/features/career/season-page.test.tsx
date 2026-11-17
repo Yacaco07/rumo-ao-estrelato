@@ -45,7 +45,7 @@ describe("Temporada na interface", () => {
     expect(screen.queryByRole("button", { name: /Treino físico/ })).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Próxima semana" }));
     const firstResult = await screen.findByRole("region", { name: "Resultado da rodada 1" });
-    expect(within(firstResult).getByText(/90 min · Nota/)).toBeInTheDocument();
+    expect(within(firstResult).getByText(/\d+ min · Nota/)).toBeInTheDocument();
     expect((await athleteRepository.read())?.season?.rounds).toEqual(["technical"]);
     const savedScore = within(firstResult).getByText(/\d+ × \d+/, { selector: ".season-score strong" }).textContent;
 

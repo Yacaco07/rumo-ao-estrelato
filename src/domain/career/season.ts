@@ -1,8 +1,10 @@
 import { averageRating, type AthleteDraft } from "@/domain/athlete/athlete";
 import { getPosition } from "@/domain/athlete/positions";
 import { defaultTrainingFocus, developedAttributes, gainPractice, TRAINING_EFFECT, trainingPotential } from "./training";
+import { hash } from "./random";
+import { playerOverall, simulateMatch, type Absence } from "./match";
 import type { ContractOffer } from "./contract";
-import { buildCalendar, FIRST_SEASON_YEAR, roundDate, type Fixture } from "./calendar";
+import { buildCalendar, FIRST_SEASON_YEAR, roundDate } from "./calendar";
 import { SEASON_ROUNDS, seasonActionSchema, seasonSchema, type Season, type SeasonAction, type SeasonClub, type Training } from "./season-schema";
 
 export type SeasonCatalog = { worldVersion: string; clubs: SeasonClub[] };
@@ -12,27 +14,9 @@ export type SeasonProfile = {
   contract: ContractOffer;
 };
 
-type Match = Fixture & { homeGoals: number; awayGoals: number };
 type Preparation = { fatigue: number; xp: number };
-type Appearance = { minutes: number; goals: number; assists: number; saves: number; cleanSheet: boolean; rating: number | null };
 
 export { buildCalendar } from "./calendar";
-
-function hash(value: string): number {
-  let result = 2166136261;
-  for (let index = 0; index < value.length; index++) {
-    result = Math.imul(result ^ value.charCodeAt(index), 16777619);
-  }
-  return result >>> 0;
-}
-
-function randomSource(seed: number) {
-  let state = seed;
-  return () => {
-    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
-    return state / 0x100000000;
-  };
-}
 
 export function createSeason(profile: SeasonProfile, catalog: SeasonCatalog, year = FIRST_SEASON_YEAR): Season | null {
   const result = seasonSchema.safeParse({
@@ -80,63 +64,6 @@ function prepare(current: Preparation, training: Training | null): Preparation {
   return { fatigue: Math.max(0, Math.min(100, current.fatigue + change.fatigue)), xp: current.xp + change.xp };
 }
 
-function playerOverall(initialOverall: number, xp: number) {
-  return Math.min(99, initialOverall + Math.min(12, Math.floor(xp / 65)));
-}
-
-function simulateMatch(fixture: Fixture, player: Season["player"], prepared: Preparation, roundIndex: number, seed: number) {
-  const random = randomSource(hash(`${seed}:${roundIndex}:${fixture.home.id}:${fixture.away.id}`));
-  const { clubId, role, position, initialOverall } = player;
-  const isKeeper = position === "GK";
-  const managesHome = fixture.home.id === clubId;
-  const managesAway = fixture.away.id === clubId;
-  const hasAthlete = managesHome || managesAway;
-  const overall = playerOverall(initialOverall, prepared.xp);
-  const starter = roundIndex === 0 || role === "rotation" || overall >= 60 || prepared.fatigue < 45 && roundIndex % 3 === 0;
-  const minutes = !hasAthlete ? 0 : isKeeper ? starter ? 90 : 0
-    : Math.max(15, Math.min(90, (starter ? 81 : 46) + Math.floor(random() * 12) - Math.floor(prepared.fatigue / 3)));
-  let goals = 0;
-  let assists = 0;
-  let saves = 0;
-
-  function score(club: SeasonClub, atHome: boolean) {
-    const withAthlete = club.id === clubId;
-    const againstKeeper = hasAthlete && isKeeper && !withAthlete && minutes > 0;
-    const teamShape = ((hash(`${seed}:${club.id}`) % 13) - 6) * 0.005;
-    const chance = 0.225 + teamShape + (atHome ? 0.035 : 0);
-    const athleteImpact = (overall - prepared.fatigue / 4) / 1800;
-    const shots = 4 + Math.floor(random() * 6);
-    let scored = 0;
-    for (let index = 0; index < shots; index++) {
-      const minute = 1 + Math.floor(random() * 90);
-      const onPitch = starter ? minute <= minutes : minute > 90 - minutes;
-      const attackBonus = withAthlete && !isKeeper && onPitch ? athleteImpact : 0;
-      const keeperBonus = againstKeeper ? athleteImpact : 0;
-      const outcome = random();
-      if (outcome < chance + attackBonus - keeperBonus) {
-        scored++;
-        if (withAthlete && !isKeeper && onPitch) {
-          const share = position === "ST" || position === "WG" ? 0.32 : 0.13;
-          const involvement = random();
-          if (involvement < share) goals++;
-          else if (involvement < share + 0.20) assists++;
-        }
-      } else if (againstKeeper && outcome < 0.65) {
-        saves++;
-      }
-    }
-    return scored;
-  }
-
-  const match: Match = { ...fixture, homeGoals: score(fixture.home, true), awayGoals: score(fixture.away, false) };
-  const conceded = managesHome ? match.awayGoals : match.homeGoals;
-  const cleanSheet = isKeeper && minutes === 90 && conceded === 0;
-  const impact = isKeeper ? saves * 0.22 + Number(cleanSheet) * 0.6 - conceded * 0.32 : goals * 0.8 + assists * 0.55;
-  const rating = minutes === 0 ? null : Math.round(Math.min(10, Math.max(3, 6 + impact - prepared.fatigue / 150 + random() * 0.8)) * 10) / 10;
-  const appearance: Appearance = { minutes, goals, assists, saves, cleanSheet, rating };
-  return { match, appearance };
-}
-
 function newTable(clubs: SeasonClub[]) {
   return new Map(clubs.map((club) => [club.id, { club, played: 0, wins: 0, draws: 0, losses: 0, scored: 0, conceded: 0, points: 0 }]));
 }
@@ -157,7 +84,10 @@ export function readSeason(season: Season) {
   let practice = trainingPlan?.practice ?? {};
   const table = newTable(season.clubs);
   let progress: Preparation = { fatigue: 0, xp: 0 };
-  const stats = { appearances: 0, minutes: 0, goals: 0, assists: 0, saves: 0, cleanSheets: 0, totalRating: 0 };
+  let suspension = season.startingSuspension ?? 0;
+  let injury = 0;
+  let yellow = 0;
+  const stats = { appearances: 0, minutes: 0, goals: 0, assists: 0, saves: 0, cleanSheets: 0, totalRating: 0, yellowCards: 0, redCards: 0 };
   const calendar = buildCalendar(season.clubs);
   const rounds = calendar.map((fixtures, index) => {
     const fixture = fixtures.find(({ home, away }) => home.id === player.clubId || away.id === player.clubId)!;
@@ -168,12 +98,22 @@ export function readSeason(season: Season) {
     const focus = season.focuses?.[index] ?? roleFocus;
     if (trainingPlan && preparation) practice = gainPractice(trainingPlan, practice, focus, TRAINING_EFFECT[preparation].practice);
     progress = prepare(progress, preparation);
-    const results = fixtures.map((game) => simulateMatch(game, player, progress, index, season.seed));
+    const detailed = season.detailedFrom !== undefined && index >= season.detailedFrom;
+    const absence: Absence | undefined = injury > 0 ? "injured" : suspension > 0 ? "suspended" : undefined;
+    const attributes = detailed && trainingPlan ? developedAttributes(trainingPlan, practice) : {};
+    const results = fixtures.map((game) => simulateMatch(game, player, progress, index, season.seed,
+      detailed ? { attributes, absence } : undefined));
     for (const { match } of results) {
       recordResult(table, match.home, match.homeGoals, match.awayGoals);
       recordResult(table, match.away, match.awayGoals, match.homeGoals);
     }
-    const { match, appearance } = results[fixtures.indexOf(fixture)];
+    const { match, appearance, events } = results[fixtures.indexOf(fixture)];
+    injury = Math.max(0, injury - 1, appearance.injuryGames);
+    suspension = Math.max(0, suspension - 1) + appearance.red;
+    yellow += appearance.yellow;
+    if (yellow === 3) { yellow = 0; suspension++; }
+    stats.yellowCards += appearance.yellow;
+    stats.redCards += appearance.red;
     stats.minutes += appearance.minutes;
     stats.goals += appearance.goals;
     stats.assists += appearance.assists;
@@ -188,7 +128,7 @@ export function readSeason(season: Season) {
       fatigue: Math.max(0, Math.min(100, progress.fatigue + Math.round(appearance.minutes / 6) - 9)),
       xp: progress.xp + (appearance.rating === null ? 0 : Math.floor(appearance.rating * 2)),
     };
-    return { ...scheduled, played: { match, appearance, preparation, results: results.map(({ match }) => match) } };
+    return { ...scheduled, played: { match, appearance, events, preparation, results: results.map(({ match }) => match) } };
   });
 
   if (season.preparation !== null) {
@@ -212,6 +152,7 @@ export function readSeason(season: Season) {
       : playerOverall(player.initialOverall, progress.xp),
     attributes,
     potential: trainingPlan ? trainingPotential(trainingPlan) : undefined,
+    health: { injury, suspension },
     practice,
     xp: progress.xp,
   };

@@ -34,6 +34,7 @@ export function applyCareerAction(
   if (!parsed.success) return { ok: false, message: "Escolha um comando válido." };
   let pastSeasons = profile.pastSeasons ?? [];
   let current = withTrainingPlan(season, profile.athlete);
+  if (current.detailedFrom === undefined) current = { ...current, detailedFrom: current.rounds.length };
 
   function rollSeason() {
     const upcoming = createSeason(profile, { worldVersion: current.worldVersion, clubs: current.clubs }, seasonYear(current) + 1);
@@ -44,12 +45,17 @@ export function applyCareerAction(
       ...upcoming,
       date: careerDate(current),
       trainingPlan: nextTrainingPlan(current.trainingPlan!, previous.practice),
+      detailedFrom: 0,
+      startingSuspension: previous.health.suspension,
     };
     return true;
   }
 
   if (parsed.data.type === "train") {
     if (current.rounds.length === SEASON_ROUNDS && !rollSeason()) return { ok: false, message: "A próxima temporada não pôde ser montada." };
+    if (parsed.data.training !== "recovery" && readSeason(current).health.injury > 0) {
+      return { ok: false, message: "Durante a lesão, escolha recuperação." };
+    }
     const result = applySeasonAction(current, parsed.data);
     return result.ok ? { ...result, pastSeasons } : result;
   }
