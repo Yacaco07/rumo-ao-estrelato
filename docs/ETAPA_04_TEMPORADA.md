@@ -22,3 +22,7 @@ O perfil e o primeiro contrato existentes abrem a temporada sem recriação. A p
 `npm run check` valida o catálogo, a tipagem, a suíte e o build. Os 116 testes passaram. A suíte percorre 38 rodadas para um goleiro e um atacante, verifica mandos, placares e pontuação e cobre a estreia salva na interface e comandos concorrentes entre abas. O fluxo automatizado usa DOM e IndexedDB simulados.
 
 A versão 0.5.0 termina ao fim da primeira temporada. A próxima etapa é a virada de ano com histórico, contrato e movimentações. A integração de acesso e descenso depende da Série B verificada.
+
+## Calendário da carreira
+
+O calendário completo guarda as 38 datas simuladas e mostra até três compromissos imediatos do clube, com competição, rodada e mando. A edição de 2026 mantém as datas dos saves anteriores. A listagem completa inclui os resultados já disputados.

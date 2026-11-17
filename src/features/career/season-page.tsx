@@ -7,7 +7,7 @@ import { useAthlete } from "@/features/athlete/athlete-provider";
 import { createSeason, readSeason, type SeasonCatalog } from "@/domain/career/season";
 import { SEASON_ROUNDS, TRAINING_LABELS, TRAINING_TYPES, type SeasonAction } from "@/domain/career/season-schema";
 
-const formatDate = (value: string) => value.split("-").reverse().slice(0, 2).join("/");
+const formatDate = (value: string) => value.split("-").reverse().join("/");
 const formatRating = (value: number | null) => value?.toFixed(1).replace(".", ",") ?? "—";
 const trainingEffects = {
   technical: "+8 XP · +9 fadiga",
@@ -113,8 +113,15 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
         <ul>{lastMatch.results.map((match) => <li key={match.home.id}>{match.home.name} <strong>{match.homeGoals} × {match.awayGoals}</strong> {match.away.name}</li>)}</ul>
       </details>
     </section>}
+    {next && <section className="panel season-card season-section season-details" aria-labelledby="upcoming-matches">
+      <h2 id="upcoming-matches">Próximos compromissos</h2>
+      <ul>{rounds.slice(next.number - 1, next.number + 2).map(({ number, date, competition, fixture }) => <li key={number}>
+        <time dateTime={date}>{formatDate(date)}</time>
+        <span>{competition} · Rodada {number} · {fixture.home.name} × {fixture.away.name}</span>
+      </li>)}</ul>
+    </section>}
     <details className="panel season-card season-section season-details">
-      <summary>Calendário e resultados</summary>
+      <summary>Calendário completo e resultados</summary>
       <ol>{rounds.map(({ number, date, fixture, played }) => <li key={number} aria-current={number === next?.number ? "step" : undefined}>
         <time dateTime={date}>{formatDate(date)}</time><span>{fixture.home.name} {played ? `${played.match.homeGoals} × ${played.match.awayGoals}` : "×"} {fixture.away.name}</span>
       </li>)}</ol>

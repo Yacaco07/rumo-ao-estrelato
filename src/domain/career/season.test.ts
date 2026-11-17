@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createEmptyDraft } from "@/domain/athlete/athlete";
 import { CURRENT_WORLD } from "@/data/world/current-world";
 import { applySeasonAction, buildCalendar, createSeason, readSeason, type SeasonProfile } from "./season";
+import { roundDate } from "./calendar";
 import { seasonSchema, SEASON_ROUNDS } from "./season-schema";
 
 const catalog = {
@@ -30,6 +31,12 @@ describe("Primeira temporada", () => {
     expect(pairings.size).toBe(380);
     for (const { home, away } of matches) expect(pairings.has(`${away.id}:${home.id}`)).toBe(true);
     for (const club of catalog.clubs) expect(matches.filter(({ home }) => home.id === club.id)).toHaveLength(19);
+  });
+
+  it("mantém o calendário histórico de 2026 e data as edições futuras", () => {
+    expect(roundDate(2026, 0)).toBe("2026-02-01");
+    expect(roundDate(2026, 37)).toBe("2026-10-18");
+    expect(roundDate(2027, 0)).toBe("2027-02-07");
   });
 
   it("valida participantes e registra uma preparação por rodada", () => {

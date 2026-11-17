@@ -1,6 +1,7 @@
 import { averageRating, type AthleteDraft } from "@/domain/athlete/athlete";
 import type { ContractOffer } from "./contract";
-import { LEAGUE_SIZE, SEASON_ROUNDS, seasonActionSchema, seasonSchema, type Season, type SeasonAction, type SeasonClub, type Training } from "./season-schema";
+import { buildCalendar, FIRST_SEASON_YEAR, roundDate, type Fixture } from "./calendar";
+import { SEASON_ROUNDS, seasonActionSchema, seasonSchema, type Season, type SeasonAction, type SeasonClub, type Training } from "./season-schema";
 
 export type SeasonCatalog = { worldVersion: string; clubs: SeasonClub[] };
 export type SeasonProfile = {
@@ -9,13 +10,11 @@ export type SeasonProfile = {
   contract: ContractOffer;
 };
 
-type Fixture = { home: SeasonClub; away: SeasonClub };
 type Match = Fixture & { homeGoals: number; awayGoals: number };
 type Preparation = { fatigue: number; xp: number };
 type Appearance = { minutes: number; goals: number; assists: number; saves: number; cleanSheet: boolean; rating: number | null };
 
-const startTime = Date.UTC(2026, 1, 1);
-const week = 7 * 24 * 60 * 60 * 1000;
+export { buildCalendar } from "./calendar";
 
 function hash(value: string): number {
   let result = 2166136261;
@@ -59,20 +58,6 @@ export function applySeasonAction(season: Season, input: SeasonAction): { ok: tr
   }
   if (season.preparation !== null) return { ok: false, message: "A preparação desta rodada já foi registrada." };
   return { ok: true, season: { ...season, preparation: action.data.training } };
-}
-
-export function buildCalendar(clubs: SeasonClub[]) {
-  const rotation = [...clubs];
-  const firstHalf = Array.from({ length: LEAGUE_SIZE - 1 }, (_, round) => {
-    const matches = Array.from({ length: LEAGUE_SIZE / 2 }, (_, index) => {
-      const a = rotation[index];
-      const b = rotation[rotation.length - 1 - index];
-      return (index === 0 ? round : index) % 2 === 0 ? { home: a, away: b } : { home: b, away: a };
-    });
-    rotation.splice(1, 0, rotation.pop()!);
-    return matches;
-  });
-  return [...firstHalf, ...firstHalf.map((matches) => matches.map(({ home, away }) => ({ home: away, away: home })))];
 }
 
 function prepare(current: Preparation, training: Training | null): Preparation {
@@ -160,7 +145,7 @@ export function readSeason(season: Season) {
   const calendar = buildCalendar(season.clubs);
   const rounds = calendar.map((fixtures, index) => {
     const fixture = fixtures.find(({ home, away }) => home.id === player.clubId || away.id === player.clubId)!;
-    const scheduled = { number: index + 1, date: new Date(startTime + index * week).toISOString().slice(0, 10), fixture };
+    const scheduled = { number: index + 1, date: roundDate(FIRST_SEASON_YEAR, index), competition: "Série A", fixture };
     if (index >= season.rounds.length) return { ...scheduled, played: null };
 
     const preparation = season.rounds[index];

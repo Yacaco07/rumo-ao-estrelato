@@ -32,7 +32,10 @@ describe("Temporada na interface", () => {
     }, player);
 
     const view = renderSeason();
-    await user.click(await screen.findByRole("button", { name: /Treino técnico/ }));
+    const commitments = await screen.findByRole("region", { name: "Próximos compromissos" });
+    expect(within(commitments).getAllByRole("listitem")).toHaveLength(3);
+    expect(within(commitments).getByText(/Série A · Rodada 1 · .*Palmeiras/)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Treino técnico/ }));
     await screen.findByRole("status");
     expect((await athleteRepository.read())?.season?.preparation).toBe("technical");
     expect(screen.queryByRole("button", { name: /Treino físico/ })).not.toBeInTheDocument();
