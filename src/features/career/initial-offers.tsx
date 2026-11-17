@@ -40,7 +40,7 @@ export function InitialOffers({ catalog }: { catalog: OfferCatalog }) {
     {loading ? <p className="loading-line" role="status">Buscando seu perfil salvo…</p>
       : error ? <p>Recarregue seu perfil para consultar as propostas.</p>
       : contract ? <section className="panel contract-panel" aria-labelledby="signed-club">
-        <p role="status" className="notice notice-success">Contrato assinado e salvo neste navegador.</p>
+        <p role="status" className="notice notice-success">{saved.market?.freeAgent ? "Contrato encerrado · agente livre." : "Contrato assinado e salvo neste navegador."}</p>
         <h2 id="signed-club">{contract.clubName}</h2>
         <p>{saved.athlete.name} · {getPosition(saved.athlete.position).label}</p>
         <ContractTerms terms={contract} />

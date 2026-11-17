@@ -1,6 +1,7 @@
 import type { SavedAthlete } from "@/domain/athlete/athlete";
 import { addDays, DAYS_PER_WEEK, FIRST_SEASON_YEAR, roundDate } from "./calendar";
 import { effectiveContract, emptyMarket, marketAfterRound, settleMarket, useMarket, type MarketCareer } from "./market";
+import { switchRegistration } from "./registration";
 import { nextTrainingPlan, withTrainingPlan } from "./training";
 import { applySeasonAction, createSeason, readSeason } from "./season";
 import { SEASON_ROUNDS, seasonActionSchema, type Season, type SeasonAction } from "./season-schema";
@@ -65,10 +66,12 @@ export function applyCareerAction(
       startingTrust: previous.trust,
       startingSuspension: previous.health.suspension,
     };
+    if (market.freeAgent) current = switchRegistration(current, { ...contract, inactive: true });
     return true;
   }
 
   if (parsed.data.type === "train") {
+    settle(careerDate(current));
     if (current.rounds.length === SEASON_ROUNDS && !rollSeason()) return { ok: false, message: "A próxima temporada não pôde ser montada." };
     if (parsed.data.training !== "recovery" && readSeason(current).health.injury > 0) {
       return { ok: false, message: "Durante a lesão, escolha recuperação." };

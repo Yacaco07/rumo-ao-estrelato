@@ -109,7 +109,7 @@ export function readSeason(season: Season) {
     if (trainingPlan && preparation) practice = gainPractice(trainingPlan, practice, focus, TRAINING_EFFECT[preparation].practice);
     progress = prepare(progress, preparation);
     const detailed = season.detailedFrom !== undefined && index >= season.detailedFrom;
-    const absence: Absence | undefined = injury > 0 ? "injured" : suspension > 0 ? "suspended" : undefined;
+    const absence: Absence | undefined = registration.inactive ? "free-agent" : injury > 0 ? "injured" : suspension > 0 ? "suspended" : undefined;
     const attributes = detailed && trainingPlan ? developedAttributes(trainingPlan, practice) : {};
     const selection = coaching ? selectAthlete({ trust, role: registration.role, fatigue: progress.fatigue, debut: index === 0, absence }) : undefined;
     const results = fixtures.map((game) => simulateMatch(game, { ...player, ...registration }, progress, index, season.seed,
@@ -173,7 +173,7 @@ export function readSeason(season: Season) {
     trust,
     selection: selectAthlete({
       trust, role: registration.role, fatigue: progress.fatigue, debut: season.rounds.length === 0,
-      absence: injury > 0 ? "injured" : suspension > 0 ? "suspended" : undefined,
+      absence: registration.inactive ? "free-agent" : injury > 0 ? "injured" : suspension > 0 ? "suspended" : undefined,
     }),
     practice,
     xp: progress.xp,

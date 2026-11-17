@@ -59,6 +59,7 @@ export const seasonSchema = z.object({
     fromRound: z.number().int().min(0).max(SEASON_ROUNDS),
     clubId: z.string(),
     role: contractRoleSchema,
+    inactive: z.literal(true).optional(),
   }).strict()).max(SEASON_ROUNDS + 1).optional(),
   coachTalkRounds: z.array(z.number().int().min(0).max(SEASON_ROUNDS)).max(SEASON_ROUNDS + 1).optional(),
   startingTrust: z.number().int().min(24).max(100).optional(),

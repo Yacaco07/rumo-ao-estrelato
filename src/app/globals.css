@@ -461,3 +461,7 @@ fieldset { padding: 0; margin: 0; border: none; }
 .market-offers { margin-block: 12px; }
 .market-offers .offer-card h4 { font-weight: 650; }
 .market-offers .inline-actions { gap: 7px; }
+
+.market-counter { display: grid; gap: 8px; margin-top: 8px; }
+.market-counter label { display: grid; gap: 4px; font-size: 12px; }
+.market-counter input, .market-counter select { width: 100%; min-height: 35px; border: 1px solid var(--line); border-radius: 4px; padding: 5px; }

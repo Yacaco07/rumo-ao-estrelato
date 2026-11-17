@@ -5,7 +5,7 @@ import type { Season, SeasonClub, TrainingPlan } from "./season-schema";
 
 type Preparation = { fatigue: number; xp: number };
 type Match = Fixture & { homeGoals: number; awayGoals: number };
-export type Absence = "injured" | "suspended";
+export type Absence = "injured" | "suspended" | "free-agent";
 export type MatchEvent = {
   minute: number;
   clubId: string;

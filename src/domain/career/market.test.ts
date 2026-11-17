@@ -44,6 +44,47 @@ describe("Mercado durante a carreira", () => {
     expect(moved.market.moves).toHaveLength(1);
   });
 
+  it("negocia as duas partes, diminui a paciência e grava os termos aceitos", () => {
+    const requested = advance(initial, { type: "market", action: { kind: "request", request: "transfer" } });
+    const state = advance(requested, { type: "advance", until: "week" });
+    const offer = state.market.offers[1];
+    const negotiated = advance(state, { type: "market", action: {
+      kind: "counter", offerId: offer.id, fee: offer.minimumFee, salary: offer.terms.monthlySalary + 200,
+      months: 36, role: "crucial",
+    } });
+    expect(negotiated.market.offers[1]).toMatchObject({ patience: 2, fee: offer.minimumFee, terms: { months: 36, role: "crucial" } });
+    const signed = advance(negotiated, { type: "market", action: { kind: "accept", offerId: offer.id } });
+    expect(signed.contract).toMatchObject({ clubId: offer.terms.clubId, role: "crucial", months: 36 });
+    expect(signed.market.moves[0].fee).toBe(offer.minimumFee);
+    let impatient = state;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      impatient = advance(impatient, { type: "market", action: {
+        kind: "counter", offerId: offer.id, fee: 40_000_000, salary: 100_000, months: 36, role: "crucial",
+      } });
+    }
+    expect(impatient.market.offers[1]).toMatchObject({ patience: 0, status: "rejected" });
+  });
+
+  it("permite renovação e impede escalação quando o vínculo termina", () => {
+    const starting = {
+      ...initial,
+      contract: { ...profile.contract, months: 12 as const },
+      season: { ...season, date: "2026-11-01", year: 2027 },
+    };
+    const proposed = advance(starting, { type: "market", action: { kind: "renew" } });
+    const offer = proposed.market.offers.find(({ kind }) => kind === "renewal")!;
+    const renewed = advance(proposed, { type: "market", action: { kind: "accept", offerId: offer.id } });
+    expect(renewed.market.contractEnd).toBe("2028-11-01");
+    const ended = advance(starting, { type: "advance", until: "next" });
+    expect(ended.market.freeAgent).toBe(true);
+    expect(readSeason(ended.season).last?.played?.appearance).toMatchObject({ minutes: 0, absence: "free-agent" });
+    const freeOffer = ended.market.offers.find(({ status }) => status === "open")!;
+    expect(freeOffer.fee).toBe(0);
+    const hired = advance(ended, { type: "market", action: { kind: "accept", offerId: freeOffer.id } });
+    expect(hired.market.freeAgent).toBeUndefined();
+    expect(registrationAt(hired.season, hired.season.rounds.length).inactive).toBeFalsy();
+  });
+
   it("inscreve atleta emprestado e devolve ao clube de origem no prazo", () => {
     const requested = advance(initial, { type: "market", action: { kind: "request", request: "loan" } });
     const played = advance(requested, { type: "advance", until: "week" });

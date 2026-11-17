@@ -86,7 +86,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
 
   return <>
     <div className="page-heading">
-      <div><p className="eyebrow">SÉRIE A · TEMPORADA SIMULADA {seasonYear(season)}</p><h1>{currentClub}<span className="lime-text">.</span></h1><p>{saved.athlete.name} · {season.rounds.length} de {SEASON_ROUNDS} rodadas disputadas</p><p>Data da carreira <time dateTime={date}>{formatDate(date)}</time></p></div>
+      <div><p className="eyebrow">SÉRIE A · TEMPORADA SIMULADA {seasonYear(season)}</p><h1>{saved.market?.freeAgent ? "Agente livre" : currentClub}<span className="lime-text">.</span></h1><p>{saved.athlete.name} · {season.rounds.length} de {SEASON_ROUNDS} rodadas disputadas</p><p>Data da carreira <time dateTime={date}>{formatDate(date)}</time></p></div>
       <Link href="/propostas" className="button button-outline">Meu contrato<Icon name="right" size={17} /></Link>
     </div>
     {failure && <div className="notice notice-error" role="alert">
@@ -177,7 +177,8 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
       {lastMatch.appearance.minutes > 0 ? <p>{lastMatch.appearance.minutes} min · {SELECTION_LABELS[lastMatch.appearance.lineup]} · Nota {formatRating(lastMatch.appearance.rating)} · {
         isKeeper ? `${lastMatch.appearance.saves} defesa(s)` : `${lastMatch.appearance.goals} gol(s) · ${lastMatch.appearance.assists} assistência(s)`
       }</p> : <p>{lastMatch.appearance.absence === "injured" ? "Você estava lesionado."
-        : lastMatch.appearance.absence === "suspended" ? "Você cumpriu suspensão." : lastMatch.appearance.lineup === "unavailable" ? "Você ficou fora da convocação." : "Você ficou no banco nesta partida."}</p>}
+        : lastMatch.appearance.absence === "suspended" ? "Você cumpriu suspensão."
+        : lastMatch.appearance.absence === "free-agent" ? "Você estava sem clube." : lastMatch.appearance.lineup === "unavailable" ? "Você ficou fora da convocação." : "Você ficou no banco nesta partida."}</p>}
       <details className="season-details" open>
         <summary>Linha do tempo da partida</summary>
         {lastMatch.events.length ? <ol>{lastMatch.events.map((event, index) => {

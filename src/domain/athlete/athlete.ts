@@ -48,7 +48,9 @@ export const savedAthleteSchema = z.object({
     "O histórico exige temporadas concluídas.",
   ).optional(),
 }).strict().superRefine((save, ctx) => {
-  if (save.season && registrationAt(save.season, save.season.rounds.length).clubId !== (save.market?.loan?.clubId ?? save.contract?.clubId)) {
+  const registration = save.season ? registrationAt(save.season, save.season.rounds.length) : null;
+  if (registration && (registration.clubId !== (save.market?.loan?.clubId ?? save.contract?.clubId) ||
+    Boolean(registration.inactive) !== Boolean(save.market?.freeAgent))) {
     ctx.addIssue({ code: "custom", path: ["season"], message: "O clube contratado deve participar da temporada." });
   }
   if (save.contract && save.status !== "ready") {
