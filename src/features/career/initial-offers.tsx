@@ -44,7 +44,7 @@ export function InitialOffers({ catalog }: { catalog: OfferCatalog }) {
         <h2 id="signed-club">{contract.clubName}</h2>
         <p>{saved.athlete.name} · {getPosition(saved.athlete.position).label}</p>
         <ContractTerms terms={contract} />
-        <Link href="/" className="button button-dark">Ir para a central<Icon name="right" size={17} /></Link>
+        <Link href="/temporada" className="button button-dark">{saved.season ? "Continuar temporada" : "Entrar na temporada"}<Icon name="right" size={17} /></Link>
       </section>
       : result.status === "profile-required" ? <section className="panel offer-empty">
         <h2>Conclua seu perfil</h2>

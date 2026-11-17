@@ -1,5 +1,6 @@
 import { openDB } from "idb";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { CURRENT_WORLD } from "@/data/world/current-world";
 import { createEmptyDraft } from "@/domain/athlete/athlete";
 import { createAthleteRepository } from "./athlete-repository";
 
@@ -84,6 +85,30 @@ describe("Persistência IndexedDB", () => {
       await expect(repository.signContract(offer, signed)).rejects.toMatchObject({ code: "locked" });
       await expect(repository.save(athlete.athlete, "ready", signed.revision)).rejects.toMatchObject({ code: "locked" });
       expect(await anotherTab.read()).toEqual(signed);
+    } finally {
+      await anotherTab.close();
+    }
+  });
+
+  it("avança uma única rodada quando duas abas usam a mesma revisão", async () => {
+    const athlete = await repository.save(
+      { ...createEmptyDraft(), name: "Alex", allocation: { shooting: 10 } }, "ready", null,
+    );
+    const signed = await repository.signContract({
+      clubId: "br-remo", clubName: "Remo", catalogVersion: CURRENT_WORLD.version,
+      monthlySalary: 4000, months: 24, role: "rotation",
+    }, athlete);
+    const catalog = { worldVersion: CURRENT_WORLD.version, clubs: CURRENT_WORLD.clubs.map(({ id, name }) => ({ id, name })) };
+    const anotherTab = createAthleteRepository(databaseName);
+
+    try {
+      const outcomes = await Promise.allSettled([
+        repository.playSeason({ type: "play" }, catalog, signed),
+        anotherTab.playSeason({ type: "play" }, catalog, signed),
+      ]);
+      expect(outcomes.filter(({ status }) => status === "fulfilled")).toHaveLength(1);
+      expect(outcomes.find(({ status }) => status === "rejected")).toMatchObject({ reason: { code: "conflict" } });
+      expect((await repository.read())?.season?.rounds).toEqual([null]);
     } finally {
       await anotherTab.close();
     }

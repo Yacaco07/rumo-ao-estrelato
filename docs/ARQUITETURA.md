@@ -82,3 +82,7 @@ A interface apresenta o alcance e as notas de curadoria e permite filtrar posiç
 O domínio em `src/domain/career/` gera as ofertas iniciais e avalia contrapropostas. A rota recebe um resumo agregado dos clubes. A negociação pendente fica na tela e a assinatura grava o vínculo no registro de perfil pela mesma transação com controle de revisão.
 
 O campo opcional `contract` admite perfis salvos antes da assinatura e mantém a estrutura do banco na versão 1. A assinatura exige perfil concluído, compara a revisão e a data de criação e grava os termos e a versão do catálogo. Um contrato impede a edição do perfil ou uma segunda assinatura. A exclusão explícita do perfil elimina também o vínculo.
+
+## Etapa 04 — Primeira temporada
+
+O registro opcional `season` reaproveita a transação e a revisão do perfil. Ele congela versão das regras, participantes, parâmetros do atleta e semente, além de registrar preparação e avanço de rodada. A tabela, as partidas e os totais do atleta são derivados deterministicamente de um único registro. Mudanças de balanceamento que afetem esses resultados exigem nova versão das regras.

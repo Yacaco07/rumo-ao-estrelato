@@ -95,3 +95,9 @@ Um perfil concluído pode gerar cinco propostas simuladas com base nas relaçõe
 ## Etapa 03B — Primeiro contrato
 
 A conclusão do atleta abre as cinco propostas automaticamente. O jogador escolhe o clube, pode negociar salário e duração e confirma a assinatura com os termos revisados. A central mostra o clube contratado e recupera o vínculo ao reabrir o jogo. Calendário, treinos e estreia constituem o próximo marco.
+
+## Etapa 04 — Primeira temporada
+
+O jogador usa o primeiro contrato para disputar a Série A simulada, da estreia à última rodada. O calendário semanal, a preparação, as partidas, a classificação e os números do atleta fazem parte da versão. Consulte [as regras da temporada](ETAPA_04_TEMPORADA.md).
+
+A próxima sequência começa pela virada de temporada e pelo histórico. Depois vêm contrato em andamento, renovação, transferências, empréstimos e evolução do mundo. A ampliação começa pela Série B para integrar acesso e descenso, seguida pelas demais ligas e competições após verificação dos dados. Seleções, premiações e balanço de carreiras longas têm marcos próprios.

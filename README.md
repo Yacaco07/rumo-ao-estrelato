@@ -1,6 +1,6 @@
 # RUMO AO ESTRELATO
 
-Simulador de carreira de jogador de futebol para navegador. **Versão 0.4.0 com propostas automáticas, negociação e assinatura do primeiro contrato simulado.**
+Simulador de carreira de jogador de futebol para navegador. **Versão 0.5.0 com primeira temporada jogável da Série A, da estreia à rodada 38.**
 
 Repositório oficial e exclusivo: <https://github.com/Yacaco07/rumo-ao-estrelato> · branch `main`.
 
@@ -43,7 +43,9 @@ O projeto ainda não tem hospedagem configurada. GitHub Pages não executa o ser
 - Ao concluir o perfil, a tela `/propostas` abre automaticamente com cinco clubes. Cada oferta mostra concorrência no setor, salário, duração e papel simulados.
 - Escolha uma oferta, negocie salário e duração, revise os termos e confirme a assinatura. O primeiro contrato é salvo no IndexedDB e o clube aparece na central do atleta.
 
-A carreira inicial chega ao primeiro contrato. As propostas são simuladas com base nas relações publicadas e nas posições documentadas. Escudos, partidas, calendários, transferências e temporadas continuam planejados. O escopo total tem 14 ligas, sem estaduais brasileiros. Dados desconhecidos não são preenchidos com estimativas.
+- Temporada de 38 rodadas em `/temporada`, com treinos, simulação das partidas, classificação, estatísticas do atleta e salvamento.
+
+A carreira jogável cobre a primeira temporada. Escudos, temporadas seguintes, transferências e grandes competições continuam planejados. O escopo total tem 14 ligas, sem estaduais brasileiros. Dados desconhecidos não são preenchidos com estimativas.
 
 Há um slot local. O perfil fica associado ao endereço, navegador e dispositivo usados. Limpar os dados do site remove o save. Exportação, sincronização e migrações de carreiras serão implementadas antes de saves longos. As alterações são salvas pelos botões; não há salvamento automático silencioso.
 
@@ -58,7 +60,7 @@ npm run build
 
 Ou `npm run check` para as quatro verificações em sequência. `npm run test:watch` acompanha os testes durante o desenvolvimento. O workflow em `.github/workflows/ci.yml` executa instalação reproduzível e verificações em pushes e pull requests para `main`.
 
-Os testes cobrem criação, abertura automática das ofertas, contrapropostas, assinatura, reabertura e concorrência entre abas, além da validação dos dados e do salvamento. IndexedDB é testado com `fake-indexeddb`; isso não equivale a um teste de navegador real. Consulte os resultados e limites em [ETAPA_03_PROPOSTAS.md](docs/ETAPA_03_PROPOSTAS.md).
+Os testes cobrem criação, abertura automática das ofertas, contrapropostas, assinatura, reabertura e concorrência entre abas, além da validação dos dados e do salvamento. IndexedDB é testado com `fake-indexeddb`; isso não equivale a um teste de navegador real. Consulte os testes da temporada em [ETAPA_04_TEMPORADA.md](docs/ETAPA_04_TEMPORADA.md).
 
 ## Documentação e arquivos
 
@@ -75,8 +77,9 @@ Os testes cobrem criação, abertura automática das ofertas, contrapropostas, a
 | [docs/ETAPA_02B_ELENCOS.md](docs/ETAPA_02B_ELENCOS.md) | Plano da ampliação do catálogo |
 | [docs/VALIDACAO_ETAPA_02B.md](docs/VALIDACAO_ETAPA_02B.md) | Verificações da versão 0.2.2 |
 | [docs/ETAPA_03_PROPOSTAS.md](docs/ETAPA_03_PROPOSTAS.md) | Regras das propostas simuladas, escopo e verificações |
-| `src/app/` | Rotas `/`, `/atleta`, `/propostas`, `/universo`, `/projeto`, layout e CSS |
-| `src/domain/career/`, `src/features/career/` | Seleção determinística, negociação e termos do primeiro contrato |
+| [docs/ETAPA_04_TEMPORADA.md](docs/ETAPA_04_TEMPORADA.md) | Calendário, simulação, progressão e salvamento da temporada |
+| `src/app/` | Rotas `/`, `/atleta`, `/propostas`, `/temporada`, `/universo`, `/projeto`, layout e CSS |
+| `src/domain/career/`, `src/features/career/` | Propostas, primeiro contrato e motor da temporada |
 | `src/domain/athlete/` | Schemas e regras puras de atleta |
 | `src/features/athlete/` | Criador, central e contexto do perfil |
 | `src/infrastructure/storage/` | Adaptador transacional de IndexedDB e testes |
@@ -90,7 +93,7 @@ Stack: Next.js, React, TypeScript, Tailwind CSS, Zod, Vitest e IndexedDB via `id
 
 ## Próximo marco
 
-Preparar o calendário do primeiro clube, os treinos e a primeira partida simulada. A pesquisa de inscrições e das demais ligas continua em etapas próprias, com fontes e datas registradas.
+Implementar a virada de temporada, o histórico anual e a evolução do contrato. A pesquisa de inscrições e das demais ligas continua em etapas próprias, com fontes e datas registradas.
 
 Os termos de licença do código do projeto ainda dependem de decisão do titular. Nenhum direito de terceiros sobre marcas, dados ou imagens é presumido.
 

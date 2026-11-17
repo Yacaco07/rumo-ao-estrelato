@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const CONTRACT_MONTHS = [12, 24, 36] as const;
 export const SALARY_STEP = 100;
-const roleSchema = z.enum(["development", "rotation"]);
+export const contractRoleSchema = z.enum(["development", "rotation"]);
 
-export const CONTRACT_ROLE_LABELS: Record<z.infer<typeof roleSchema>, string> = {
+export const CONTRACT_ROLE_LABELS: Record<z.infer<typeof contractRoleSchema>, string> = {
   development: "Desenvolvimento",
   rotation: "Rotação",
 };
@@ -18,7 +18,7 @@ export const contractOfferSchema = negotiableTermsSchema.extend({
   clubId: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   clubName: z.string().trim().min(1).max(600),
   catalogVersion: z.string().trim().min(1).max(60),
-  role: roleSchema,
+  role: contractRoleSchema,
 });
 
 export const signedContractSchema = contractOfferSchema.extend({ signedAt: z.iso.datetime() });

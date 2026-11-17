@@ -1,6 +1,8 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 import { athleteDraftSchema, completeAthleteSchema, savedAthleteSchema, type AthleteDraft, type SavedAthlete } from "@/domain/athlete/athlete";
 
+import { applySeasonAction, createSeason, type SeasonCatalog } from "@/domain/career/season";
+import type { SeasonAction } from "@/domain/career/season-schema";
 import { contractOfferSchema, type ContractOffer } from "@/domain/career/contract";
 
 interface AthleteDatabase extends DBSchema {
@@ -101,6 +103,21 @@ export function createAthleteRepository(databaseName = "rumo-ao-estrelato") {
           revision: current.revision + 1,
           updatedAt: now,
           contract: { ...validated.data, signedAt: now },
+        });
+      });
+    },
+    async playSeason(action: SeasonAction, catalog: SeasonCatalog, expected: Pick<SavedAthlete, "revision" | "createdAt">): Promise<SavedAthlete> {
+      return update(expected.revision, (current) => {
+        if (!current?.contract || current.createdAt !== expected.createdAt) {
+          throw new SaveError("conflict", "Recarregue o perfil e confira seu contrato antes de jogar.");
+        }
+        const season = current.season ?? createSeason({ ...current, contract: current.contract }, catalog);
+        if (!season) throw new SaveError("invalid", "O catálogo disponível não permite montar esta temporada.");
+        const result = applySeasonAction(season, action);
+        if (!result.ok) throw new SaveError("invalid", result.message);
+
+        return savedAthleteSchema.parse({
+          ...current, season: result.season, revision: current.revision + 1, updatedAt: new Date().toISOString(),
         });
       });
     },

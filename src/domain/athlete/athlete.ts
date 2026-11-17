@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { seasonSchema } from "@/domain/career/season-schema";
 import { signedContractSchema } from "@/domain/career/contract";
 import { ATTRIBUTE_KEYS, EXTRA_POINTS, getPosition, POSITION_KEYS, type AttributeKey, type Position } from "./positions";
 
@@ -38,7 +39,11 @@ export const savedAthleteSchema = z.object({
   updatedAt: z.iso.datetime(),
   athlete: athleteDraftSchema,
   contract: signedContractSchema.optional(),
+  season: seasonSchema.optional(),
 }).strict().superRefine((save, ctx) => {
+  if (save.season && save.season.player.clubId !== save.contract?.clubId) {
+    ctx.addIssue({ code: "custom", path: ["season"], message: "O clube contratado deve participar da temporada." });
+  }
   if (save.contract && save.status !== "ready") {
     ctx.addIssue({ code: "custom", path: ["contract"], message: "O primeiro contrato requer um perfil concluído." });
   }
