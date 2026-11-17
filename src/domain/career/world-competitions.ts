@@ -18,7 +18,7 @@ const DOMESTIC = [
 
 export function worldCompetitions(season: Season, date: string): CompetitionView[] {
   if (!season.brazilB) return [];
-  const context = { year: season.year ?? 2026, asOf: date, seed: season.seed };
+  const context = { year: season.year ?? 2026, asOf: date, seed: season.seed, strengths: season.clubStrengths };
   const byLeague = new Map(COMPETITION_MEMBERS.map(({ id, clubs }) => [id, clubs]));
   byLeague.set("br-a", season.clubs);
   byLeague.set("br-b", season.brazilB);

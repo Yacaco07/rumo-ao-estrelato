@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { SEASON_ROUNDS, seasonSchema } from "@/domain/career/season-schema";
+import { dynamicWorldSchema } from "@/domain/career/dynamic-world-schema";
 import { nationalCareerSchema } from "@/domain/career/national-schema";
 import { marketSchema } from "@/domain/career/market-schema";
 import { registrationAt } from "@/domain/career/registration";
@@ -44,6 +45,7 @@ export const savedAthleteSchema = z.object({
   contract: signedContractSchema.optional(),
   season: seasonSchema.optional(),
   market: marketSchema.optional(),
+  world: dynamicWorldSchema.optional(),
   retiredOn: z.iso.date().optional(),
   nationalityCareer: nationalCareerSchema.optional(),
   pastSeasons: z.array(seasonSchema).max(75).refine(

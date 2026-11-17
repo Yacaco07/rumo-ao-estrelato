@@ -39,6 +39,7 @@ export const seasonSchema = z.object({
   worldVersion: z.string().min(1).max(60),
   clubs: z.array(clubSchema).length(LEAGUE_SIZE),
   brazilB: z.array(clubSchema).length(LEAGUE_SIZE).optional(),
+  clubStrengths: z.record(z.string(), z.number().int().min(1).max(99)).optional(),
   qualifications: z.record(z.string(), z.array(z.string()).max(60)).optional(),
   player: z.object({
     clubId: z.string(),

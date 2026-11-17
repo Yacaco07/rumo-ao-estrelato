@@ -4,6 +4,8 @@ import { effectiveContract, emptyMarket, marketAfterRound, settleMarket, useMark
 import { upcomingWorldMatches, worldQualifiers } from "./world-competitions";
 import { brazilPlayoffEnd, brazilPlayoffs } from "./brazil-playoffs";
 import { registrationAt, switchRegistration } from "./registration";
+import { advanceDynamicWorld, createDynamicWorld, worldStrengths } from "./dynamic-world";
+import type { DynamicWorld } from "./dynamic-world-schema";
 import { careerAge, RETIREMENT_MAXIMUM, RETIREMENT_MINIMUM } from "./history";
 import { advanceNationalCareer, nationalEligible, nextNationalMatch } from "./national";
 import type { NationalCareer } from "./national-schema";
@@ -44,7 +46,7 @@ export function latestAdvanceDate(season: Season): string {
 }
 
 export type ClockResult =
-  | ({ ok: true; pastSeasons: Season[]; nationalityCareer: NationalCareer; retiredOn?: string } & MarketCareer)
+  | ({ ok: true; pastSeasons: Season[]; nationalityCareer: NationalCareer; world?: DynamicWorld; retiredOn?: string } & MarketCareer)
   | { ok: false; message: string };
 
 export function applyCareerAction(
@@ -64,6 +66,7 @@ export function applyCareerAction(
   let national = profile.nationalityCareer ?? { matches: [], trophies: [] };
   let nationalDate = careerDate(current);
   let retiredOn: string | undefined;
+  let world = profile.world ?? (current.brazilB ? createDynamicWorld(current) : undefined);
 
   function processNational(until: string) {
     if (current.brazilB) {
@@ -75,7 +78,7 @@ export function applyCareerAction(
   function settle(date: string) {
     ({ season: current, contract, market } = settleMarket({ season: current, contract, market }, date));
   }
-  function success(): ClockResult { return { ok: true, season: current, pastSeasons, market, contract, nationalityCareer: national, ...(retiredOn ? { retiredOn } : {}) }; }
+  function success(): ClockResult { return { ok: true, season: current, pastSeasons, market, contract, nationalityCareer: national, ...(world ? { world } : {}), ...(retiredOn ? { retiredOn } : {}) }; }
 
   if (parsed.data.type === "retire") {
     if (careerAge(profile.athlete, current) < RETIREMENT_MINIMUM) {
@@ -87,7 +90,7 @@ export function applyCareerAction(
   if (parsed.data.type === "market") {
     const result = useMarket({ season: current, market, contract }, parsed.data.action, careerDate(current));
     if (!result.ok) return result;
-    return { ok: true, ...result.career, pastSeasons, nationalityCareer: national };
+    return { ok: true, ...result.career, pastSeasons, nationalityCareer: national, ...(world ? { world } : {}) };
   }
 
   function rollSeason() {
@@ -114,12 +117,14 @@ export function applyCareerAction(
       "br-a": previous.divisions.first.map(({ club }) => club.id),
       "br-b": previous.divisions.second.map(({ club }) => club.id),
     } : undefined;
+    if (world) world = advanceDynamicWorld(world, seasonYear(upcoming));
     pastSeasons = [...pastSeasons, current];
     current = {
       ...upcoming,
       date: careerDate(current),
       trainingPlan: nextTrainingPlan(current.trainingPlan!, previous.practice),
       ...(qualifications ? { qualifications } : {}),
+      ...(world ? { clubStrengths: worldStrengths(world) } : {}),
       detailedFrom: 0,
       coachingFrom: 0,
       startingTrust: previous.trust,

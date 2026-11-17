@@ -111,6 +111,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
     <div className="page-heading">
       <div><p className="eyebrow">{league.toLocaleUpperCase("pt-BR")} · TEMPORADA SIMULADA {seasonYear(season)}</p><h1>{saved.market?.freeAgent ? "Agente livre" : currentClub}<span className="lime-text">.</span></h1><p>{saved.athlete.name} · {season.rounds.length} de {SEASON_ROUNDS} rodadas disputadas</p><p>Data da carreira <time dateTime={date}>{formatDate(date)}</time></p></div>
       <div className="inline-actions">
+        <Link href="/mundo" className="button button-outline">Mundo da carreira</Link>
         <Link href="/carreira" className="button button-outline">Histórico</Link>
         <Link href="/competicoes" className="button button-outline">Competições<Icon name="right" size={17} /></Link>
         <Link href="/propostas" className="button button-outline">Meu contrato<Icon name="right" size={17} /></Link>

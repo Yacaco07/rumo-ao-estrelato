@@ -27,6 +27,7 @@ type MatchContext = {
   attributes: TrainingPlan["attributes"];
   absence?: Absence;
   selection?: Selection;
+  strengths?: Season["clubStrengths"];
 };
 
 export function simulateMatch(
@@ -75,7 +76,10 @@ export function simulateMatch(
     const withAthlete = club.id === clubId;
     const againstKeeper = hasAthlete && isKeeper && !withAthlete && minutes > 0;
     const teamShape = ((hash(`${seed}:${club.id}`) % 13) - 6) * 0.005;
-    const chance = 0.225 + teamShape + (atHome ? 0.035 : 0);
+    const opponent = atHome ? fixture.away : fixture.home;
+    const strengths = detailed?.strengths;
+    const strength = ((strengths?.[club.id] ?? 58) - (strengths?.[opponent.id] ?? 58)) / 500;
+    const chance = 0.225 + teamShape + (atHome ? 0.035 : 0) + strength;
     const relevant = isKeeper ? skills?.reflexes : position === "CB" || position === "DM" ? skills?.defending
       : position === "CM" || position === "AM" ? skills?.passing : skills?.shooting;
     const athleteImpact = ((relevant ?? overall) - prepared.fatigue / 4) / 1800;

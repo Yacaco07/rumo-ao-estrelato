@@ -116,7 +116,7 @@ export function readSeason(season: Season) {
     const attributes = detailed && trainingPlan ? developedAttributes(trainingPlan, practice) : {};
     const selection = coaching ? selectAthlete({ trust, role: registration.role, fatigue: progress.fatigue, debut: index === 0, absence }) : undefined;
     const results = fixtures.map((game) => simulateMatch(game, { ...player, ...registration }, progress, index, season.seed,
-      detailed ? { attributes, absence, selection } : undefined));
+      detailed ? { attributes, absence, selection, strengths: season.clubStrengths } : undefined));
     for (const { match } of results) {
       recordResult(table, match.home, match.homeGoals, match.awayGoals);
       recordResult(table, match.away, match.awayGoals, match.homeGoals);

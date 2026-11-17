@@ -122,7 +122,8 @@ export function createAthleteRepository(databaseName = "rumo-ao-estrelato") {
 
         return savedAthleteSchema.parse({
           ...current, season: result.season, pastSeasons: result.pastSeasons, market: result.market, contract: result.contract, nationalityCareer: result.nationalityCareer,
-          ...(result.retiredOn ? { retiredOn: result.retiredOn } : {}), revision: current.revision + 1, updatedAt: new Date().toISOString(),
+          ...(result.retiredOn ? { retiredOn: result.retiredOn } : {}),
+          ...(result.world ? { world: result.world } : {}), revision: current.revision + 1, updatedAt: new Date().toISOString(),
         });
       });
     },

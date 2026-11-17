@@ -51,7 +51,7 @@ export function orderedClubs(clubs: SeasonClub[], preferred: string[], seed: num
     || hash(`${seed}:${a.id}`) - hash(`${seed}:${b.id}`) || a.id.localeCompare(b.id, "en"));
 }
 
-export type CompetitionContext = { year: number; asOf: string; seed: number };
+export type CompetitionContext = { year: number; asOf: string; seed: number; strengths?: Record<string, number> };
 
 export function scheduledMatch(
   context: CompetitionContext, competition: string, fixture: Fixture, week: number, weekday: number, phase: string,
@@ -63,9 +63,10 @@ export function scheduledMatch(
   if (date > context.asOf) return { ...base, score: null };
 
   const random = randomSource(hash(`${context.seed}:${id}`));
+  const difference = ((context.strengths?.[fixture.home.id] ?? 58) - (context.strengths?.[fixture.away.id] ?? 58)) / 500;
   function goals(home: boolean) {
     let number = 0;
-    for (let index = 0; index < 8; index++) if (random() < (home ? 0.23 : 0.19)) number++;
+    for (let index = 0; index < 8; index++) if (random() < (home ? 0.23 + difference : 0.19 - difference)) number++;
     return number;
   }
   const score = { homeGoals: goals(true), awayGoals: goals(false) };
