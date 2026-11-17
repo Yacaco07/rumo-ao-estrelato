@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { InitialOffer } from "@/domain/career/initial-offers";
-import { CONTRACT_MONTHS, CONTRACT_ROLE_LABELS, contractRoleSchema, negotiateContract, SALARY_STEP, type ContractOffer } from "@/domain/career/contract";
+import { CONTRACT_MONTHS, CONTRACT_ROLE_LABELS, CONTRACT_ROLES, negotiateContract, SALARY_STEP, type ContractOffer } from "@/domain/career/contract";
 import { ContractTerms } from "./contract-terms";
 
 export function ContractNegotiation({
@@ -87,7 +87,7 @@ export function ContractNegotiation({
         <div className="field">
           <label htmlFor="contract-role">Papel no elenco</label>
           <select id="contract-role" value={role} onChange={(event) => setRole(event.target.value as ContractOffer["role"])}>
-            {contractRoleSchema.options.map((option) => <option key={option} value={option}>{CONTRACT_ROLE_LABELS[option]}</option>)}
+            {CONTRACT_ROLES.map((option) => <option key={option} value={option}>{CONTRACT_ROLE_LABELS[option]}</option>)}
           </select>
         </div>
       </div>

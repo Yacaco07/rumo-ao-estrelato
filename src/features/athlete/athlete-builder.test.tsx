@@ -58,7 +58,7 @@ describe("Fluxo de criação", () => {
     const selectedClub = within(cards[1]).getByRole("heading").textContent;
     await user.click(within(cards[1]).getByRole("button", { name: /Selecionar proposta de/ }));
     let negotiation = screen.getByRole("region", { name: `Negociação com ${selectedClub}` });
-    await user.selectOptions(within(negotiation).getByLabelText("Papel no elenco"), "development");
+    await user.selectOptions(within(negotiation).getByLabelText("Papel no elenco"), "alternative");
     expect(within(negotiation).getByRole("button", { name: "Enviar contraproposta" })).toBeEnabled();
     expect(within(negotiation).getByRole("button", { name: "Revisar assinatura" })).toBeDisabled();
 
@@ -75,26 +75,26 @@ describe("Fluxo de criação", () => {
     await user.click(within(cards[1]).getByRole("button", { name: /Selecionar proposta de/ }));
     negotiation = screen.getByRole("region", { name: `Negociação com ${selectedClub}` });
     expect(within(negotiation).getByLabelText("Duração solicitada")).toHaveValue("36");
-    expect(within(negotiation).getByLabelText("Papel no elenco")).toHaveValue("development");
+    expect(within(negotiation).getByLabelText("Papel no elenco")).toHaveValue("alternative");
     await user.click(within(negotiation).getByRole("button", { name: "Revisar assinatura" }));
-    expect(within(negotiation).getByText("Desenvolvimento")).toBeInTheDocument();
+    expect(within(negotiation).getByText("Alternativo")).toBeInTheDocument();
     expect((await athleteRepository.read())?.contract).toBeUndefined();
     await user.click(within(negotiation).getByRole("button", { name: "Confirmar assinatura" }));
     await screen.findByText("Contrato assinado e salvo neste navegador.");
 
     const signed = await athleteRepository.read();
-    expect(signed?.contract).toMatchObject({ clubName: selectedClub, monthlySalary: agreedSalary, months: 36, role: "development" });
+    expect(signed?.contract).toMatchObject({ clubName: selectedClub, monthlySalary: agreedSalary, months: 36, role: "alternative" });
     view.unmount();
     const reopened = render(<AthleteProvider><OffersPage /></AthleteProvider>);
     expect(await screen.findByRole("heading", { name: selectedClub ?? "" })).toBeInTheDocument();
     expect(screen.getByText("36 meses")).toBeInTheDocument();
-    expect(screen.getByText("Desenvolvimento")).toBeInTheDocument();
+    expect(screen.getByText("Alternativo")).toBeInTheDocument();
     expect(screen.queryByRole("list", { name: "Cinco propostas simuladas" })).not.toBeInTheDocument();
 
     reopened.rerender(<AthleteProvider><SeasonPage /></AthleteProvider>);
     await user.click(await screen.findByRole("button", { name: "Próxima semana" }));
     await screen.findByRole("region", { name: "Resultado da rodada 1" });
-    expect((await athleteRepository.read())?.season?.player.role).toBe("development");
+    expect((await athleteRepository.read())?.season?.player.role).toBe("alternative");
   });
 
   it("assina a oferta original sem exigir contraproposta", async () => {

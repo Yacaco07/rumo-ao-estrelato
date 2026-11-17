@@ -18,3 +18,5 @@ A versão 0.4.0 abre `/propostas` automaticamente após salvar o perfil concluí
 ## Verificação
 
 `npm run check` valida a base, a tipagem, os testes e o build. Os 109 testes abrangem seleção e ordenação, abertura automática, contrapropostas, assinatura original ou negociada, reabertura e proteção contra dois primeiros contratos simultâneos. Os fluxos automatizados de interface usam DOM e IndexedDB simulados. A revisão visual em navegador real permanece pendente.
+
+O sistema de titularidade usa os papéis **Crucial**, **Rotação** e **Alternativo**. Contratos anteriores de Desenvolvimento são lidos como Alternativo considerando os identificadores já gravados.

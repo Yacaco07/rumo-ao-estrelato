@@ -83,7 +83,7 @@ export function createInitialOffers(saved: SavedAthlete | null, catalog: OfferCa
       monthlySalary: 3200 + (OFFER_COUNT - 1 - index) * 300,
       sectorPlayers,
       months: age <= 20 ? 24 : 12,
-      role: index < 2 ? "rotation" : "development",
+      role: index === 0 ? "crucial" : index < 3 ? "rotation" : "alternative",
     })),
   };
 }

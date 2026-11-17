@@ -35,6 +35,7 @@ export function applyCareerAction(
   let pastSeasons = profile.pastSeasons ?? [];
   let current = withTrainingPlan(season, profile.athlete);
   if (current.detailedFrom === undefined) current = { ...current, detailedFrom: current.rounds.length };
+  if (current.coachingFrom === undefined) current = { ...current, coachingFrom: current.rounds.length };
 
   function rollSeason() {
     const upcoming = createSeason(profile, { worldVersion: current.worldVersion, clubs: current.clubs }, seasonYear(current) + 1);
@@ -46,6 +47,8 @@ export function applyCareerAction(
       date: careerDate(current),
       trainingPlan: nextTrainingPlan(current.trainingPlan!, previous.practice),
       detailedFrom: 0,
+      coachingFrom: 0,
+      startingTrust: previous.trust,
       startingSuspension: previous.health.suspension,
     };
     return true;

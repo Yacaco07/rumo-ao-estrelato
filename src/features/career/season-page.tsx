@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
 import { useAthlete } from "@/features/athlete/athlete-provider";
+import { SELECTION_LABELS } from "@/domain/career/coach";
+import { CONTRACT_ROLE_LABELS } from "@/domain/career/contract";
 import type { MatchEvent } from "@/domain/career/match";
 import { addDays } from "@/domain/career/calendar";
 import { careerDate, latestAdvanceDate, seasonYear } from "@/domain/career/career-clock";
@@ -67,7 +69,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
   if (!storedSeason) return <div className="notice notice-error" role="alert">O catálogo ainda não permite montar a temporada do seu clube.</div>;
 
   const season = withTrainingPlan(storedSeason, saved.athlete);
-  const { rounds, next, last, standings, stats, overall, fatigue, condition, xp, attributes, potential, health } = readSeason(season);
+  const { rounds, next, last, standings, stats, overall, fatigue, condition, xp, attributes, potential, health, trust, selection } = readSeason(season);
   const allowedAttributes = getPosition(season.player.position).attributes;
   const trainingFocus = focus && allowedAttributes.includes(focus) ? focus : defaultTrainingFocus(season.player.position);
   const lastMatch = last?.played;
@@ -91,6 +93,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
         {next ? <>
           <p className="eyebrow">RODADA {next.number} · {formatDate(next.date)}</p>
           <h2 id="next-fixture">{next.fixture.home.name} × {next.fixture.away.name}</h2>
+          <p>Provável escalação: <strong>{SELECTION_LABELS[selection]}</strong> · Papel {CONTRACT_ROLE_LABELS[season.player.role]}</p>
           {health.injury > 0 && <p role="status">Lesionado · fora por {health.injury} jogo(s).</p>}
           {health.suspension > 0 && <p role="status">Suspenso · {health.suspension} jogo(s) a cumprir.</p>}
           <div className="season-preparation">
@@ -144,6 +147,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
           <div><dt>Geral</dt><dd>{overall}</dd></div><div><dt>Potencial</dt><dd>{potential}</dd></div>
           <div><dt>Condição</dt><dd>{condition}%</dd></div><div><dt>Fadiga</dt><dd>{fatigue}%</dd></div>
           <div><dt>Experiência</dt><dd>{xp} XP</dd></div><div><dt>Jogos</dt><dd>{stats.appearances}</dd></div>
+          <div><dt>Confiança do técnico</dt><dd>{trust}%</dd></div><div><dt>Como titular</dt><dd>{stats.starts}</dd></div>
           <div><dt>Minutos</dt><dd>{stats.minutes}</dd></div><div><dt>Nota média</dt><dd>{formatRating(stats.average)}</dd></div>
           <div><dt>Amarelos</dt><dd>{stats.yellowCards}</dd></div><div><dt>Vermelhos</dt><dd>{stats.redCards}</dd></div>
           {isKeeper ? <><div><dt>Defesas</dt><dd>{stats.saves}</dd></div><div><dt>Jogos sem sofrer gol</dt><dd>{stats.cleanSheets}</dd></div></>
@@ -165,10 +169,10 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
     {lastMatch && <section className="panel season-card season-section" aria-labelledby="last-result">
       <h2 id="last-result" ref={resultHeading} tabIndex={-1}>Resultado da rodada {last.number}</h2>
       <p className="season-score">{lastMatch.match.home.name} <strong>{lastMatch.match.homeGoals} × {lastMatch.match.awayGoals}</strong> {lastMatch.match.away.name}</p>
-      {lastMatch.appearance.minutes > 0 ? <p>{lastMatch.appearance.minutes} min · Nota {formatRating(lastMatch.appearance.rating)} · {
+      {lastMatch.appearance.minutes > 0 ? <p>{lastMatch.appearance.minutes} min · {SELECTION_LABELS[lastMatch.appearance.lineup]} · Nota {formatRating(lastMatch.appearance.rating)} · {
         isKeeper ? `${lastMatch.appearance.saves} defesa(s)` : `${lastMatch.appearance.goals} gol(s) · ${lastMatch.appearance.assists} assistência(s)`
       }</p> : <p>{lastMatch.appearance.absence === "injured" ? "Você estava lesionado."
-        : lastMatch.appearance.absence === "suspended" ? "Você cumpriu suspensão." : "Você ficou no banco nesta partida."}</p>}
+        : lastMatch.appearance.absence === "suspended" ? "Você cumpriu suspensão." : lastMatch.appearance.lineup === "unavailable" ? "Você ficou fora da convocação." : "Você ficou no banco nesta partida."}</p>}
       <details className="season-details" open>
         <summary>Linha do tempo da partida</summary>
         {lastMatch.events.length ? <ol>{lastMatch.events.map((event, index) => {

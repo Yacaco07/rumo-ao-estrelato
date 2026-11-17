@@ -1,6 +1,7 @@
 import { averageRating, type AthleteDraft } from "@/domain/athlete/athlete";
 import { getPosition } from "@/domain/athlete/positions";
 import { defaultTrainingFocus, developedAttributes, gainPractice, TRAINING_EFFECT, trainingPotential } from "./training";
+import { initialTrust, selectAthlete, trainingTrust, updateTrust } from "./coach";
 import { hash } from "./random";
 import { playerOverall, simulateMatch, type Absence } from "./match";
 import type { ContractOffer } from "./contract";
@@ -87,7 +88,8 @@ export function readSeason(season: Season) {
   let suspension = season.startingSuspension ?? 0;
   let injury = 0;
   let yellow = 0;
-  const stats = { appearances: 0, minutes: 0, goals: 0, assists: 0, saves: 0, cleanSheets: 0, totalRating: 0, yellowCards: 0, redCards: 0 };
+  let trust = season.startingTrust ?? initialTrust(player.role);
+  const stats = { starts: 0, appearances: 0, minutes: 0, goals: 0, assists: 0, saves: 0, cleanSheets: 0, totalRating: 0, yellowCards: 0, redCards: 0 };
   const calendar = buildCalendar(season.clubs);
   const rounds = calendar.map((fixtures, index) => {
     const fixture = fixtures.find(({ home, away }) => home.id === player.clubId || away.id === player.clubId)!;
@@ -95,14 +97,17 @@ export function readSeason(season: Season) {
     if (index >= season.rounds.length) return { ...scheduled, played: null };
 
     const preparation = season.rounds[index];
+    const coaching = season.coachingFrom !== undefined && index >= season.coachingFrom;
+    if (coaching) trust = updateTrust(trust + trainingTrust(preparation, progress.fatigue), null, 0);
     const focus = season.focuses?.[index] ?? roleFocus;
     if (trainingPlan && preparation) practice = gainPractice(trainingPlan, practice, focus, TRAINING_EFFECT[preparation].practice);
     progress = prepare(progress, preparation);
     const detailed = season.detailedFrom !== undefined && index >= season.detailedFrom;
     const absence: Absence | undefined = injury > 0 ? "injured" : suspension > 0 ? "suspended" : undefined;
     const attributes = detailed && trainingPlan ? developedAttributes(trainingPlan, practice) : {};
+    const selection = coaching ? selectAthlete({ trust, role: player.role, fatigue: progress.fatigue, debut: index === 0, absence }) : undefined;
     const results = fixtures.map((game) => simulateMatch(game, player, progress, index, season.seed,
-      detailed ? { attributes, absence } : undefined));
+      detailed ? { attributes, absence, selection } : undefined));
     for (const { match } of results) {
       recordResult(table, match.home, match.homeGoals, match.awayGoals);
       recordResult(table, match.away, match.awayGoals, match.homeGoals);
@@ -119,6 +124,8 @@ export function readSeason(season: Season) {
     stats.assists += appearance.assists;
     stats.saves += appearance.saves;
     stats.cleanSheets += Number(appearance.cleanSheet);
+    if (coaching) trust = updateTrust(trust, appearance.rating, appearance.red);
+    if (appearance.minutes > 0 && appearance.lineup === "starter") stats.starts++;
     if (appearance.rating !== null) {
       stats.appearances++;
       stats.totalRating += appearance.rating;
@@ -132,6 +139,7 @@ export function readSeason(season: Season) {
   });
 
   if (season.preparation !== null) {
+    if (season.coachingFrom !== undefined) trust = updateTrust(trust + trainingTrust(season.preparation, progress.fatigue), null, 0);
     if (trainingPlan) practice = gainPractice(trainingPlan, practice, season.selectedFocus ?? roleFocus, TRAINING_EFFECT[season.preparation].practice);
     progress = prepare(progress, season.preparation);
   }
@@ -153,6 +161,11 @@ export function readSeason(season: Season) {
     attributes,
     potential: trainingPlan ? trainingPotential(trainingPlan) : undefined,
     health: { injury, suspension },
+    trust,
+    selection: selectAthlete({
+      trust, role: player.role, fatigue: progress.fatigue, debut: season.rounds.length === 0,
+      absence: injury > 0 ? "injured" : suspension > 0 ? "suspended" : undefined,
+    }),
     practice,
     xp: progress.xp,
   };

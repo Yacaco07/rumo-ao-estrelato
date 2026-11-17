@@ -1,10 +1,10 @@
 import type { Fixture } from "./calendar";
+import type { Selection } from "./coach";
 import { hash, randomSource } from "./random";
 import type { Season, SeasonClub, TrainingPlan } from "./season-schema";
 
 type Preparation = { fatigue: number; xp: number };
 type Match = Fixture & { homeGoals: number; awayGoals: number };
-type Lineup = "starter" | "bench" | "unavailable";
 export type Absence = "injured" | "suspended";
 export type MatchEvent = {
   minute: number;
@@ -15,7 +15,7 @@ export type MatchEvent = {
 };
 type Appearance = {
   minutes: number; goals: number; assists: number; saves: number; cleanSheet: boolean;
-  rating: number | null; lineup: Lineup; absence?: Absence; injuryGames: number;
+  rating: number | null; lineup: Selection; absence?: Absence; injuryGames: number;
   yellow: number; red: number;
 };
 
@@ -26,6 +26,7 @@ export function playerOverall(initialOverall: number, xp: number) {
 type MatchContext = {
   attributes: TrainingPlan["attributes"];
   absence?: Absence;
+  selection?: Selection;
 };
 
 export function simulateMatch(
@@ -40,9 +41,11 @@ export function simulateMatch(
   const hasAthlete = managesHome || managesAway;
   const overall = playerOverall(initialOverall, prepared.xp);
   const skills = detailed?.attributes;
-  const starter = roundIndex === 0 || role === "rotation" || overall >= 60 || prepared.fatigue < 45 && roundIndex % 3 === 0;
+  const legacyStarter = roundIndex === 0 || role === "rotation" || overall >= 60 || prepared.fatigue < 45 && roundIndex % 3 === 0;
+  const selection = detailed?.selection ?? (legacyStarter ? "starter" : "bench");
+  const starter = selection === "starter";
   const absence = hasAthlete ? detailed?.absence : undefined;
-  const plannedMinutes = !hasAthlete || absence ? 0 : isKeeper ? starter ? 90 : 0
+  const plannedMinutes = !hasAthlete || absence || selection === "unavailable" ? 0 : isKeeper ? starter ? 90 : 0
     : Math.max(15, Math.min(90, (starter ? 81 : 46) + Math.floor(random() * 12) - Math.floor(prepared.fatigue / 3)));
   const enters = starter ? 0 : 90 - plannedMinutes;
   const expectedExit = enters + plannedMinutes;
@@ -55,7 +58,7 @@ export function simulateMatch(
   const incidentMinute = injuryGames || red || yellow ? enters + 1 + Math.floor(incident() * plannedMinutes) : null;
   const leaves = incidentMinute !== null && (injuryGames || red) ? incidentMinute : expectedExit;
   const minutes = leaves - enters;
-  const lineup: Lineup = absence ? "unavailable" : starter && minutes > 0 ? "starter" : "bench";
+  const lineup: Selection = absence ? "unavailable" : selection;
   const events: MatchEvent[] = [];
   if (minutes > 0 && enters > 0) events.push({ kind: "sub-in", minute: enters, clubId, player: true });
   if (incidentMinute !== null) {

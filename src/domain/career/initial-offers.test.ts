@@ -62,8 +62,8 @@ describe("Propostas iniciais", () => {
     const reordered = { ...catalog, clubs: [...catalog.clubs].reverse() };
     expect(createInitialOffers(athlete, reordered)).toEqual(result);
     expect(result).toMatchObject({ offers: [
-      { months: 12, role: "rotation" }, { months: 12, role: "rotation" },
-      { months: 12, role: "development" }, { months: 12, role: "development" }, { months: 12, role: "development" },
+      { months: 12, role: "crucial" }, { months: 12, role: "rotation" },
+      { months: 12, role: "rotation" }, { months: 12, role: "alternative" }, { months: 12, role: "alternative" },
     ] });
   });
 

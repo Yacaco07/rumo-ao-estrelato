@@ -2,10 +2,13 @@ import { z } from "zod";
 
 export const CONTRACT_MONTHS = [12, 24, 36] as const;
 export const SALARY_STEP = 100;
-export const contractRoleSchema = z.enum(["development", "rotation"]);
+export const CONTRACT_ROLES = ["crucial", "rotation", "alternative"] as const;
+export const contractRoleSchema = z.enum([...CONTRACT_ROLES, "development"]);
 
 export const CONTRACT_ROLE_LABELS: Record<z.infer<typeof contractRoleSchema>, string> = {
-  development: "Desenvolvimento",
+  crucial: "Crucial",
+  alternative: "Alternativo",
+  development: "Alternativo",
   rotation: "Rotação",
 };
 

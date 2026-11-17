@@ -53,6 +53,8 @@ export const seasonSchema = z.object({
   focuses: z.array(attributeSchema.nullable()).max(SEASON_ROUNDS).optional(),
   selectedFocus: attributeSchema.optional(),
   detailedFrom: z.number().int().min(0).max(SEASON_ROUNDS).optional(),
+  coachingFrom: z.number().int().min(0).max(SEASON_ROUNDS).optional(),
+  startingTrust: z.number().int().min(24).max(100).optional(),
   startingSuspension: z.number().int().min(0).max(3).optional(),
 }).strict().refine(({ clubs, player }) => clubs.some(({ id }) => id === player.clubId), "O clube do atleta deve participar da temporada.")
   .refine(({ rounds, preparation }) => rounds.length < SEASON_ROUNDS || preparation === null, "A temporada já terminou.")
