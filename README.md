@@ -1,6 +1,6 @@
 # RUMO AO ESTRELATO
 
-Simulador de carreira de jogador de futebol para navegador. **Versão 0.5.1 com escolha do papel no elenco e primeira temporada jogável da Série A.**
+Simulador de carreira de jogador de futebol para navegador. **Versão 0.9.0. A carreira atravessa temporadas, contratações, competições e aposentadoria.**
 
 Repositório oficial e exclusivo: <https://github.com/Yacaco07/rumo-ao-estrelato> · branch `main`.
 
@@ -26,7 +26,7 @@ npm run build
 npm start
 ```
 
-O projeto ainda não tem hospedagem configurada. GitHub Pages não executa o servidor Next.js com esta configuração; uma eventual publicação será tratada em uma etapa própria.
+Para publicar o frontend estático no GitHub Pages, selecione GitHub Actions como origem na configuração Pages deste repositório e execute o workflow **Verificar aplicação**. O workflow testa a exportação com a mesma base de caminhos usada na publicação. O servidor Next.js continua disponível para Codespaces e desenvolvimento local.
 
 ## O que funciona
 
@@ -38,16 +38,20 @@ O projeto ainda não tem hospedagem configurada. GitHub Pages não executa o ser
 - Reabertura do perfil, validação de saves, proteção contra sobrescrita por outra aba e exclusão com confirmação.
 - Catálogo pesquisado da Série A 2026: 20 clubes e 659 jogadores, com 111 fontes consultadas até 17/11/2026.
 - Busca de clubes sem distinção de acentos, filtro por cobertura e posição, seleção de clube e fontes com datas.
-- Cobertura explícita: 18 relações de clubes e duas listas da CBF, que podem incluir base. Os 659 jogadores têm posição e camisa documentada. Em 13 casos, a numeração vem de uma partida identificada e a atribuição atual ainda está a confirmar. As outras 13 ligas seguem planejadas.
+- Cobertura explícita: 18 relações de clubes e duas listas da CBF, que podem incluir base. Os 659 jogadores têm posição e camisa documentada. Em 13 casos, a numeração vem de uma partida identificada e a atribuição atual ainda está a confirmar. As outras 13 ligas têm participantes documentados e elencos a pesquisar.
 - Snapshot versionado validado por Zod, com referências por campo e verificador de importação.
 - Ao concluir o perfil, a tela `/propostas` abre automaticamente com cinco clubes. Cada oferta mostra concorrência no setor, salário, duração e papel simulados.
 - Escolha uma oferta, negocie salário, duração e papel no elenco, revise os termos e confirme a assinatura. O primeiro contrato é salvo no IndexedDB e o clube aparece na central do atleta.
 
-- Temporada de 38 rodadas em `/temporada`, com treinos, simulação das partidas, classificação, estatísticas do atleta e salvamento.
+- Temporadas em `/temporada` com calendário, avanço semanal ou por data, treino individual, escalação, lances, lesões, suspensões e classificação.
+- Mercado com insatisfação, transferências, empréstimos, contrapropostas e renovações. Os elencos brasileiros mudam junto com a inscrição do atleta.
+- `/competicoes` mostra 14 ligas, copas, campeões e seleções. O acesso e o descenso brasileiros alteram os participantes.
+- `/carreira` reúne histórico, recordes, premiações, aposentadoria e exportação e importação de saves.
+- `/mundo` acompanha elencos, técnicos, contratações e aposentadorias que acontecem ao longo das edições.
 
-A carreira jogável cobre a primeira temporada. Escudos, temporadas seguintes, transferências e grandes competições continuam planejados. O escopo total tem 14 ligas, sem estaduais brasileiros. Dados desconhecidos não são preenchidos com estimativas.
+A carreira individual e o mercado do atleta operam no Brasil. Ligas estrangeiras e copas têm calendário, resultados e fases simulados por clube. As fontes e os recortes de regulamento estão em [COMPETICOES.md](docs/COMPETICOES.md). Escudos dependem de autorização por ativo.
 
-Há um slot local. O perfil fica associado ao endereço, navegador e dispositivo usados. Limpar os dados do site remove o save. Exportação, sincronização e migrações de carreiras serão implementadas antes de saves longos. As alterações são salvas pelos botões; não há salvamento automático silencioso.
+O jogo salva um perfil por origem, navegador e dispositivo. Exporte um arquivo pela página **História da carreira** para levar o progresso a outro navegador ou endereço.
 
 ## Verificar
 
@@ -60,7 +64,7 @@ npm run build
 
 Ou `npm run check` para as quatro verificações em sequência. `npm run test:watch` acompanha os testes durante o desenvolvimento. O workflow em `.github/workflows/ci.yml` executa instalação reproduzível e verificações em pushes e pull requests para `main`.
 
-Os testes cobrem criação, abertura automática das ofertas, contrapropostas, assinatura, reabertura e concorrência entre abas, além da validação dos dados e do salvamento. IndexedDB é testado com `fake-indexeddb`; isso não equivale a um teste de navegador real. Consulte os testes da temporada em [ETAPA_04_TEMPORADA.md](docs/ETAPA_04_TEMPORADA.md).
+Os testes cobrem criação, abertura automática das ofertas, contrapropostas, assinatura, reabertura e concorrência entre abas, além da validação dos dados e do salvamento. Os testes automatizados de domínio e interface usam Vitest. O workflow também executa um cenário de ponta a ponta no Chromium, com janelas de computador e celular, salvamento IndexedDB, reabertura e backup.
 
 ## Documentação e arquivos
 
@@ -91,9 +95,12 @@ Os testes cobrem criação, abertura automática das ofertas, contrapropostas, a
 
 Stack: Next.js, React, TypeScript, Tailwind CSS, Zod, Vitest e IndexedDB via `idb`. As versões estão fixadas no lockfile. Zustand será adotado somente quando o compartilhamento de estado da carreira justificar sua inclusão.
 
-## Próximo marco
+## Relatórios de desenvolvimento
 
-Implementar a virada de temporada, o histórico anual e a evolução do contrato. A pesquisa de inscrições e das demais ligas continua em etapas próprias, com fontes e datas registradas.
+- [Mercado e contratos](docs/MERCADO_DA_CARREIRA.md)
+- [Competições e seleções](docs/COMPETICOES.md)
+- [Histórico e arquivo da carreira](docs/HISTORICO_DA_CARREIRA.md)
+- [Mundo dinâmico](docs/MUNDO_DINAMICO.md)
 
 Os termos de licença do código do projeto ainda dependem de decisão do titular. Nenhum direito de terceiros sobre marcas, dados ou imagens é presumido.
 
