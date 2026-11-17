@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
 import { useAthlete } from "@/features/athlete/athlete-provider";
+import { addDays } from "@/domain/career/calendar";
+import { careerDate, latestAdvanceDate, seasonYear } from "@/domain/career/career-clock";
 import { createSeason, readSeason, type SeasonCatalog } from "@/domain/career/season";
 import { SEASON_ROUNDS, TRAINING_LABELS, TRAINING_TYPES, type SeasonAction } from "@/domain/career/season-schema";
 
@@ -19,6 +21,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
   const { saved, loading, error, playSeason } = useAthlete();
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState("");
+  const [targetDate, setTargetDate] = useState("");
   const resultHeading = useRef<HTMLHeadingElement>(null);
   const [focusResult, setFocusResult] = useState(false);
 
@@ -34,7 +37,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
     setFailure("");
     try {
       await playSeason(command, catalog);
-      if (command.type === "play") setFocusResult(true);
+      if (command.type !== "train") { setFocusResult(true); setTargetDate(""); }
     } catch (error) {
       setFailure(error instanceof Error ? error.message : "Não foi possível salvar a temporada.");
     } finally {
@@ -55,12 +58,15 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
 
   const { rounds, next, last, standings, stats, overall, fatigue, xp } = readSeason(season);
   const lastMatch = last?.played;
+  const date = careerDate(season);
+  const previous = saved.pastSeasons?.at(-1);
+  const previousEdition = previous ? readSeason(previous) : null;
   const { clubId, position } = season.player;
   const isKeeper = position === "GK";
 
   return <>
     <div className="page-heading">
-      <div><p className="eyebrow">SÉRIE A · TEMPORADA SIMULADA</p><h1>{saved.contract.clubName}<span className="lime-text">.</span></h1><p>{saved.athlete.name} · {season.rounds.length} de {SEASON_ROUNDS} rodadas disputadas</p></div>
+      <div><p className="eyebrow">SÉRIE A · TEMPORADA SIMULADA {seasonYear(season)}</p><h1>{saved.contract.clubName}<span className="lime-text">.</span></h1><p>{saved.athlete.name} · {season.rounds.length} de {SEASON_ROUNDS} rodadas disputadas</p><p>Data da carreira <time dateTime={date}>{formatDate(date)}</time></p></div>
       <Link href="/propostas" className="button button-outline">Meu contrato<Icon name="right" size={17} /></Link>
     </div>
     {failure && <div className="notice notice-error" role="alert">
@@ -82,13 +88,30 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
                 </button>)}
               </div>}
           </div>
-          <button className="button button-lime" disabled={busy} onClick={() => void action({ type: "play" })}>
-            {busy ? "Salvando…" : next.number === 1 ? "Jogar estreia" : "Jogar rodada"}<Icon name="right" size={17} />
-          </button>
+          <div className="inline-actions">
+            <button className="button button-lime" disabled={busy} onClick={() => void action({ type: "advance", until: "week" })}>
+              {busy ? "Salvando…" : "Próxima semana"}<Icon name="right" size={17} />
+            </button>
+            <button className="button button-outline" disabled={busy} onClick={() => void action({ type: "advance", until: "next" })}>
+              Até o próximo jogo
+            </button>
+          </div>
+          <form className="calendar-advance" onSubmit={(e) => {
+            e.preventDefault();
+            void action({ type: "advance", until: targetDate });
+          }}>
+            <div className="field">
+              <label htmlFor="advance-date">Avançar até a data</label>
+              <input id="advance-date" type="date" min={addDays(date, 1)} max={latestAdvanceDate(season)} required value={targetDate}
+                onChange={(e) => setTargetDate(e.target.value)} />
+            </div>
+            <button className="button button-outline" disabled={busy || !targetDate}>Avançar</button>
+          </form>
         </> : <>
           <h2 id="next-fixture">Temporada encerrada</h2>
           <p>Campeão simulado: <strong>{standings[0].club.name}</strong></p>
           <p>{saved.contract.clubName} terminou em {standings.findIndex(({ club }) => club.id === clubId) + 1}º lugar.</p>
+          <button className="button button-lime" disabled={busy} onClick={() => void action({ type: "advance", until: "week" })}>Próxima semana</button>
         </>}
       </section>
       <section className="panel season-card" aria-labelledby="season-athlete">
@@ -102,6 +125,11 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
         </dl>
       </section>
     </div>
+    {(lastMatch || previousEdition) && <section className="panel season-card season-section" aria-labelledby="career-news">
+      <h2 id="career-news">Notícias da carreira</h2>
+      {lastMatch && <p>{lastMatch.match.home.name} {lastMatch.match.homeGoals} × {lastMatch.match.awayGoals} {lastMatch.match.away.name} pela rodada {last.number}.</p>}
+      {previousEdition && previous && <p>{previousEdition.standings[0].club.name} venceu a edição de {seasonYear(previous)}. A edição de {seasonYear(season)} está no calendário.</p>}
+    </section>}
     {lastMatch && <section className="panel season-card season-section" aria-labelledby="last-result">
       <h2 id="last-result" ref={resultHeading} tabIndex={-1}>Resultado da rodada {last.number}</h2>
       <p className="season-score">{lastMatch.match.home.name} <strong>{lastMatch.match.homeGoals} × {lastMatch.match.awayGoals}</strong> {lastMatch.match.away.name}</p>

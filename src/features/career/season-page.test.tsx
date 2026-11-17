@@ -39,7 +39,7 @@ describe("Temporada na interface", () => {
     await screen.findByRole("status");
     expect((await athleteRepository.read())?.season?.preparation).toBe("technical");
     expect(screen.queryByRole("button", { name: /Treino físico/ })).not.toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Jogar estreia" }));
+    await user.click(screen.getByRole("button", { name: "Próxima semana" }));
     const firstResult = await screen.findByRole("region", { name: "Resultado da rodada 1" });
     expect(within(firstResult).getByText(/90 min · Nota/)).toBeInTheDocument();
     expect((await athleteRepository.read())?.season?.rounds).toEqual(["technical"]);
@@ -48,7 +48,7 @@ describe("Temporada na interface", () => {
     view.unmount();
     renderSeason();
     expect(await screen.findByText("BH Gonçalves · 1 de 38 rodadas disputadas")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Jogar rodada" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Próxima semana" })).toBeEnabled();
     const updatedResult = screen.getByRole("region", { name: "Resultado da rodada 1" });
     expect(within(updatedResult).getByText(savedScore!, { selector: ".season-score strong" })).toBeInTheDocument();
     expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(21);

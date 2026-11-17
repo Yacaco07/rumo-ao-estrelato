@@ -1,7 +1,8 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 import { athleteDraftSchema, completeAthleteSchema, savedAthleteSchema, type AthleteDraft, type SavedAthlete } from "@/domain/athlete/athlete";
 
-import { applySeasonAction, createSeason, type SeasonCatalog } from "@/domain/career/season";
+import { applyCareerAction } from "@/domain/career/career-clock";
+import { createSeason, type SeasonCatalog } from "@/domain/career/season";
 import type { SeasonAction } from "@/domain/career/season-schema";
 import { contractOfferSchema, type ContractOffer } from "@/domain/career/contract";
 
@@ -113,11 +114,11 @@ export function createAthleteRepository(databaseName = "rumo-ao-estrelato") {
         }
         const season = current.season ?? createSeason({ ...current, contract: current.contract }, catalog);
         if (!season) throw new SaveError("invalid", "O catálogo disponível não permite montar esta temporada.");
-        const result = applySeasonAction(season, action);
+        const result = applyCareerAction({ ...current, contract: current.contract }, season, action);
         if (!result.ok) throw new SaveError("invalid", result.message);
 
         return savedAthleteSchema.parse({
-          ...current, season: result.season, revision: current.revision + 1, updatedAt: new Date().toISOString(),
+          ...current, season: result.season, pastSeasons: result.pastSeasons, revision: current.revision + 1, updatedAt: new Date().toISOString(),
         });
       });
     },

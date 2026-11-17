@@ -451,3 +451,6 @@ fieldset { padding: 0; margin: 0; border: none; }
 .season-table th, .season-table td { padding: 7px 9px; text-align: left; border-bottom: 1px solid var(--line); }
 .season-table tbody th { min-width: 110px; font-weight: 500; }
 .season-table tr.current { background: #eef6e3; }
+
+.calendar-advance { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-top: 14px; }
+.calendar-advance .field input { min-width: 155px; min-height: 42px; }

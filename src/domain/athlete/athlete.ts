@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { seasonSchema } from "@/domain/career/season-schema";
+import { SEASON_ROUNDS, seasonSchema } from "@/domain/career/season-schema";
 import { signedContractSchema } from "@/domain/career/contract";
 import { ATTRIBUTE_KEYS, EXTRA_POINTS, getPosition, POSITION_KEYS, type AttributeKey, type Position } from "./positions";
 
@@ -40,6 +40,10 @@ export const savedAthleteSchema = z.object({
   athlete: athleteDraftSchema,
   contract: signedContractSchema.optional(),
   season: seasonSchema.optional(),
+  pastSeasons: z.array(seasonSchema).max(75).refine(
+    (seasons) => seasons.every(({ rounds }) => rounds.length === SEASON_ROUNDS),
+    "O histórico exige temporadas concluídas.",
+  ).optional(),
 }).strict().superRefine((save, ctx) => {
   if (save.season && save.season.player.clubId !== save.contract?.clubId) {
     ctx.addIssue({ code: "custom", path: ["season"], message: "O clube contratado deve participar da temporada." });

@@ -22,6 +22,8 @@ const clubSchema = z.object({
 
 export const seasonSchema = z.object({
   rulesVersion: z.literal(1),
+  year: z.number().int().min(2026).max(2100).optional(),
+  date: z.iso.date().optional(),
   worldVersion: z.string().min(1).max(60),
   clubs: z.array(clubSchema).length(LEAGUE_SIZE).refine(
     (clubs) => new Set(clubs.map(({ id }) => id)).size === clubs.length,
@@ -45,6 +47,7 @@ export type SeasonClub = z.infer<typeof clubSchema>;
 export const seasonActionSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("train"), training: trainingSchema }).strict(),
   z.object({ type: z.literal("play") }).strict(),
+  z.object({ type: z.literal("advance"), until: z.union([z.literal("week"), z.literal("next"), z.iso.date()]) }).strict(),
 ]);
 
 export type SeasonAction = z.infer<typeof seasonActionSchema>;

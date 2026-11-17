@@ -92,7 +92,7 @@ describe("Fluxo de criação", () => {
     expect(screen.queryByRole("list", { name: "Cinco propostas simuladas" })).not.toBeInTheDocument();
 
     reopened.rerender(<AthleteProvider><SeasonPage /></AthleteProvider>);
-    await user.click(await screen.findByRole("button", { name: "Jogar estreia" }));
+    await user.click(await screen.findByRole("button", { name: "Próxima semana" }));
     await screen.findByRole("region", { name: "Resultado da rodada 1" });
     expect((await athleteRepository.read())?.season?.player.role).toBe("development");
   });

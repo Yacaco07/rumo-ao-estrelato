@@ -26,3 +26,9 @@ A versão 0.5.0 termina ao fim da primeira temporada. A próxima etapa é a vira
 ## Calendário da carreira
 
 O calendário completo guarda as 38 datas simuladas e mostra até três compromissos imediatos do clube, com competição, rodada e mando. A edição de 2026 mantém as datas dos saves anteriores. A listagem completa inclui os resultados já disputados.
+
+## Avanço do tempo
+
+**Próxima semana** avança sete dias simulados. Também é possível avançar ao próximo jogo ou informar uma data até um ano à frente. Todos os jogos devidos são computados em ordem e somente uma vez. O último resultado e o campeão da edição anterior aparecem nas notícias da carreira.
+
+A rodada final arquiva a edição e monta a seguinte na mesma transação. Durante a pausa entre edições, é possível avançar semanas sem gerar partidas. O histórico das edições completas permanece no save.

@@ -32,11 +32,15 @@ function randomSource(seed: number) {
   };
 }
 
-export function createSeason(profile: SeasonProfile, catalog: SeasonCatalog): Season | null {
+export function createSeason(profile: SeasonProfile, catalog: SeasonCatalog, year = FIRST_SEASON_YEAR): Season | null {
   const result = seasonSchema.safeParse({
     rulesVersion: 1,
+    year,
     ...catalog,
-    seed: hash(JSON.stringify([profile.createdAt, profile.athlete.name, profile.contract.clubId, catalog.worldVersion])),
+    seed: hash(JSON.stringify([
+      profile.createdAt, profile.athlete.name, profile.contract.clubId,
+      catalog.worldVersion, ...(year === FIRST_SEASON_YEAR ? [] : [year]),
+    ])),
     player: {
       clubId: profile.contract.clubId,
       role: profile.contract.role,
@@ -51,7 +55,7 @@ export function createSeason(profile: SeasonProfile, catalog: SeasonCatalog): Se
 
 export function applySeasonAction(season: Season, input: SeasonAction): { ok: true; season: Season } | { ok: false; message: string } {
   const action = seasonActionSchema.safeParse(input);
-  if (!action.success) return { ok: false, message: "Escolha uma ação válida." };
+  if (!action.success || action.data.type === "advance") return { ok: false, message: "Escolha uma ação válida." };
   if (season.rounds.length === SEASON_ROUNDS) return { ok: false, message: "A temporada já terminou." };
   if (action.data.type === "play") {
     return { ok: true, season: { ...season, rounds: [...season.rounds, season.preparation], preparation: null } };
@@ -145,7 +149,7 @@ export function readSeason(season: Season) {
   const calendar = buildCalendar(season.clubs);
   const rounds = calendar.map((fixtures, index) => {
     const fixture = fixtures.find(({ home, away }) => home.id === player.clubId || away.id === player.clubId)!;
-    const scheduled = { number: index + 1, date: roundDate(FIRST_SEASON_YEAR, index), competition: "Série A", fixture };
+    const scheduled = { number: index + 1, date: roundDate(season.year ?? FIRST_SEASON_YEAR, index), competition: "Série A", fixture };
     if (index >= season.rounds.length) return { ...scheduled, played: null };
 
     const preparation = season.rounds[index];
