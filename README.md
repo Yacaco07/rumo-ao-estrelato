@@ -1,6 +1,6 @@
 # RUMO AO ESTRELATO
 
-Simulador de carreira de jogador de futebol para navegador. **Versão 0.5.0 com primeira temporada jogável da Série A, da estreia à rodada 38.**
+Simulador de carreira de jogador de futebol para navegador. **Versão 0.5.1 com escolha do papel no elenco e primeira temporada jogável da Série A.**
 
 Repositório oficial e exclusivo: <https://github.com/Yacaco07/rumo-ao-estrelato> · branch `main`.
 
@@ -41,7 +41,7 @@ O projeto ainda não tem hospedagem configurada. GitHub Pages não executa o ser
 - Cobertura explícita: 18 relações de clubes e duas listas da CBF, que podem incluir base. Os 659 jogadores têm posição e camisa documentada. Em 13 casos, a numeração vem de uma partida identificada e a atribuição atual ainda está a confirmar. As outras 13 ligas seguem planejadas.
 - Snapshot versionado validado por Zod, com referências por campo e verificador de importação.
 - Ao concluir o perfil, a tela `/propostas` abre automaticamente com cinco clubes. Cada oferta mostra concorrência no setor, salário, duração e papel simulados.
-- Escolha uma oferta, negocie salário e duração, revise os termos e confirme a assinatura. O primeiro contrato é salvo no IndexedDB e o clube aparece na central do atleta.
+- Escolha uma oferta, negocie salário, duração e papel no elenco, revise os termos e confirme a assinatura. O primeiro contrato é salvo no IndexedDB e o clube aparece na central do atleta.
 
 - Temporada de 38 rodadas em `/temporada`, com treinos, simulação das partidas, classificação, estatísticas do atleta e salvamento.
 

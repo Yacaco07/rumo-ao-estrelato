@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { InitialOffer } from "@/domain/career/initial-offers";
-import { CONTRACT_MONTHS, negotiateContract, SALARY_STEP, type ContractOffer } from "@/domain/career/contract";
+import { CONTRACT_MONTHS, CONTRACT_ROLE_LABELS, contractRoleSchema, negotiateContract, SALARY_STEP, type ContractOffer } from "@/domain/career/contract";
 import { ContractTerms } from "./contract-terms";
 
 export function ContractNegotiation({
@@ -19,30 +19,33 @@ export function ContractNegotiation({
   const heading = useRef<HTMLHeadingElement>(null);
   const [salary, setSalary] = useState(String(terms.monthlySalary));
   const [months, setMonths] = useState(terms.months);
+  const [role, setRole] = useState(terms.role);
   const [feedback, setFeedback] = useState("");
   const [error, setError] = useState("");
   const [confirm, setConfirm] = useState(false);
-  const edited = Number(salary) !== terms.monthlySalary || months !== terms.months;
+  const edited = Number(salary) !== terms.monthlySalary || months !== terms.months || role !== terms.role;
 
   useEffect(() => { heading.current?.focus(); }, []);
 
   function submitCounteroffer(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const reply = negotiateContract(original, { monthlySalary: Number(salary), months });
+    const reply = negotiateContract(original, { monthlySalary: Number(salary), months, role });
     setError("");
     if (reply.status === "invalid") {
-      setError("Escolha um prazo válido e informe um salário em múltiplos de R$ 100.");
+      setError("Escolha um prazo e um papel válidos e informe um salário em múltiplos de R$ 100.");
       return;
     }
     if (reply.status === "rejected") {
       setFeedback("O clube recusou a contraproposta. Os termos disponíveis continuam abaixo.");
       setSalary(String(terms.monthlySalary));
       setMonths(terms.months);
+      setRole(terms.role);
       return;
     }
     onTerms(reply.terms);
     setSalary(String(reply.terms.monthlySalary));
     setMonths(reply.terms.months);
+    setRole(reply.terms.role);
     setFeedback(reply.status === "accepted" ? "O clube aceitou sua contraproposta." : "O clube retornou com novos termos.");
   }
 
@@ -79,6 +82,12 @@ export function ContractNegotiation({
           <label htmlFor="contract-months">Duração solicitada</label>
           <select id="contract-months" value={months} onChange={(event) => setMonths(Number(event.target.value) as ContractOffer["months"])}>
             {CONTRACT_MONTHS.map((option) => <option key={option} value={option}>{option} meses</option>)}
+          </select>
+        </div>
+        <div className="field">
+          <label htmlFor="contract-role">Papel no elenco</label>
+          <select id="contract-role" value={role} onChange={(event) => setRole(event.target.value as ContractOffer["role"])}>
+            {contractRoleSchema.options.map((option) => <option key={option} value={option}>{CONTRACT_ROLE_LABELS[option]}</option>)}
           </select>
         </div>
       </div>

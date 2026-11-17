@@ -17,9 +17,15 @@ describe("Contrapropostas", () => {
     });
   });
 
-  it("retorna novos termos dentro do orçamento simulado", () => {
-    expect(negotiateContract(original, { monthlySalary: 4700, months: 12 })).toEqual({
-      status: "countered", terms: { ...original, monthlySalary: 4400, months: 12 },
+  it("permite negociar somente o papel no elenco", () => {
+    expect(negotiateContract(original, { monthlySalary: 4000, months: 24, role: "development" })).toEqual({
+      status: "accepted", terms: { ...original, role: "development" },
+    });
+  });
+
+  it("retorna novos termos dentro do orçamento simulado e mantém o papel solicitado", () => {
+    expect(negotiateContract(original, { monthlySalary: 4700, months: 12, role: "development" })).toEqual({
+      status: "countered", terms: { ...original, monthlySalary: 4400, months: 12, role: "development" },
     });
   });
 
@@ -28,7 +34,7 @@ describe("Contrapropostas", () => {
     expect(original.monthlySalary).toBe(4000);
   });
 
-  it.each([{ monthlySalary: 4201, months: 24 }, { monthlySalary: 4200, months: 0 }])("rejeita termos inválidos", (request) => {
+  it.each([{ monthlySalary: 4201, months: 24 }, { monthlySalary: 4200, months: 0 }, { monthlySalary: 4200, months: 24, role: "invalid" }])("rejeita termos inválidos", (request) => {
     expect(negotiateContract(original, request)).toEqual({ status: "invalid" });
   });
 });

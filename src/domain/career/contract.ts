@@ -12,6 +12,7 @@ export const CONTRACT_ROLE_LABELS: Record<z.infer<typeof contractRoleSchema>, st
 const negotiableTermsSchema = z.object({
   monthlySalary: z.number().int().min(1000).max(100_000).multipleOf(SALARY_STEP),
   months: z.literal(CONTRACT_MONTHS),
+  role: contractRoleSchema.optional(),
 }).strict();
 
 export const contractOfferSchema = negotiableTermsSchema.extend({
@@ -30,10 +31,10 @@ export function negotiateContract(original: ContractOffer, proposal: unknown) {
   const request = negotiableTermsSchema.safeParse(proposal);
   if (!request.success) return { status: "invalid" } as const;
 
-  const { monthlySalary, months } = request.data;
+  const { monthlySalary, months, role = original.role } = request.data;
   if (monthlySalary > original.monthlySalary + 1000) return { status: "rejected" } as const;
 
-  const terms = { ...original, monthlySalary: Math.min(monthlySalary, original.monthlySalary + 400), months };
+  const terms = { ...original, monthlySalary: Math.min(monthlySalary, original.monthlySalary + 400), months, role };
   const status = terms.monthlySalary === monthlySalary ? "accepted" : "countered";
   return { status, terms } as const;
 }
