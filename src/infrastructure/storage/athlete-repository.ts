@@ -118,7 +118,7 @@ export function createAthleteRepository(databaseName = "rumo-ao-estrelato") {
         if (!result.ok) throw new SaveError("invalid", result.message);
 
         return savedAthleteSchema.parse({
-          ...current, season: result.season, pastSeasons: result.pastSeasons, revision: current.revision + 1, updatedAt: new Date().toISOString(),
+          ...current, season: result.season, pastSeasons: result.pastSeasons, market: result.market, contract: result.contract, revision: current.revision + 1, updatedAt: new Date().toISOString(),
         });
       });
     },

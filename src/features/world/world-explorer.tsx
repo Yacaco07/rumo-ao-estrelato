@@ -25,7 +25,9 @@ function SourceLink({ source }: { source: WorldSource }) {
   </div>;
 }
 
-export function WorldExplorer({ world }: { world: WorldSnapshot }) {
+type CareerPlayer = { clubId: string; name: string; position: string };
+
+export function WorldExplorer({ world, careerPlayer }: { world: WorldSnapshot; careerPlayer?: CareerPlayer }) {
   const coverage = getWorldCoverage(world);
   const [query, setQuery] = useState("");
   const [rosterFilter, setRosterFilter] = useState<RosterFilter>("all");
@@ -66,6 +68,7 @@ export function WorldExplorer({ world }: { world: WorldSnapshot }) {
         <section id="club-details" className={`panel club-detail ${selected ? "" : "no-selection"}`} aria-label="Detalhes do clube">
           {selected ? <>
             <header className="club-detail-header"><span className="eyebrow">{competition.name.toLocaleUpperCase("pt-BR")} · {competition.season}</span><h3>{selected.name}</h3><span className={`roster-coverage-tag ${selected.roster.status}`}><span className="status-dot" />{selected.roster.status === "listed" ? (competitionAthletes ? "Atletas listados pela CBF" : "Relação do clube consultada") : "Pesquisa do elenco pendente"}</span></header>
+            {careerPlayer?.clubId === selected.id && <div className="club-roster"><p><strong>{careerPlayer.name}</strong> · {careerPlayer.position} · Inscrito no elenco da carreira simulada.</p></div>}
             {selected.roster.status === "listed" ? <div className="club-roster">
               {competitionAthletes && <p className="roster-no-results">Esta lista da competição pode incluir atletas da base. Não representa um elenco principal completo. Posições e camisas não confirmadas permanecem desconhecidas.</p>}
               <div className="roster-heading"><div><h4>Jogadores listados</h4><p>{visiblePlayers.length} de {players.length} nomes na relação consultada</p></div><div className="roster-position-filter"><label htmlFor="player-position">Posição</label><select id="player-position" value={positionFilter} onChange={(event) => setPositionFilter(event.target.value as PositionGroup | "unknown" | "all")}><option value="all">Todas as posições</option>{positionGroups.map((group) => <option key={group} value={group}>{POSITION_GROUP_LABELS[group]}</option>)}<option value="unknown">Posição a confirmar</option></select></div></div>

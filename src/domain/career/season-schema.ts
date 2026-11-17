@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ATTRIBUTE_KEYS, getPosition, POSITION_KEYS } from "@/domain/athlete/positions";
+import { marketActionSchema } from "./market-schema";
 import { contractRoleSchema } from "./contract";
 
 export const LEAGUE_SIZE = 20;
@@ -54,11 +55,22 @@ export const seasonSchema = z.object({
   selectedFocus: attributeSchema.optional(),
   detailedFrom: z.number().int().min(0).max(SEASON_ROUNDS).optional(),
   coachingFrom: z.number().int().min(0).max(SEASON_ROUNDS).optional(),
+  registrations: z.array(z.object({
+    fromRound: z.number().int().min(0).max(SEASON_ROUNDS),
+    clubId: z.string(),
+    role: contractRoleSchema,
+  }).strict()).max(SEASON_ROUNDS + 1).optional(),
+  coachTalkRounds: z.array(z.number().int().min(0).max(SEASON_ROUNDS)).max(SEASON_ROUNDS + 1).optional(),
   startingTrust: z.number().int().min(24).max(100).optional(),
   startingSuspension: z.number().int().min(0).max(3).optional(),
 }).strict().refine(({ clubs, player }) => clubs.some(({ id }) => id === player.clubId), "O clube do atleta deve participar da temporada.")
   .refine(({ rounds, preparation }) => rounds.length < SEASON_ROUNDS || preparation === null, "A temporada já terminou.")
   .superRefine((season, ctx) => {
+    if (season.registrations?.some((entry, index, all) =>
+      entry.fromRound > season.rounds.length || !season.clubs.some(({ id }) => id === entry.clubId) ||
+      (index > 0 && all[index - 1].fromRound >= entry.fromRound))) {
+      ctx.addIssue({ code: "custom", path: ["registrations"], message: "A inscrição do atleta é incompatível com a edição." });
+    }
     const allowed = getPosition(season.player.position).attributes;
     if (season.focuses && (season.focuses.length !== season.rounds.length ||
       season.focuses.some((key, index) => key !== null && (!allowed.includes(key) || !season.rounds[index] || season.rounds[index] === "recovery")))) {
@@ -84,6 +96,7 @@ export type SeasonClub = z.infer<typeof clubSchema>;
 export const seasonActionSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("train"), training: trainingSchema, focus: attributeSchema.optional() }).strict(),
   z.object({ type: z.literal("play") }).strict(),
+  z.object({ type: z.literal("market"), action: marketActionSchema }).strict(),
   z.object({ type: z.literal("advance"), until: z.union([z.literal("week"), z.literal("next"), z.iso.date()]) }).strict(),
 ]);
 

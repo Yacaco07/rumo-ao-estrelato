@@ -2,6 +2,7 @@ import { averageRating, type AthleteDraft } from "@/domain/athlete/athlete";
 import { getPosition } from "@/domain/athlete/positions";
 import { defaultTrainingFocus, developedAttributes, gainPractice, TRAINING_EFFECT, trainingPotential } from "./training";
 import { initialTrust, selectAthlete, trainingTrust, updateTrust } from "./coach";
+import { registrationAt } from "./registration";
 import { hash } from "./random";
 import { playerOverall, simulateMatch, type Absence } from "./match";
 import type { ContractOffer } from "./contract";
@@ -42,7 +43,7 @@ export function createSeason(profile: SeasonProfile, catalog: SeasonCatalog, yea
 
 export function applySeasonAction(season: Season, input: SeasonAction): { ok: true; season: Season } | { ok: false; message: string } {
   const action = seasonActionSchema.safeParse(input);
-  if (!action.success || action.data.type === "advance") return { ok: false, message: "Escolha uma ação válida." };
+  if (!action.success || (action.data.type === "advance" || action.data.type === "market")) return { ok: false, message: "Escolha uma ação válida." };
   if (season.rounds.length === SEASON_ROUNDS) return { ok: false, message: "A temporada já terminou." };
   if (action.data.type === "play") {
     const { selectedFocus, ...previous } = season;
@@ -92,21 +93,26 @@ export function readSeason(season: Season) {
   const stats = { starts: 0, appearances: 0, minutes: 0, goals: 0, assists: 0, saves: 0, cleanSheets: 0, totalRating: 0, yellowCards: 0, redCards: 0 };
   const calendar = buildCalendar(season.clubs);
   const rounds = calendar.map((fixtures, index) => {
-    const fixture = fixtures.find(({ home, away }) => home.id === player.clubId || away.id === player.clubId)!;
+    const registration = registrationAt(season, index);
+    const fixture = fixtures.find(({ home, away }) => home.id === registration.clubId || away.id === registration.clubId)!;
     const scheduled = { number: index + 1, date: roundDate(season.year ?? FIRST_SEASON_YEAR, index), competition: "Série A", fixture };
     if (index >= season.rounds.length) return { ...scheduled, played: null };
 
     const preparation = season.rounds[index];
+    if (season.registrations?.some(({ fromRound }) => fromRound === index)) trust = initialTrust(registration.role);
     const coaching = season.coachingFrom !== undefined && index >= season.coachingFrom;
-    if (coaching) trust = updateTrust(trust + trainingTrust(preparation, progress.fatigue), null, 0);
+    if (coaching) {
+      const talk = season.coachTalkRounds?.includes(index) ? 6 : 0;
+      trust = updateTrust(trust + talk + trainingTrust(preparation, progress.fatigue), null, 0);
+    }
     const focus = season.focuses?.[index] ?? roleFocus;
     if (trainingPlan && preparation) practice = gainPractice(trainingPlan, practice, focus, TRAINING_EFFECT[preparation].practice);
     progress = prepare(progress, preparation);
     const detailed = season.detailedFrom !== undefined && index >= season.detailedFrom;
     const absence: Absence | undefined = injury > 0 ? "injured" : suspension > 0 ? "suspended" : undefined;
     const attributes = detailed && trainingPlan ? developedAttributes(trainingPlan, practice) : {};
-    const selection = coaching ? selectAthlete({ trust, role: player.role, fatigue: progress.fatigue, debut: index === 0, absence }) : undefined;
-    const results = fixtures.map((game) => simulateMatch(game, player, progress, index, season.seed,
+    const selection = coaching ? selectAthlete({ trust, role: registration.role, fatigue: progress.fatigue, debut: index === 0, absence }) : undefined;
+    const results = fixtures.map((game) => simulateMatch(game, { ...player, ...registration }, progress, index, season.seed,
       detailed ? { attributes, absence, selection } : undefined));
     for (const { match } of results) {
       recordResult(table, match.home, match.homeGoals, match.awayGoals);
@@ -138,6 +144,9 @@ export function readSeason(season: Season) {
     return { ...scheduled, played: { match, appearance, events, preparation, results: results.map(({ match }) => match) } };
   });
 
+  const registration = registrationAt(season, season.rounds.length);
+  if (season.registrations?.some(({ fromRound }) => fromRound === season.rounds.length)) trust = initialTrust(registration.role);
+  if (season.coachTalkRounds?.includes(season.rounds.length)) trust = updateTrust(trust + 6, null, 0);
   if (season.preparation !== null) {
     if (season.coachingFrom !== undefined) trust = updateTrust(trust + trainingTrust(season.preparation, progress.fatigue), null, 0);
     if (trainingPlan) practice = gainPractice(trainingPlan, practice, season.selectedFocus ?? roleFocus, TRAINING_EFFECT[season.preparation].practice);
@@ -163,7 +172,7 @@ export function readSeason(season: Season) {
     health: { injury, suspension },
     trust,
     selection: selectAthlete({
-      trust, role: player.role, fatigue: progress.fatigue, debut: season.rounds.length === 0,
+      trust, role: registration.role, fatigue: progress.fatigue, debut: season.rounds.length === 0,
       absence: injury > 0 ? "injured" : suspension > 0 ? "suspended" : undefined,
     }),
     practice,

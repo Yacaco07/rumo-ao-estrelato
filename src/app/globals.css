@@ -457,3 +457,7 @@ fieldset { padding: 0; margin: 0; border: none; }
 
 .season-preparation .field select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; background: #fff; }
 .season-preparation .calendar-advance { margin-block: 10px; }
+
+.market-offers { margin-block: 12px; }
+.market-offers .offer-card h4 { font-weight: 650; }
+.market-offers .inline-actions { gap: 7px; }

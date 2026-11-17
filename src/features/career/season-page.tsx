@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
 import { useAthlete } from "@/features/athlete/athlete-provider";
+import { MarketPanel } from "./market-panel";
+import { emptyMarket } from "@/domain/career/market";
+import { registrationAt } from "@/domain/career/registration";
 import { SELECTION_LABELS } from "@/domain/career/coach";
 import { CONTRACT_ROLE_LABELS } from "@/domain/career/contract";
 import type { MatchEvent } from "@/domain/career/match";
@@ -49,7 +52,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
     setFailure("");
     try {
       await playSeason(command, catalog);
-      if (command.type !== "train") { setFocusResult(true); setTargetDate(""); }
+      if (command.type === "play" || command.type === "advance") { setFocusResult(true); setTargetDate(""); }
     } catch (error) {
       setFailure(error instanceof Error ? error.message : "Não foi possível salvar a temporada.");
     } finally {
@@ -76,12 +79,14 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
   const date = careerDate(season);
   const previous = saved.pastSeasons?.at(-1);
   const previousEdition = previous ? readSeason(previous) : null;
-  const { clubId, position } = season.player;
+  const { position } = season.player;
+  const { clubId, role } = registrationAt(season, season.rounds.length);
+  const currentClub = season.clubs.find(({ id }) => id === clubId)!.name;
   const isKeeper = position === "GK";
 
   return <>
     <div className="page-heading">
-      <div><p className="eyebrow">SÉRIE A · TEMPORADA SIMULADA {seasonYear(season)}</p><h1>{saved.contract.clubName}<span className="lime-text">.</span></h1><p>{saved.athlete.name} · {season.rounds.length} de {SEASON_ROUNDS} rodadas disputadas</p><p>Data da carreira <time dateTime={date}>{formatDate(date)}</time></p></div>
+      <div><p className="eyebrow">SÉRIE A · TEMPORADA SIMULADA {seasonYear(season)}</p><h1>{currentClub}<span className="lime-text">.</span></h1><p>{saved.athlete.name} · {season.rounds.length} de {SEASON_ROUNDS} rodadas disputadas</p><p>Data da carreira <time dateTime={date}>{formatDate(date)}</time></p></div>
       <Link href="/propostas" className="button button-outline">Meu contrato<Icon name="right" size={17} /></Link>
     </div>
     {failure && <div className="notice notice-error" role="alert">
@@ -93,7 +98,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
         {next ? <>
           <p className="eyebrow">RODADA {next.number} · {formatDate(next.date)}</p>
           <h2 id="next-fixture">{next.fixture.home.name} × {next.fixture.away.name}</h2>
-          <p>Provável escalação: <strong>{SELECTION_LABELS[selection]}</strong> · Papel {CONTRACT_ROLE_LABELS[season.player.role]}</p>
+          <p>Provável escalação: <strong>{SELECTION_LABELS[selection]}</strong> · Papel {CONTRACT_ROLE_LABELS[role]}</p>
           {health.injury > 0 && <p role="status">Lesionado · fora por {health.injury} jogo(s).</p>}
           {health.suspension > 0 && <p role="status">Suspenso · {health.suspension} jogo(s) a cumprir.</p>}
           <div className="season-preparation">
@@ -137,7 +142,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
         </> : <>
           <h2 id="next-fixture">Temporada encerrada</h2>
           <p>Campeão simulado: <strong>{standings[0].club.name}</strong></p>
-          <p>{saved.contract.clubName} terminou em {standings.findIndex(({ club }) => club.id === clubId) + 1}º lugar.</p>
+          <p>{currentClub} terminou em {standings.findIndex(({ club }) => club.id === clubId) + 1}º lugar.</p>
           <button className="button button-lime" disabled={busy} onClick={() => void action({ type: "advance", until: "week" })}>Próxima semana</button>
         </>}
       </section>
@@ -198,6 +203,8 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
         <time dateTime={date}>{formatDate(date)}</time><span>{fixture.home.name} {played ? `${played.match.homeGoals} × ${played.match.awayGoals}` : "×"} {fixture.away.name}</span>
       </li>)}</ol>
     </details>
+    <MarketPanel market={saved.market ?? emptyMarket()} contract={saved.contract} busy={busy}
+      dispatch={(marketAction) => void action({ type: "market", action: marketAction })} />
     <section className="panel season-card season-section" aria-labelledby="league-table">
       <h2 id="league-table">Classificação simulada</h2>
       <div className="season-table-wrap" tabIndex={0} role="region" aria-label="Tabela da Série A">
