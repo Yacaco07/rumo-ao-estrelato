@@ -35,9 +35,13 @@ describe("Temporada na interface", () => {
     const commitments = await screen.findByRole("region", { name: "Próximos compromissos" });
     expect(within(commitments).getAllByRole("listitem")).toHaveLength(3);
     expect(within(commitments).getByText(/Série A · Rodada 1 · .*Palmeiras/)).toBeInTheDocument();
+    const focus = screen.getByLabelText("Atributo a desenvolver");
+    expect(within(focus).queryByRole("option", { name: "Finalização" })).not.toBeInTheDocument();
+    await user.selectOptions(focus, "handling");
     await user.click(screen.getByRole("button", { name: /Treino técnico/ }));
     await screen.findByRole("status");
-    expect((await athleteRepository.read())?.season?.preparation).toBe("technical");
+    expect(screen.getByRole("status")).toHaveTextContent("Segurança");
+    expect((await athleteRepository.read())?.season?.selectedFocus).toBe("handling");
     expect(screen.queryByRole("button", { name: /Treino físico/ })).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Próxima semana" }));
     const firstResult = await screen.findByRole("region", { name: "Resultado da rodada 1" });

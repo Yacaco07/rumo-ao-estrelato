@@ -32,3 +32,7 @@ O calendário completo guarda as 38 datas simuladas e mostra até três compromi
 **Próxima semana** avança sete dias simulados. Também é possível avançar ao próximo jogo ou informar uma data até um ano à frente. Todos os jogos devidos são computados em ordem e somente uma vez. O último resultado e o campeão da edição anterior aparecem nas notícias da carreira.
 
 A rodada final arquiva a edição e monta a seguinte na mesma transação. Durante a pausa entre edições, é possível avançar semanas sem gerar partidas. O histórico das edições completas permanece no save.
+
+## Treinamento individual
+
+Antes de treinar, escolha um dos seis atributos da posição. Exercícios técnicos e físicos desenvolvem esse atributo com intensidades e custos de fadiga distintos. Minutos e nota da partida também contribuem. A idade regula a velocidade de evolução e o potencial limita o ganho. Recuperação melhora a condição física, preservando a evolução entre temporadas.

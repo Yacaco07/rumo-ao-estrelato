@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createEmptyDraft, type SavedAthlete } from "@/domain/athlete/athlete";
 import { CURRENT_WORLD } from "@/data/world/current-world";
 import { applyCareerAction, careerDate, seasonYear } from "./career-clock";
+import { defaultTrainingFocus, gainPractice, initialTrainingPlan } from "./training";
 import { createSeason, readSeason } from "./season";
 
 const createdAt = "2026-11-17T12:00:00Z";
@@ -34,6 +35,34 @@ describe("Relógio da carreira", () => {
     if (!next.ok) throw new Error(next.message);
     expect(next.season.rounds).toHaveLength(3);
     expect(readSeason(next.season).last?.date).toBe("2026-02-15");
+  });
+
+  it("desenvolve o foco selecionado, limita ganhos e carrega evolução para o ano seguinte", () => {
+    let current = season;
+    expect(defaultTrainingFocus("ST")).toBe("shooting");
+    expect(applyCareerAction(profile, current, { type: "train", training: "technical", focus: "reflexes" }).ok).toBe(false);
+    const base = initialTrainingPlan(profile.athlete);
+    expect(gainPractice(base, {}, "passing", 50).passing).toBeGreaterThan(
+      gainPractice({ ...base, age: 35 }, {}, "passing", 50).passing!,
+    );
+    expect(gainPractice(base, {}, "passing", 9000).passing).toBe(
+      (base.ceilings.passing! - base.attributes.passing!) * 90,
+    );
+    for (let week = 0; week < 7; week++) {
+      const trained = applyCareerAction(profile, current, { type: "train", training: "physical", focus: "passing" });
+      if (!trained.ok) throw new Error(trained.message);
+      const next = applyCareerAction(profile, trained.season, { type: "advance", until: "week" });
+      if (!next.ok) throw new Error(next.message);
+      current = next.season;
+    }
+    const progressed = readSeason(current);
+    expect(current.focuses).toEqual(Array(7).fill("passing"));
+    expect(progressed.attributes?.passing).toBeGreaterThan(base.attributes.passing!);
+    expect(progressed.attributes?.shooting).toBe(base.attributes.shooting);
+    const rollover = applyCareerAction(profile, current, { type: "advance", until: "2026-10-18" });
+    if (!rollover.ok) throw new Error(rollover.message);
+    expect(rollover.season.trainingPlan?.age).toBe(profile.athlete.age + 1);
+    expect(readSeason(rollover.season).attributes).toEqual(readSeason(rollover.pastSeasons[0]).attributes);
   });
 
   it("arquiva a edição em 38 rodadas e atravessa semanas sem jogos", () => {

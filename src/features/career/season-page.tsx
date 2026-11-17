@@ -6,22 +6,19 @@ import { Icon } from "@/components/icon";
 import { useAthlete } from "@/features/athlete/athlete-provider";
 import { addDays } from "@/domain/career/calendar";
 import { careerDate, latestAdvanceDate, seasonYear } from "@/domain/career/career-clock";
+import { ATTRIBUTE_LABELS, getPosition, type AttributeKey } from "@/domain/athlete/positions";
+import { defaultTrainingFocus, TRAINING_EFFECT, withTrainingPlan } from "@/domain/career/training";
 import { createSeason, readSeason, type SeasonCatalog } from "@/domain/career/season";
 import { SEASON_ROUNDS, TRAINING_LABELS, TRAINING_TYPES, type SeasonAction } from "@/domain/career/season-schema";
 
 const formatDate = (value: string) => value.split("-").reverse().join("/");
 const formatRating = (value: number | null) => value?.toFixed(1).replace(".", ",") ?? "—";
-const trainingEffects = {
-  technical: "+8 XP · +9 fadiga",
-  physical: "+11 XP · +16 fadiga",
-  recovery: "−25 fadiga",
-};
-
 export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
   const { saved, loading, error, playSeason } = useAthlete();
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState("");
   const [targetDate, setTargetDate] = useState("");
+  const [focus, setFocus] = useState<AttributeKey>();
   const resultHeading = useRef<HTMLHeadingElement>(null);
   const [focusResult, setFocusResult] = useState(false);
 
@@ -53,10 +50,13 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
   </>;
 
   const profile = { ...saved, contract: saved.contract };
-  const season = saved.season ?? createSeason(profile, catalog);
-  if (!season) return <div className="notice notice-error" role="alert">O catálogo ainda não permite montar a temporada do seu clube.</div>;
+  const storedSeason = saved.season ?? createSeason(profile, catalog);
+  if (!storedSeason) return <div className="notice notice-error" role="alert">O catálogo ainda não permite montar a temporada do seu clube.</div>;
 
-  const { rounds, next, last, standings, stats, overall, fatigue, xp } = readSeason(season);
+  const season = withTrainingPlan(storedSeason, saved.athlete);
+  const { rounds, next, last, standings, stats, overall, fatigue, condition, xp, attributes, potential } = readSeason(season);
+  const allowedAttributes = getPosition(season.player.position).attributes;
+  const trainingFocus = focus && allowedAttributes.includes(focus) ? focus : defaultTrainingFocus(season.player.position);
   const lastMatch = last?.played;
   const date = careerDate(season);
   const previous = saved.pastSeasons?.at(-1);
@@ -80,13 +80,22 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
           <h2 id="next-fixture">{next.fixture.home.name} × {next.fixture.away.name}</h2>
           <div className="season-preparation">
             <h3>Preparação da rodada</h3>
-            {season.preparation ? <p role="status">{TRAINING_LABELS[season.preparation]} registrado.</p>
-              : <div className="season-training">
+            {season.preparation ? <p role="status">{TRAINING_LABELS[season.preparation]} registrado{season.selectedFocus ? ` · ${ATTRIBUTE_LABELS[season.selectedFocus]}` : ""}.</p>
+              : <>
+                <div className="field calendar-advance">
+                  <label htmlFor="train-focus">Atributo a desenvolver</label>
+                  <select id="train-focus" value={trainingFocus} onChange={(e) => setFocus(e.target.value as AttributeKey)} disabled={busy}>
+                    {allowedAttributes.map((key) => <option key={key} value={key}>{ATTRIBUTE_LABELS[key]}</option>)}
+                  </select>
+                </div>
+                <div className="season-training">
                 {TRAINING_TYPES.map((training) => <button key={training} className="button button-outline" disabled={busy}
-                  onClick={() => void action({ type: "train", training })}>
-                  <strong>{TRAINING_LABELS[training]}</strong><span>{trainingEffects[training]}</span>
+                  onClick={() => void action(training === "recovery" ? { type: "train", training } : { type: "train", training, focus: trainingFocus })}>
+                  <strong>{TRAINING_LABELS[training]}</strong>
+                  <span>{training === "recovery" ? "−25 fadiga" : `+${TRAINING_EFFECT[training].xp} XP · +${TRAINING_EFFECT[training].fatigue} fadiga`}</span>
                 </button>)}
-              </div>}
+                </div>
+              </>}
           </div>
           <div className="inline-actions">
             <button className="button button-lime" disabled={busy} onClick={() => void action({ type: "advance", until: "week" })}>
@@ -117,12 +126,19 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
       <section className="panel season-card" aria-labelledby="season-athlete">
         <h2 id="season-athlete">Meu desempenho</h2>
         <dl className="season-stats">
-          <div><dt>Geral</dt><dd>{overall}</dd></div><div><dt>Fadiga</dt><dd>{fatigue}%</dd></div>
+          <div><dt>Geral</dt><dd>{overall}</dd></div><div><dt>Potencial</dt><dd>{potential}</dd></div>
+          <div><dt>Condição</dt><dd>{condition}%</dd></div><div><dt>Fadiga</dt><dd>{fatigue}%</dd></div>
           <div><dt>Experiência</dt><dd>{xp} XP</dd></div><div><dt>Jogos</dt><dd>{stats.appearances}</dd></div>
           <div><dt>Minutos</dt><dd>{stats.minutes}</dd></div><div><dt>Nota média</dt><dd>{formatRating(stats.average)}</dd></div>
           {isKeeper ? <><div><dt>Defesas</dt><dd>{stats.saves}</dd></div><div><dt>Jogos sem sofrer gol</dt><dd>{stats.cleanSheets}</dd></div></>
             : <><div><dt>Gols</dt><dd>{stats.goals}</dd></div><div><dt>Assistências</dt><dd>{stats.assists}</dd></div></>}
         </dl>
+        <details className="season-details season-section">
+          <summary>Atributos por posição</summary>
+          <dl className="season-stats">{allowedAttributes.map((key) => <div key={key}>
+            <dt>{ATTRIBUTE_LABELS[key]}</dt><dd>{attributes?.[key]}</dd>
+          </div>)}</dl>
+        </details>
       </section>
     </div>
     {(lastMatch || previousEdition) && <section className="panel season-card season-section" aria-labelledby="career-news">

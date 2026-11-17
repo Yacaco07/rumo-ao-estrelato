@@ -1,4 +1,6 @@
 import { averageRating, type AthleteDraft } from "@/domain/athlete/athlete";
+import { getPosition } from "@/domain/athlete/positions";
+import { defaultTrainingFocus, developedAttributes, gainPractice, TRAINING_EFFECT, trainingPotential } from "./training";
 import type { ContractOffer } from "./contract";
 import { buildCalendar, FIRST_SEASON_YEAR, roundDate, type Fixture } from "./calendar";
 import { SEASON_ROUNDS, seasonActionSchema, seasonSchema, type Season, type SeasonAction, type SeasonClub, type Training } from "./season-schema";
@@ -58,15 +60,23 @@ export function applySeasonAction(season: Season, input: SeasonAction): { ok: tr
   if (!action.success || action.data.type === "advance") return { ok: false, message: "Escolha uma ação válida." };
   if (season.rounds.length === SEASON_ROUNDS) return { ok: false, message: "A temporada já terminou." };
   if (action.data.type === "play") {
-    return { ok: true, season: { ...season, rounds: [...season.rounds, season.preparation], preparation: null } };
+    const { selectedFocus, ...previous } = season;
+    const withFocus = season.focuses || selectedFocus;
+    const focuses = withFocus ? [
+      ...(season.focuses ?? season.rounds.map(() => null)), selectedFocus ?? null,
+    ] : undefined;
+    return { ok: true, season: { ...previous, rounds: [...season.rounds, season.preparation], preparation: null, ...(focuses ? { focuses } : {}) } };
   }
   if (season.preparation !== null) return { ok: false, message: "A preparação desta rodada já foi registrada." };
-  return { ok: true, season: { ...season, preparation: action.data.training } };
+  const { training, focus } = action.data;
+  if (focus && (training === "recovery" || !getPosition(season.player.position).attributes.includes(focus))) {
+    return { ok: false, message: "Escolha um atributo da sua posição para este treino." };
+  }
+  return { ok: true, season: { ...season, preparation: training, ...(focus ? { selectedFocus: focus } : {}) } };
 }
 
 function prepare(current: Preparation, training: Training | null): Preparation {
-  const change = training === "technical" ? { fatigue: 9, xp: 8 } : training === "physical"
-    ? { fatigue: 16, xp: 11 } : { fatigue: training === "recovery" ? -25 : -12, xp: 0 };
+  const change = training ? TRAINING_EFFECT[training] : { fatigue: -12, xp: 0 };
   return { fatigue: Math.max(0, Math.min(100, current.fatigue + change.fatigue)), xp: current.xp + change.xp };
 }
 
@@ -142,7 +152,9 @@ function recordResult(table: ReturnType<typeof newTable>, club: SeasonClub, goal
 }
 
 export function readSeason(season: Season) {
-  const { player } = season;
+  const { player, trainingPlan } = season;
+  const roleFocus = defaultTrainingFocus(player.position);
+  let practice = trainingPlan?.practice ?? {};
   const table = newTable(season.clubs);
   let progress: Preparation = { fatigue: 0, xp: 0 };
   const stats = { appearances: 0, minutes: 0, goals: 0, assists: 0, saves: 0, cleanSheets: 0, totalRating: 0 };
@@ -153,6 +165,8 @@ export function readSeason(season: Season) {
     if (index >= season.rounds.length) return { ...scheduled, played: null };
 
     const preparation = season.rounds[index];
+    const focus = season.focuses?.[index] ?? roleFocus;
+    if (trainingPlan && preparation) practice = gainPractice(trainingPlan, practice, focus, TRAINING_EFFECT[preparation].practice);
     progress = prepare(progress, preparation);
     const results = fixtures.map((game) => simulateMatch(game, player, progress, index, season.seed));
     for (const { match } of results) {
@@ -168,6 +182,7 @@ export function readSeason(season: Season) {
     if (appearance.rating !== null) {
       stats.appearances++;
       stats.totalRating += appearance.rating;
+      if (trainingPlan) practice = gainPractice(trainingPlan, practice, focus, Math.floor(appearance.rating * appearance.minutes / 60));
     }
     progress = {
       fatigue: Math.max(0, Math.min(100, progress.fatigue + Math.round(appearance.minutes / 6) - 9)),
@@ -176,7 +191,11 @@ export function readSeason(season: Season) {
     return { ...scheduled, played: { match, appearance, preparation, results: results.map(({ match }) => match) } };
   });
 
-  if (season.preparation !== null) progress = prepare(progress, season.preparation);
+  if (season.preparation !== null) {
+    if (trainingPlan) practice = gainPractice(trainingPlan, practice, season.selectedFocus ?? roleFocus, TRAINING_EFFECT[season.preparation].practice);
+    progress = prepare(progress, season.preparation);
+  }
+  const attributes = trainingPlan ? developedAttributes(trainingPlan, practice) : undefined;
   const standings = Array.from(table.values()).sort((a, b) =>
     b.points - a.points || b.wins - a.wins || (b.scored - b.conceded) - (a.scored - a.conceded) ||
     b.scored - a.scored || a.club.id.localeCompare(b.club.id, "en"),
@@ -188,7 +207,12 @@ export function readSeason(season: Season) {
     standings,
     stats: { ...stats, average: stats.appearances > 0 ? stats.totalRating / stats.appearances : null },
     fatigue: progress.fatigue,
-    overall: playerOverall(player.initialOverall, progress.xp),
+    condition: 100 - progress.fatigue,
+    overall: attributes ? Math.round(Object.values(attributes).reduce((sum, score) => sum + score, 0) / Object.keys(attributes).length)
+      : playerOverall(player.initialOverall, progress.xp),
+    attributes,
+    potential: trainingPlan ? trainingPotential(trainingPlan) : undefined,
+    practice,
     xp: progress.xp,
   };
 }

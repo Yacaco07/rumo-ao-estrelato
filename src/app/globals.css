@@ -454,3 +454,6 @@ fieldset { padding: 0; margin: 0; border: none; }
 
 .calendar-advance { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-top: 14px; }
 .calendar-advance .field input { min-width: 155px; min-height: 42px; }
+
+.season-preparation .field select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; background: #fff; }
+.season-preparation .calendar-advance { margin-block: 10px; }

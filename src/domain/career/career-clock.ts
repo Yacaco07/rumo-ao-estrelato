@@ -1,6 +1,7 @@
 import type { SavedAthlete } from "@/domain/athlete/athlete";
 import { addDays, DAYS_PER_WEEK, FIRST_SEASON_YEAR, roundDate } from "./calendar";
-import { applySeasonAction, createSeason } from "./season";
+import { nextTrainingPlan, withTrainingPlan } from "./training";
+import { applySeasonAction, createSeason, readSeason } from "./season";
 import { SEASON_ROUNDS, seasonActionSchema, type Season, type SeasonAction } from "./season-schema";
 
 export function seasonYear(season: Season): number {
@@ -32,13 +33,18 @@ export function applyCareerAction(
   const parsed = seasonActionSchema.safeParse(input);
   if (!parsed.success) return { ok: false, message: "Escolha um comando válido." };
   let pastSeasons = profile.pastSeasons ?? [];
-  let current = season;
+  let current = withTrainingPlan(season, profile.athlete);
 
   function rollSeason() {
     const upcoming = createSeason(profile, { worldVersion: current.worldVersion, clubs: current.clubs }, seasonYear(current) + 1);
     if (!upcoming) return false;
+    const previous = readSeason(current);
     pastSeasons = [...pastSeasons, current];
-    current = { ...upcoming, date: careerDate(current) };
+    current = {
+      ...upcoming,
+      date: careerDate(current),
+      trainingPlan: nextTrainingPlan(current.trainingPlan!, previous.practice),
+    };
     return true;
   }
 
