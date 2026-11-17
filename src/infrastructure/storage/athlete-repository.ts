@@ -1,12 +1,14 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 import { athleteDraftSchema, completeAthleteSchema, savedAthleteSchema, type AthleteDraft, type SavedAthlete } from "@/domain/athlete/athlete";
 
+import { contractOfferSchema, type ContractOffer } from "@/domain/career/contract";
+
 interface AthleteDatabase extends DBSchema {
   profiles: { key: string; value: SavedAthlete };
 }
 
 export class SaveError extends Error {
-  constructor(public readonly code: "unavailable" | "invalid" | "incompatible" | "conflict", message: string) {
+  constructor(public readonly code: "unavailable" | "invalid" | "incompatible" | "conflict" | "locked", message: string) {
     super(message);
     this.name = "SaveError";
   }
@@ -40,6 +42,32 @@ export function createAthleteRepository(databaseName = "rumo-ao-estrelato") {
     return connection;
   }
 
+  async function update<T extends SavedAthlete | null>(
+    expectedRevision: number | null,
+    change: (current: SavedAthlete | null) => T,
+  ): Promise<T> {
+    try {
+      const tx = (await database()).transaction("profiles", "readwrite");
+      const committed = tx.done.then(() => null, (error: unknown) => asSaveError(error));
+      try {
+        const current = parseSave(await tx.store.get("athlete-profile"));
+        if ((current?.revision ?? null) !== expectedRevision) {
+          throw new SaveError("conflict", "O perfil mudou em outra aba. Recarregue o perfil antes de continuar.");
+        }
+        const next = change(current);
+        if (next) await tx.store.put(next);
+        else await tx.store.delete("athlete-profile");
+        const commitError = await committed;
+        if (commitError) throw commitError;
+        return next;
+      } catch (error) {
+        try { tx.abort(); } catch { /* The transaction may already have finished. */ }
+        await committed;
+        throw error;
+      }
+    } catch (error) { throw asSaveError(error); }
+  }
+
   return {
     async read(): Promise<SavedAthlete | null> {
       try { return parseSave(await (await database()).get("profiles", "athlete-profile")); }
@@ -48,43 +76,36 @@ export function createAthleteRepository(databaseName = "rumo-ao-estrelato") {
     async save(athlete: AthleteDraft, status: SavedAthlete["status"], expectedRevision: number | null): Promise<SavedAthlete> {
       const validation = (status === "ready" ? completeAthleteSchema : athleteDraftSchema).safeParse(athlete);
       if (!validation.success) throw new SaveError("invalid", validation.error.issues[0].message);
-      try {
-        const db = await database();
-        const tx = db.transaction("profiles", "readwrite");
-        // Observe failures immediately; the returned promise never rejects unhandled.
-        const committed = tx.done.then(() => null, (error: unknown) => asSaveError(error));
-        try {
-          const current = parseSave(await tx.store.get("athlete-profile"));
-          if ((current?.revision ?? null) !== expectedRevision) throw new SaveError("conflict", "O perfil mudou em outra aba. Recarregue o perfil antes de salvar novamente.");
-          const now = new Date().toISOString();
-          const next = savedAthleteSchema.parse({ schemaVersion: 1, id: "athlete-profile", revision: (current?.revision ?? 0) + 1, status, createdAt: current?.createdAt ?? now, updatedAt: now, athlete: validation.data });
-          await tx.store.put(next);
-          const commitError = await committed;
-          if (commitError) throw commitError;
-          return next;
-        } catch (error) {
-          try { tx.abort(); } catch { /* The transaction may already have finished. */ }
-          await committed;
-          throw error;
+
+      return update(expectedRevision, (current) => {
+        if (current?.contract) throw new SaveError("locked", "O perfil já está vinculado ao primeiro contrato.");
+        const now = new Date().toISOString();
+        return savedAthleteSchema.parse({
+          schemaVersion: 1, id: "athlete-profile", revision: (current?.revision ?? 0) + 1,
+          status, createdAt: current?.createdAt ?? now, updatedAt: now, athlete: validation.data,
+        });
+      });
+    },
+    async signContract(offer: ContractOffer, expected: Pick<SavedAthlete, "revision" | "createdAt">): Promise<SavedAthlete> {
+      const validated = contractOfferSchema.safeParse(offer);
+      if (!validated.success) throw new SaveError("invalid", "Confira os termos do primeiro contrato.");
+
+      return update(expected.revision, (current) => {
+        if (current?.status !== "ready" || current.createdAt !== expected.createdAt) {
+          throw new SaveError("conflict", "O perfil foi alterado. Recarregue antes de assinar.");
         }
-      } catch (error) { throw asSaveError(error); }
+        if (current.contract) throw new SaveError("locked", "O primeiro contrato já foi assinado.");
+        const now = new Date().toISOString();
+        return savedAthleteSchema.parse({
+          ...current,
+          revision: current.revision + 1,
+          updatedAt: now,
+          contract: { ...validated.data, signedAt: now },
+        });
+      });
     },
     async remove(expectedRevision: number): Promise<void> {
-      try {
-        const tx = (await database()).transaction("profiles", "readwrite");
-        const committed = tx.done.then(() => null, (error: unknown) => asSaveError(error));
-        try {
-          const current = parseSave(await tx.store.get("athlete-profile"));
-          if (current?.revision !== expectedRevision) throw new SaveError("conflict", "O perfil mudou em outra aba. Recarregue antes de excluir.");
-          await tx.store.delete("athlete-profile");
-          const commitError = await committed;
-          if (commitError) throw commitError;
-        } catch (error) {
-          try { tx.abort(); } catch { /* Already finished. */ }
-          await committed;
-          throw error;
-        }
-      } catch (error) { throw asSaveError(error); }
+      await update(expectedRevision, () => null);
     },
     async close() { if (connection) (await connection).close(); connection = undefined; },
   };

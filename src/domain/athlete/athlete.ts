@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { signedContractSchema } from "@/domain/career/contract";
 import { ATTRIBUTE_KEYS, EXTRA_POINTS, getPosition, POSITION_KEYS, type AttributeKey, type Position } from "./positions";
 
 export const athleteDraftSchema = z.object({
@@ -36,7 +37,11 @@ export const savedAthleteSchema = z.object({
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
   athlete: athleteDraftSchema,
+  contract: signedContractSchema.optional(),
 }).strict().superRefine((save, ctx) => {
+  if (save.contract && save.status !== "ready") {
+    ctx.addIssue({ code: "custom", path: ["contract"], message: "O primeiro contrato requer um perfil concluído." });
+  }
   if (save.status === "ready" && !completeAthleteSchema.safeParse(save.athlete).success) {
     ctx.addIssue({ code: "custom", path: ["athlete"], message: "O perfil concluído está incompleto." });
   }

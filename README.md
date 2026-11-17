@@ -1,10 +1,10 @@
 # RUMO AO ESTRELATO
 
-Simulador de carreira de jogador de futebol para navegador. **Versão 0.3.0 com criação de atleta, catálogo da Série A e cinco propostas iniciais simuladas.**
+Simulador de carreira de jogador de futebol para navegador. **Versão 0.4.0 com propostas automáticas, negociação e assinatura do primeiro contrato simulado.**
 
 Repositório oficial e exclusivo: <https://github.com/Yacaco07/rumo-ao-estrelato> · branch `main`.
 
-**Situação desta entrega:** código e documentação do projeto publicados na branch `main` do repositório oficial. As regras das primeiras propostas estão em [ETAPA_03_PROPOSTAS.md](docs/ETAPA_03_PROPOSTAS.md). A pesquisa de numeração está em [REVISAO_SERIE_A_2026.md](docs/REVISAO_SERIE_A_2026.md).
+**Situação desta entrega:** código e documentação do projeto publicados na branch `main` do repositório oficial. As regras das propostas e da assinatura estão em [ETAPA_03_PROPOSTAS.md](docs/ETAPA_03_PROPOSTAS.md). A pesquisa de numeração está em [REVISAO_SERIE_A_2026.md](docs/REVISAO_SERIE_A_2026.md).
 
 ## Executar
 
@@ -40,9 +40,10 @@ O projeto ainda não tem hospedagem configurada. GitHub Pages não executa o ser
 - Busca de clubes sem distinção de acentos, filtro por cobertura e posição, seleção de clube e fontes com datas.
 - Cobertura explícita: 18 relações de clubes e duas listas da CBF, que podem incluir base. Os 659 jogadores têm posição e camisa documentada. Em 13 casos, a numeração vem de uma partida identificada e a atribuição atual ainda está a confirmar. As outras 13 ligas seguem planejadas.
 - Snapshot versionado validado por Zod, com referências por campo e verificador de importação.
-- Cinco propostas simuladas em `/propostas`. Conclua o perfil e selecione **Ver minhas propostas** para comparar clubes, concorrência no setor, papel e duração simulados.
+- Ao concluir o perfil, a tela `/propostas` abre automaticamente com cinco clubes. Cada oferta mostra concorrência no setor, salário, duração e papel simulados.
+- Escolha uma oferta, negocie salário e duração, revise os termos e confirme a assinatura. O primeiro contrato é salvo no IndexedDB e o clube aparece na central do atleta.
 
-A assinatura do contrato e o início da carreira serão tratados em outra etapa. As propostas são simuladas com base nas relações publicadas e nas posições documentadas. Escudos, partidas, calendários, transferências e temporadas continuam planejados. O escopo total tem 14 ligas, sem estaduais brasileiros. Dados desconhecidos não são preenchidos com estimativas.
+A carreira inicial chega ao primeiro contrato. As propostas são simuladas com base nas relações publicadas e nas posições documentadas. Escudos, partidas, calendários, transferências e temporadas continuam planejados. O escopo total tem 14 ligas, sem estaduais brasileiros. Dados desconhecidos não são preenchidos com estimativas.
 
 Há um slot local. O perfil fica associado ao endereço, navegador e dispositivo usados. Limpar os dados do site remove o save. Exportação, sincronização e migrações de carreiras serão implementadas antes de saves longos. As alterações são salvas pelos botões; não há salvamento automático silencioso.
 
@@ -57,7 +58,7 @@ npm run build
 
 Ou `npm run check` para as quatro verificações em sequência. `npm run test:watch` acompanha os testes durante o desenvolvimento. O workflow em `.github/workflows/ci.yml` executa instalação reproduzível e verificações em pushes e pull requests para `main`.
 
-Os testes incluem limites e conservação dos dez pontos, atributos por posição, identidade, conclusão, recuperação após reabertura, corrupção, versão incompatível, concorrência entre abas, falha de espaço e fluxo do criador. IndexedDB é testado com `fake-indexeddb`; isso não equivale a um teste de navegador real. Consulte os resultados e limites em [VALIDACAO_ETAPA_02B.md](docs/VALIDACAO_ETAPA_02B.md).
+Os testes cobrem criação, abertura automática das ofertas, contrapropostas, assinatura, reabertura e concorrência entre abas, além da validação dos dados e do salvamento. IndexedDB é testado com `fake-indexeddb`; isso não equivale a um teste de navegador real. Consulte os resultados e limites em [ETAPA_03_PROPOSTAS.md](docs/ETAPA_03_PROPOSTAS.md).
 
 ## Documentação e arquivos
 
@@ -75,7 +76,7 @@ Os testes incluem limites e conservação dos dez pontos, atributos por posiçã
 | [docs/VALIDACAO_ETAPA_02B.md](docs/VALIDACAO_ETAPA_02B.md) | Verificações da versão 0.2.2 |
 | [docs/ETAPA_03_PROPOSTAS.md](docs/ETAPA_03_PROPOSTAS.md) | Regras das propostas simuladas, escopo e verificações |
 | `src/app/` | Rotas `/`, `/atleta`, `/propostas`, `/universo`, `/projeto`, layout e CSS |
-| `src/domain/career/`, `src/features/career/` | Seleção determinística e interface das cinco propostas |
+| `src/domain/career/`, `src/features/career/` | Seleção determinística, negociação e termos do primeiro contrato |
 | `src/domain/athlete/` | Schemas e regras puras de atleta |
 | `src/features/athlete/` | Criador, central e contexto do perfil |
 | `src/infrastructure/storage/` | Adaptador transacional de IndexedDB e testes |
@@ -89,7 +90,7 @@ Stack: Next.js, React, TypeScript, Tailwind CSS, Zod, Vitest e IndexedDB via `id
 
 ## Próximo marco
 
-Preparar a negociação e o primeiro contrato. A pesquisa de inscrições e das demais ligas continua em etapas próprias, com fontes e datas registradas.
+Preparar o calendário do primeiro clube, os treinos e a primeira partida simulada. A pesquisa de inscrições e das demais ligas continua em etapas próprias, com fontes e datas registradas.
 
 Os termos de licença do código do projeto ainda dependem de decisão do titular. Nenhum direito de terceiros sobre marcas, dados ou imagens é presumido.
 

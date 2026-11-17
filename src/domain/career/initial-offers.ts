@@ -1,4 +1,5 @@
 import type { SavedAthlete } from "@/domain/athlete/athlete";
+import type { ContractOffer } from "./contract";
 import type { Position } from "@/domain/athlete/positions";
 import type { PositionGroup, WorldSnapshot } from "@/domain/world/world-schema";
 
@@ -41,13 +42,7 @@ export function buildOfferCatalog(world: WorldSnapshot) {
 }
 
 export type OfferCatalog = ReturnType<typeof buildOfferCatalog>;
-type InitialOffer = {
-  clubId: string;
-  clubName: string;
-  sectorPlayers: number;
-  months: 12 | 24;
-  role: "development" | "rotation";
-};
+export type InitialOffer = ContractOffer & { sectorPlayers: number };
 
 type InitialOffers =
   | { status: "profile-required" }
@@ -84,6 +79,8 @@ export function createInitialOffers(saved: SavedAthlete | null, catalog: OfferCa
     offers: candidates.slice(0, OFFER_COUNT).map(({ club, sectorPlayers }, index) => ({
       clubId: club.id,
       clubName: club.name,
+      catalogVersion: catalog.version,
+      monthlySalary: 3200 + (OFFER_COUNT - 1 - index) * 300,
       sectorPlayers,
       months: age <= 20 ? 24 : 12,
       role: index < 2 ? "rotation" : "development",

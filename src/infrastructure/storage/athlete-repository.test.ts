@@ -62,6 +62,33 @@ describe("Persistência IndexedDB", () => {
     expect((await repository.read())?.revision).toBe(1);
   });
 
+  it("fecha um único primeiro contrato em abas concorrentes e protege o vínculo", async () => {
+    const athlete = await repository.save(
+      { ...createEmptyDraft(), name: "Alex", allocation: { shooting: 10 } }, "ready", null,
+    );
+    const offer = {
+      clubId: "br-remo", clubName: "Remo", catalogVersion: "2026.11.17-01",
+      monthlySalary: 4000, months: 24, role: "rotation",
+    } as const;
+    const anotherTab = createAthleteRepository(databaseName);
+
+    try {
+      const results = await Promise.allSettled([
+        repository.signContract(offer, athlete),
+        anotherTab.signContract({ ...offer, monthlySalary: 4500 }, athlete),
+      ]);
+      expect(results.filter(({ status }) => status === "fulfilled")).toHaveLength(1);
+      expect(results.find(({ status }) => status === "rejected")).toMatchObject({ reason: { code: "conflict" } });
+      const signed = (await repository.read())!;
+      expect(signed.contract?.clubId).toBe(offer.clubId);
+      await expect(repository.signContract(offer, signed)).rejects.toMatchObject({ code: "locked" });
+      await expect(repository.save(athlete.athlete, "ready", signed.revision)).rejects.toMatchObject({ code: "locked" });
+      expect(await anotherTab.read()).toEqual(signed);
+    } finally {
+      await anotherTab.close();
+    }
+  });
+
   it.each([1, 99])("preserva save corrompido ou de versão incompatível (%i)", async (schemaVersion) => {
     await repository.read();
     const direct = await openDB(databaseName, 1);

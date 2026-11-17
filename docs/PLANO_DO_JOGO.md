@@ -91,3 +91,7 @@ Plano em [ETAPA_02B_ELENCOS.md](ETAPA_02B_ELENCOS.md), pesquisa em [PESQUISA_SER
 ## Etapa 03 — Comparação das cinco propostas
 
 Um perfil concluído pode gerar cinco propostas simuladas com base nas relações consultadas da Série A. A seleção considera o setor do atleta e gera condições de jogo identificadas como simuladas. As regras, os testes e o escopo de negociação estão em [ETAPA_03_PROPOSTAS.md](ETAPA_03_PROPOSTAS.md).
+
+## Etapa 03B — Primeiro contrato
+
+A conclusão do atleta abre as cinco propostas automaticamente. O jogador escolhe o clube, pode negociar salário e duração e confirma a assinatura com os termos revisados. A central mostra o clube contratado e recupera o vínculo ao reabrir o jogo. Calendário, treinos e estreia constituem o próximo marco.

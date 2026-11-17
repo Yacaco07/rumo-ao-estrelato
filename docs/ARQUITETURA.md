@@ -76,3 +76,9 @@ As versões efetivas estão fixadas em `package.json` e `package-lock.json`. O a
 O schema 1 aceita o campo opcional `roster.scope`: `club-list` para uma relação do clube e `competition-athletes` para a lista histórica da competição filtrada por clube atual. Snapshots anteriores sem esse campo mantêm a semântica de relação do clube. Pesquisa pendente não pode declarar alcance. Não houve mudança de schema do perfil nem de IndexedDB.
 
 A interface apresenta o alcance e as notas de curadoria e permite filtrar posições ainda desconhecidas. `sourceListedCount` representa a quantidade importada após curadoria; o relatório registra também a quantidade publicada antes das exclusões. A relação da competição pode incluir base e não habilita a carreira. Categorias explícitas plurais e rótulos como “Defensor”, “Meia” e “Meio Campo” são agrupados sem inferir uma função específica do criador.
+
+## Etapa 03B — Propostas e contrato
+
+O domínio em `src/domain/career/` gera as ofertas iniciais e avalia contrapropostas. A rota recebe um resumo agregado dos clubes. A negociação pendente fica na tela e a assinatura grava o vínculo no registro de perfil pela mesma transação com controle de revisão.
+
+O campo opcional `contract` admite perfis salvos antes da assinatura e mantém a estrutura do banco na versão 1. A assinatura exige perfil concluído, compara a revisão e a data de criação e grava os termos e a versão do catálogo. Um contrato impede a edição do perfil ou uma segunda assinatura. A exclusão explícita do perfil elimina também o vínculo.

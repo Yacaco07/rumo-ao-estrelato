@@ -13,7 +13,7 @@ try {
   console.log(`${listed - competitionLists} relações de clubes · ${competitionLists} listas de atletas da competição (podem incluir base)`);
   const observations = world.players.filter((player) => player.shirtObservation).length;
   console.log(`Campos a confirmar: ${world.players.filter((player) => player.positionLabel === null).length} posições · ${world.players.filter((player) => player.shirtNumber === null).length} camisas do elenco · ${observations} camisas documentadas em partidas`);
-  console.log(`Data de corte: ${world.asOfDate} · ${world.sources.length} fontes · inscrições e carreiras ainda não liberadas`);
+  console.log(`Data de corte: ${world.asOfDate} · ${world.sources.length} fontes · inscrições a verificar · catálogo em revisão para partidas`);
 } catch (error) {
   console.error("Snapshot rejeitado; nenhum arquivo foi alterado.");
   if (error && Array.isArray(error.issues)) {

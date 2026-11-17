@@ -52,3 +52,7 @@ Não incluir fotos de jogadores. Nenhum escudo acompanha as versões 0.1 ou 0.2;
 ## Universo vivo
 
 Após iniciar uma carreira, transferências, desempenhos, novos atletas e títulos gerados pelo motor são **eventos simulados daquele save**, não fatos reais. O histórico deve identificar a origem e preservar o snapshot inicial. Dados externos novos serão oferecidos para novas carreiras e não sobrescreverão mundos em andamento.
+
+### Consulta ao Logo de Times
+
+Consulta em 17/11/2026. O site disponibiliza arquivos gratuitamente e limita o uso a divulgação, reservando a titularidade aos respectivos donos. A página da Série A agrupa os participantes de 2023. A consulta não encontrou autorização dos titulares para distribuir esses escudos como parte do jogo. O catálogo mantém a identificação textual enquanto essa evidência estiver pendente. [Direitos autorais do Logo de Times](https://logodetimes.com/direitos-autorais/) · [Catálogo apresentado como Série A de 2023](https://logodetimes.com/campeonato-brasileiro-serie-a/)

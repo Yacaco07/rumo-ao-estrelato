@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import type { ContractOffer } from "@/domain/career/contract";
 import type { AthleteDraft, SavedAthlete } from "@/domain/athlete/athlete";
 import { athleteRepository } from "@/infrastructure/storage/athlete-repository";
 
@@ -8,6 +9,7 @@ type ProfileContext = {
   saved: SavedAthlete | null; loading: boolean; error: string | null;
   dirty: boolean; setDirty: (value: boolean) => void;
   saveProfile: (athlete: AthleteDraft, status: SavedAthlete["status"]) => Promise<SavedAthlete>;
+  signContract: (offer: ContractOffer) => Promise<void>;
   removeProfile: () => Promise<void>;
 };
 
@@ -34,13 +36,19 @@ export function AthleteProvider({ children }: { children: ReactNode }) {
     return result;
   }
 
+  async function signContract(offer: ContractOffer) {
+    if (error) throw new Error(error);
+    if (!saved) throw new Error("Conclua seu perfil antes de assinar.");
+    setSaved(await athleteRepository.signContract(offer, saved));
+  }
+
   async function removeProfile() {
     if (error) throw new Error(error);
     if (saved) await athleteRepository.remove(saved.revision);
     setSaved(null); setDirty(false);
   }
 
-  return <Context.Provider value={{ saved, loading, error, dirty, setDirty, saveProfile, removeProfile }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ saved, loading, error, dirty, setDirty, saveProfile, signContract, removeProfile }}>{children}</Context.Provider>;
 }
 
 export function useAthlete() {
