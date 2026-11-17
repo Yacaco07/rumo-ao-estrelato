@@ -27,3 +27,12 @@ Datas e cruzamentos são simulados. Os regulamentos reais orientam as fases e as
 - [UEFA, formato das fases de liga](https://pt.uefa.com/uefachampionsleague/news/0268-121596105392-0908f942a319-1000--novo-formato-da-champions-league-explicado/)
 - [CFA, ampliação da AFC Elite para 2026/27](https://www.thecfa.cn/qttz/20260519/37691.html)
 - [FIFA, vagas no Mundial de Clubes 2029](https://www.fifa.com/en/tournaments/mens/fifa-club-world-cup/articles/mamelodi-sundowns-pyramids-qualify-2025-club-2029)
+
+## Parte 9 — Seleções
+
+O jogo reconhece nacionalidades do catálogo de seleções e abre convocações com base na posição, minutos, nota média e condição. As janelas da carreira processam amistosos e competições com grupos, mata-mata e finais. O painel guarda convocação, rival, minutos, gols, assistências e títulos. Lesão ou suspensão impede participação.
+
+A Copa do Mundo simulada de 2026 começa com as 48 seleções documentadas, doze grupos e classificação dos oito melhores terceiros. Depois, a seleção de participantes é simulada. Copa América, Eurocopa e Copa Asiática usam recortes próprios do jogo e anos distintos. O calendário de seleções tem partidas em dias separados do calendário nacional de clubes.
+
+- [FIFA, participantes e formato da Copa de 2026](https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/fifa-world-cup-2026-hosts-cities-dates-usa-mexico-canada)
+- [AFC, regulamento da Copa Asiática de 2027](https://assets.the-afc.com/downloads/tournament-regulations/AFC-Asian-Cup-Saudi-Arabia-2027%E2%84%A2-Competition-Regulations-20oct-upd.pdf)

@@ -128,7 +128,7 @@ export function knockout(
 
 export function groupedCup(
   context: CompetitionContext, id: string, name: string, clubs: SeasonClub[],
-  rules: { groups: number; rounds: number; firstWeek: number; knockoutWeeks: number[]; weekday: number; qualify: number },
+  rules: { groups: number; rounds: number; firstWeek: number; knockoutWeeks: number[]; weekday: number; qualify: number; extraQualify?: number },
 ): CompetitionView {
   const groups = Array.from({ length: rules.groups }, (_, group) => clubs.filter((_, index) => index % rules.groups === group));
   const leagues = groups.map((members, index) => scheduleLeague(context, `${id}-g${index + 1}`, `Grupo ${String.fromCharCode(65 + index)}`, members, {
@@ -138,6 +138,11 @@ export function groupedCup(
   const tables = leagues.map((league) => ({ name: league.name, rows: league.tables[0].rows }));
   if (matches.some(({ score }) => score === null)) return { id, name, matches, tables };
   const qualified = Array.from({ length: rules.qualify }, (_, index) => tables.flatMap(({ rows }) => rows[index]?.club ?? [])).flat();
+  if (rules.extraQualify) {
+    const next = tables.flatMap(({ rows }) => rows[rules.qualify] ?? [])
+      .sort((a, b) => b.points - a.points || (b.scored - b.conceded) - (a.scored - a.conceded) || b.scored - a.scored || a.club.id.localeCompare(b.club.id, "en"));
+    qualified.push(...next.slice(0, rules.extraQualify).map(({ club }) => club));
+  }
   const final = knockout(context, id, name, qualified, rules.knockoutWeeks, rules.weekday);
   return { ...final, matches: [...matches, ...final.matches], tables };
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useAthlete } from "@/features/athlete/athlete-provider";
+import { nationalTournaments } from "@/domain/career/national";
 import { brazilPlayoffs } from "@/domain/career/brazil-playoffs";
 import { buildCalendar, roundDate } from "@/domain/career/calendar";
 import { careerDate, seasonYear } from "@/domain/career/career-clock";
@@ -52,7 +53,7 @@ export function CompetitionCentre({ catalog }: { catalog: SeasonCatalog }) {
         tables: [{ name: "Classificação", rows: divisions.second }], winner: rounds[37]?.played ? divisions.second[0]?.club : undefined },
     ];
     if (rounds[37]?.played && divisions.second.length) domestic.push(brazilPlayoffs(season, date, divisions.second).view);
-    return { year: seasonYear(season), date, views: [...domestic, ...worldCompetitions(season, date)] };
+    return { year: seasonYear(season), date, views: [...domestic, ...worldCompetitions(season, date), ...nationalTournaments(year, date, season.seed)] };
   }, [saved, catalog]);
 
   const heading = <div className="page-heading">

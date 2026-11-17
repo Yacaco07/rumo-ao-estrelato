@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
 import { useAthlete } from "@/features/athlete/athlete-provider";
+import { findNation, nationalEligible, nextNationalMatch } from "@/domain/career/national";
 import { upcomingWorldMatches } from "@/domain/career/world-competitions";
 import { brazilPlayoffs } from "@/domain/career/brazil-playoffs";
 import { MarketPanel } from "./market-panel";
@@ -75,7 +76,8 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
 
   const season = withTrainingPlan(!storedSeason.brazilB && catalog.brazilB
     ? { ...storedSeason, brazilB: catalog.brazilB } : storedSeason, saved.athlete);
-  const { rounds, next, last, standings, stats, overall, fatigue, condition, xp, attributes, potential, health, trust, selection, divisions } = readSeason(season);
+  const edition = readSeason(season);
+  const { rounds, next, last, standings, stats, overall, fatigue, condition, xp, attributes, potential, health, trust, selection, divisions } = edition;
   const allowedAttributes = getPosition(season.player.position).attributes;
   const trainingFocus = focus && allowedAttributes.includes(focus) ? focus : defaultTrainingFocus(season.player.position);
   const lastMatch = last?.played;
@@ -86,7 +88,11 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
   const { clubId, role } = registrationAt(season, season.rounds.length);
   const currentClub = [...season.clubs, ...(season.brazilB ?? [])].find(({ id }) => id === clubId)!.name;
   const league = season.clubs.some(({ id }) => id === clubId) ? "Série A" : "Série B";
+  const nation = findNation(saved.athlete.nationality);
+  const nextNational = nationalEligible(saved.athlete, edition) ? nextNationalMatch(saved.athlete, seasonYear(season), date, season.seed) : undefined;
+  const nationalMatches = saved.nationalityCareer?.matches ?? [];
   const schedule = [
+    ...(nextNational ? [{ ...nextNational, competition: "Seleção" }] : []),
     ...rounds.filter((round) => !round.played).map(({ date, fixture, competition, number }) =>
       ({ ...fixture, date, competition, phase: `Rodada ${number}`, id: `liga-${number}` })),
     ...upcomingWorldMatches(season, date, clubId),
@@ -222,6 +228,27 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
         <time dateTime={date}>{formatDate(date)}</time><span>{fixture.home.name} {played ? `${played.match.homeGoals} × ${played.match.awayGoals}` : "×"} {fixture.away.name}</span>
       </li>)}</ol>
     </details>
+    <section className="panel season-card season-section" aria-labelledby="national-team">
+      <h2 id="national-team">Seleção{nation ? ` · ${nation.name}` : ""}</h2>
+      <p>{nation ? nextNational ? `Em observação para o jogo de ${formatDate(nextNational.date)}.`
+        : "Minutos, nota média e condição no clube são avaliados antes das convocações."
+        : "A nacionalidade do perfil está fora do catálogo atual de seleções."}</p>
+      {nationalMatches.length > 0 && <>
+        <dl className="season-stats">
+          <div><dt>Convocações</dt><dd>{nationalMatches.length}</dd></div>
+          <div><dt>Jogos</dt><dd>{nationalMatches.filter(({ minutes }) => minutes > 0).length}</dd></div>
+          <div><dt>Gols</dt><dd>{nationalMatches.reduce((total, { goals }) => total + goals, 0)}</dd></div>
+          <div><dt>Assistências</dt><dd>{nationalMatches.reduce((total, { assists }) => total + assists, 0)}</dd></div>
+          <div><dt>Títulos</dt><dd>{saved.nationalityCareer?.trophies.length ?? 0}</dd></div>
+        </dl>
+        <details className="season-details season-section">
+          <summary>Histórico de convocações</summary>
+          <ul>{nationalMatches.slice(-30).reverse().map((game) => <li key={game.id}>
+            {formatDate(game.date)} · {game.competition} · {game.nation} {game.ownScore} × {game.opponentScore} {game.opponent} · {game.minutes} min
+          </li>)}</ul>
+        </details>
+      </>}
+    </section>
     <MarketPanel market={saved.market ?? emptyMarket()} contract={saved.contract} busy={busy}
       dispatch={(marketAction) => void action({ type: "market", action: marketAction })} />
     <section className="panel season-card season-section" aria-labelledby="league-table">

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { SEASON_ROUNDS, seasonSchema } from "@/domain/career/season-schema";
+import { nationalCareerSchema } from "@/domain/career/national-schema";
 import { marketSchema } from "@/domain/career/market-schema";
 import { registrationAt } from "@/domain/career/registration";
 import { signedContractSchema } from "@/domain/career/contract";
@@ -43,6 +44,7 @@ export const savedAthleteSchema = z.object({
   contract: signedContractSchema.optional(),
   season: seasonSchema.optional(),
   market: marketSchema.optional(),
+  nationalityCareer: nationalCareerSchema.optional(),
   pastSeasons: z.array(seasonSchema).max(75).refine(
     (seasons) => seasons.every(({ rounds }) => rounds.length === SEASON_ROUNDS),
     "O histórico exige temporadas concluídas.",
