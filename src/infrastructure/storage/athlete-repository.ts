@@ -112,7 +112,10 @@ export function createAthleteRepository(databaseName = "rumo-ao-estrelato") {
         if (!current?.contract || current.createdAt !== expected.createdAt) {
           throw new SaveError("conflict", "Recarregue o perfil e confira seu contrato antes de jogar.");
         }
-        const season = current.season ?? createSeason({ ...current, contract: current.contract }, catalog);
+        const savedSeason = current.season && !current.season.brazilB && catalog.brazilB
+          ? { ...current.season, brazilB: catalog.brazilB }
+          : current.season;
+        const season = savedSeason ?? createSeason({ ...current, contract: current.contract }, catalog);
         if (!season) throw new SaveError("invalid", "O catálogo disponível não permite montar esta temporada.");
         const result = applyCareerAction({ ...current, contract: current.contract }, season, action);
         if (!result.ok) throw new SaveError("invalid", result.message);

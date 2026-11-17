@@ -37,10 +37,9 @@ export const seasonSchema = z.object({
   year: z.number().int().min(2026).max(2100).optional(),
   date: z.iso.date().optional(),
   worldVersion: z.string().min(1).max(60),
-  clubs: z.array(clubSchema).length(LEAGUE_SIZE).refine(
-    (clubs) => new Set(clubs.map(({ id }) => id)).size === clubs.length,
-    "O calendário requer clubes distintos.",
-  ),
+  clubs: z.array(clubSchema).length(LEAGUE_SIZE),
+  brazilB: z.array(clubSchema).length(LEAGUE_SIZE).optional(),
+  qualifications: z.record(z.string(), z.array(z.string()).max(60)).optional(),
   player: z.object({
     clubId: z.string(),
     position: z.enum(POSITION_KEYS),
@@ -64,11 +63,15 @@ export const seasonSchema = z.object({
   coachTalkRounds: z.array(z.number().int().min(0).max(SEASON_ROUNDS)).max(SEASON_ROUNDS + 1).optional(),
   startingTrust: z.number().int().min(24).max(100).optional(),
   startingSuspension: z.number().int().min(0).max(3).optional(),
-}).strict().refine(({ clubs, player }) => clubs.some(({ id }) => id === player.clubId), "O clube do atleta deve participar da temporada.")
+}).strict().refine(({ clubs, brazilB, player }) => [...clubs, ...(brazilB ?? [])].some(({ id }) => id === player.clubId), "O clube do atleta deve participar da temporada.")
   .refine(({ rounds, preparation }) => rounds.length < SEASON_ROUNDS || preparation === null, "A temporada já terminou.")
   .superRefine((season, ctx) => {
+    const clubs = [...season.clubs, ...(season.brazilB ?? [])];
+    if (new Set(clubs.map(({ id }) => id)).size !== clubs.length) {
+      ctx.addIssue({ code: "custom", path: ["clubs"], message: "O calendário requer clubes distintos." });
+    }
     if (season.registrations?.some((entry, index, all) =>
-      entry.fromRound > season.rounds.length || !season.clubs.some(({ id }) => id === entry.clubId) ||
+      entry.fromRound > season.rounds.length || !clubs.some(({ id }) => id === entry.clubId) ||
       (index > 0 && all[index - 1].fromRound >= entry.fromRound))) {
       ctx.addIssue({ code: "custom", path: ["registrations"], message: "A inscrição do atleta é incompatível com a edição." });
     }

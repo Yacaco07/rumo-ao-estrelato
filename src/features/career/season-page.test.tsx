@@ -33,7 +33,7 @@ describe("Temporada na interface", () => {
 
     const view = renderSeason();
     const commitments = await screen.findByRole("region", { name: "Próximos compromissos" });
-    expect(within(commitments).getAllByRole("listitem")).toHaveLength(3);
+    expect(within(commitments).getAllByRole("listitem")).toHaveLength(4);
     expect(within(commitments).getByText(/Série A · Rodada 1 · .*Palmeiras/)).toBeInTheDocument();
     const focus = screen.getByLabelText("Atributo a desenvolver");
     expect(within(focus).queryByRole("option", { name: "Finalização" })).not.toBeInTheDocument();

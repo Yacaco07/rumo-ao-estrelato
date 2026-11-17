@@ -9,7 +9,7 @@ import type { ContractOffer } from "./contract";
 import { buildCalendar, FIRST_SEASON_YEAR, roundDate } from "./calendar";
 import { SEASON_ROUNDS, seasonActionSchema, seasonSchema, type Season, type SeasonAction, type SeasonClub, type Training } from "./season-schema";
 
-export type SeasonCatalog = { worldVersion: string; clubs: SeasonClub[] };
+export type SeasonCatalog = { worldVersion: string; clubs: SeasonClub[]; brazilB?: SeasonClub[] };
 export type SeasonProfile = {
   createdAt: string;
   athlete: AthleteDraft;
@@ -84,7 +84,8 @@ export function readSeason(season: Season) {
   const { player, trainingPlan } = season;
   const roleFocus = defaultTrainingFocus(player.position);
   let practice = trainingPlan?.practice ?? {};
-  const table = newTable(season.clubs);
+  const table = newTable([...season.clubs, ...(season.brazilB ?? [])]);
+  const serieA = new Set(season.clubs.map(({ id }) => id));
   let progress: Preparation = { fatigue: 0, xp: 0 };
   let suspension = season.startingSuspension ?? 0;
   let injury = 0;
@@ -92,10 +93,12 @@ export function readSeason(season: Season) {
   let trust = season.startingTrust ?? initialTrust(player.role);
   const stats = { starts: 0, appearances: 0, minutes: 0, goals: 0, assists: 0, saves: 0, cleanSheets: 0, totalRating: 0, yellowCards: 0, redCards: 0 };
   const calendar = buildCalendar(season.clubs);
-  const rounds = calendar.map((fixtures, index) => {
+  const secondCalendar = season.brazilB ? buildCalendar(season.brazilB) : undefined;
+  const rounds = calendar.map((firstDivision, index) => {
+    const fixtures = [...firstDivision, ...(secondCalendar?.[index] ?? [])];
     const registration = registrationAt(season, index);
     const fixture = fixtures.find(({ home, away }) => home.id === registration.clubId || away.id === registration.clubId)!;
-    const scheduled = { number: index + 1, date: roundDate(season.year ?? FIRST_SEASON_YEAR, index), competition: "Série A", fixture };
+    const scheduled = { number: index + 1, date: roundDate(season.year ?? FIRST_SEASON_YEAR, index), competition: serieA.has(registration.clubId) ? "Série A" : "Série B", fixture };
     if (index >= season.rounds.length) return { ...scheduled, played: null };
 
     const preparation = season.rounds[index];
@@ -141,7 +144,7 @@ export function readSeason(season: Season) {
       fatigue: Math.max(0, Math.min(100, progress.fatigue + Math.round(appearance.minutes / 6) - 9)),
       xp: progress.xp + (appearance.rating === null ? 0 : Math.floor(appearance.rating * 2)),
     };
-    return { ...scheduled, played: { match, appearance, events, preparation, results: results.map(({ match }) => match) } };
+    return { ...scheduled, played: { match, appearance, events, preparation, allResults: results.map(({ match }) => match), results: results.filter(({ match }) => serieA.has(match.home.id) === serieA.has(registration.clubId)).map(({ match }) => match) } };
   });
 
   const registration = registrationAt(season, season.rounds.length);
@@ -157,11 +160,14 @@ export function readSeason(season: Season) {
     b.points - a.points || b.wins - a.wins || (b.scored - b.conceded) - (a.scored - a.conceded) ||
     b.scored - a.scored || a.club.id.localeCompare(b.club.id, "en"),
   );
+  const first = standings.filter(({ club }) => serieA.has(club.id));
+  const second = standings.filter(({ club }) => !serieA.has(club.id));
   return {
     rounds,
     next: rounds[season.rounds.length],
     last: rounds[season.rounds.length - 1],
-    standings,
+    standings: serieA.has(registration.clubId) ? first : second,
+    divisions: { first, second },
     stats: { ...stats, average: stats.appearances > 0 ? stats.totalRating / stats.appearances : null },
     fatigue: progress.fatigue,
     condition: 100 - progress.fatigue,

@@ -1,7 +1,9 @@
 import type { SavedAthlete } from "@/domain/athlete/athlete";
 import { addDays, DAYS_PER_WEEK, FIRST_SEASON_YEAR, roundDate } from "./calendar";
 import { effectiveContract, emptyMarket, marketAfterRound, settleMarket, useMarket, type MarketCareer } from "./market";
-import { switchRegistration } from "./registration";
+import { upcomingWorldMatches, worldQualifiers } from "./world-competitions";
+import { brazilPlayoffEnd, brazilPlayoffs } from "./brazil-playoffs";
+import { registrationAt, switchRegistration } from "./registration";
 import { nextTrainingPlan, withTrainingPlan } from "./training";
 import { applySeasonAction, createSeason, readSeason } from "./season";
 import { SEASON_ROUNDS, seasonActionSchema, type Season, type SeasonAction } from "./season-schema";
@@ -15,8 +17,23 @@ export function careerDate(season: Season): string {
 }
 
 export function nextMatchDate(season: Season): string {
-  if (season.rounds.length === SEASON_ROUNDS) return roundDate(seasonYear(season) + 1, 0);
+  if (season.rounds.length === SEASON_ROUNDS) return season.brazilB && careerDate(season) < brazilPlayoffEnd(season)
+    ? brazilPlayoffEnd(season) : roundDate(seasonYear(season) + 1, 0);
   return roundDate(seasonYear(season), season.rounds.length);
+}
+
+export function nextCommitmentDate(season: Season): string {
+  const league = nextMatchDate(season);
+  if (!season.brazilB) return league;
+  const registration = registrationAt(season, season.rounds.length);
+  if (registration.inactive) return league;
+  const date = careerDate(season);
+  const playoff = season.rounds.length === SEASON_ROUNDS
+    ? brazilPlayoffs(season, date, readSeason(season).divisions.second).view.matches.find((match) =>
+      !match.score && (match.home.id === registration.clubId || match.away.id === registration.clubId))?.date
+    : undefined;
+  const other = playoff ?? upcomingWorldMatches(season, date, registration.clubId)[0]?.date;
+  return other && other < league ? other : league;
 }
 
 export function latestAdvanceDate(season: Season): string {
@@ -53,14 +70,31 @@ export function applyCareerAction(
   }
 
   function rollSeason() {
-    const upcoming = createSeason({ ...profile, contract: effectiveContract({ season: current, contract, market }) }, { worldVersion: current.worldVersion, clubs: current.clubs }, seasonYear(current) + 1);
-    if (!upcoming) return false;
     const previous = readSeason(current);
+    let clubs = current.clubs;
+    let brazilB = current.brazilB;
+    if (brazilB) {
+      const { first, second } = previous.divisions;
+      const promoted = new Set(brazilPlayoffs(current, careerDate(current), second).promoted);
+      const relegated = new Set(first.slice(-4).map(({ club }) => club.id));
+      const outgoing = clubs.filter(({ id }) => relegated.has(id));
+      clubs = [...clubs.filter(({ id }) => !relegated.has(id)), ...brazilB.filter(({ id }) => promoted.has(id))];
+      brazilB = [...brazilB.filter(({ id }) => !promoted.has(id)), ...outgoing];
+    }
+    const upcoming = createSeason({ ...profile, contract: effectiveContract({ season: current, contract, market }) },
+      { worldVersion: current.worldVersion, clubs, ...(brazilB ? { brazilB } : {}) }, seasonYear(current) + 1);
+    if (!upcoming) return false;
+    const qualifications = brazilB ? {
+      ...worldQualifiers(current, careerDate(current)),
+      "br-a": previous.divisions.first.map(({ club }) => club.id),
+      "br-b": previous.divisions.second.map(({ club }) => club.id),
+    } : undefined;
     pastSeasons = [...pastSeasons, current];
     current = {
       ...upcoming,
       date: careerDate(current),
       trainingPlan: nextTrainingPlan(current.trainingPlan!, previous.practice),
+      ...(qualifications ? { qualifications } : {}),
       detailedFrom: 0,
       coachingFrom: 0,
       startingTrust: previous.trust,
@@ -72,6 +106,7 @@ export function applyCareerAction(
 
   if (parsed.data.type === "train") {
     settle(careerDate(current));
+    if (current.brazilB && current.rounds.length === SEASON_ROUNDS) return { ok: false, message: "Aguarde o fim do playoff para preparar a edição seguinte." };
     if (current.rounds.length === SEASON_ROUNDS && !rollSeason()) return { ok: false, message: "A próxima temporada não pôde ser montada." };
     if (parsed.data.training !== "recovery" && readSeason(current).health.injury > 0) {
       return { ok: false, message: "Durante a lesão, escolha recuperação." };
@@ -85,20 +120,29 @@ export function applyCareerAction(
   const date = careerDate(current);
   const target = parsed.data.type === "play" ? nextMatchDate(current)
     : parsed.data.until === "week" ? addDays(date, DAYS_PER_WEEK)
-    : parsed.data.until === "next" ? nextMatchDate(current) : parsed.data.until;
+    : parsed.data.until === "next" ? nextCommitmentDate(current) : parsed.data.until;
   if (target <= date || target > latestAdvanceDate(current)) {
     return { ok: false, message: "Escolha uma data futura dentro de um ano do calendário." };
   }
 
-  if (current.rounds.length === SEASON_ROUNDS && !rollSeason()) return { ok: false, message: "A próxima temporada não pôde ser montada." };
-  while (nextMatchDate(current) <= target) {
+  function finishIfDue() {
+    if (current.rounds.length !== SEASON_ROUNDS) return true;
+    const end = current.brazilB ? brazilPlayoffEnd(current) : careerDate(current);
+    if (target < end) return true;
+    settle(end);
+    current = { ...current, date: end };
+    return rollSeason();
+  }
+
+  if (!finishIfDue()) return { ok: false, message: "A próxima temporada não pôde ser montada." };
+  while (current.rounds.length < SEASON_ROUNDS && nextMatchDate(current) <= target) {
     const matchDay = nextMatchDate(current);
     settle(matchDay);
     const result = applySeasonAction(current, { type: "play" });
     if (!result.ok) return result;
     current = { ...result.season, date: matchDay };
     market = marketAfterRound({ season: current, market, contract }, matchDay, readSeason(current).last);
-    if (current.rounds.length === SEASON_ROUNDS && !rollSeason()) return { ok: false, message: "A próxima temporada não pôde ser montada." };
+    if (!finishIfDue()) return { ok: false, message: "A próxima temporada não pôde ser montada." };
   }
   settle(target);
   current = { ...current, date: target };

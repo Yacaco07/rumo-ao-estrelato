@@ -465,3 +465,6 @@ fieldset { padding: 0; margin: 0; border: none; }
 .market-counter { display: grid; gap: 8px; margin-top: 8px; }
 .market-counter label { display: grid; gap: 4px; font-size: 12px; }
 .market-counter input, .market-counter select { width: 100%; min-height: 35px; border: 1px solid var(--line); border-radius: 4px; padding: 5px; }
+
+.season-card .calendar-advance select { min-height: 40px; max-width: 100%; padding: 7px 10px; border-radius: 5px; border: 1px solid var(--line); }
+.season-table caption { text-align: left; font-weight: 600; padding-block: 8px; }

@@ -1,4 +1,5 @@
 import { readFileSync, statSync } from "node:fs";
+import { leagueMembershipSchema } from "../src/domain/world/league-membership.ts";
 import { parseWorldSnapshot } from "../src/domain/world/world-schema.ts";
 
 const file = process.argv[2] ?? new URL("../src/data/world/br-serie-a-2026.json", import.meta.url);
@@ -6,6 +7,12 @@ const file = process.argv[2] ?? new URL("../src/data/world/br-serie-a-2026.json"
 try {
   if (statSync(file).size > 5_000_000) throw new Error("Snapshot maior que o limite de revisão de 5 MB.");
   const world = parseWorldSnapshot(JSON.parse(readFileSync(file, "utf8")));
+  if (!process.argv[2]) {
+    const extra = leagueMembershipSchema.parse(JSON.parse(readFileSync(new URL("../src/data/world/competition-members-2026.json", import.meta.url), "utf8")));
+    const original = new Set(world.clubs.map(({ id }) => id));
+    if (extra.some(({ clubs }) => clubs.some(({ id }) => original.has(id)))) throw new Error("Clube repetido entre a Série A e as ligas adicionais.");
+    console.log(`${extra.length} ligas adicionais · ${extra.reduce((total, league) => total + league.clubs.length, 0)} clubes · fontes de participação registradas`);
+  }
   const listed = world.clubs.filter((club) => club.roster.status === "listed").length;
   const competitionLists = world.clubs.filter((club) => club.roster.status === "listed" && club.roster.scope === "competition-athletes").length;
   console.log(`Snapshot válido: ${world.id} · versão ${world.version}`);

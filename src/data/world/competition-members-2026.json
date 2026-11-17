@@ -1,0 +1,1148 @@
+[
+  {
+    "id": "br-b",
+    "name": "Série B",
+    "edition": "2026",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "CBF, Regulamento Específico, anexo A",
+        "url": "https://stcbfsiteprdimgbrs.blob.core.windows.net/img-site/cdn/REC_Brasileiro_Serie_B_2026_85d55b9f72.pdf"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "br-america-mineiro",
+        "name": "América Mineiro"
+      },
+      {
+        "id": "br-athletic-club",
+        "name": "Athletic Club"
+      },
+      {
+        "id": "br-atletico-goianiense",
+        "name": "Atlético Goianiense"
+      },
+      {
+        "id": "br-avai",
+        "name": "Avaí"
+      },
+      {
+        "id": "br-botafogo-sp",
+        "name": "Botafogo-SP"
+      },
+      {
+        "id": "br-ceara",
+        "name": "Ceará"
+      },
+      {
+        "id": "br-crb",
+        "name": "CRB"
+      },
+      {
+        "id": "br-criciuma",
+        "name": "Criciúma"
+      },
+      {
+        "id": "br-cuiaba",
+        "name": "Cuiabá"
+      },
+      {
+        "id": "br-fortaleza",
+        "name": "Fortaleza"
+      },
+      {
+        "id": "br-goias",
+        "name": "Goiás"
+      },
+      {
+        "id": "br-juventude",
+        "name": "Juventude"
+      },
+      {
+        "id": "br-londrina",
+        "name": "Londrina"
+      },
+      {
+        "id": "br-nautico",
+        "name": "Náutico"
+      },
+      {
+        "id": "br-gremio-novorizontino",
+        "name": "Grêmio Novorizontino"
+      },
+      {
+        "id": "br-operario-pr",
+        "name": "Operário-PR"
+      },
+      {
+        "id": "br-ponte-preta",
+        "name": "Ponte Preta"
+      },
+      {
+        "id": "br-sao-bernardo-fc",
+        "name": "São Bernardo FC"
+      },
+      {
+        "id": "br-sport-recife",
+        "name": "Sport Recife"
+      },
+      {
+        "id": "br-vila-nova",
+        "name": "Vila Nova"
+      }
+    ]
+  },
+  {
+    "id": "ar-1",
+    "name": "Liga Profesional Argentina",
+    "edition": "2026",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "Liga Profesional de Fútbol de AFA, zonas 2026",
+        "url": "https://www.ligaprofesional.ar/?p=75932"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "ar-platense",
+        "name": "Platense"
+      },
+      {
+        "id": "ar-defensa-y-justicia",
+        "name": "Defensa y Justicia"
+      },
+      {
+        "id": "ar-central-cordoba",
+        "name": "Central Córdoba"
+      },
+      {
+        "id": "ar-lanus",
+        "name": "Lanús"
+      },
+      {
+        "id": "ar-deportivo-riestra",
+        "name": "Deportivo Riestra"
+      },
+      {
+        "id": "ar-talleres-de-cordoba",
+        "name": "Talleres de Córdoba"
+      },
+      {
+        "id": "ar-boca-juniors",
+        "name": "Boca Juniors"
+      },
+      {
+        "id": "ar-estudiantes-de-la-plata",
+        "name": "Estudiantes de La Plata"
+      },
+      {
+        "id": "ar-instituto-de-cordoba",
+        "name": "Instituto de Córdoba"
+      },
+      {
+        "id": "ar-gimnasia-de-mendoza",
+        "name": "Gimnasia de Mendoza"
+      },
+      {
+        "id": "ar-san-lorenzo",
+        "name": "San Lorenzo"
+      },
+      {
+        "id": "ar-independiente",
+        "name": "Independiente"
+      },
+      {
+        "id": "ar-newell-s-old-boys",
+        "name": "Newell’s Old Boys"
+      },
+      {
+        "id": "ar-union-de-santa-fe",
+        "name": "Unión de Santa Fe"
+      },
+      {
+        "id": "ar-velez-sarsfield",
+        "name": "Vélez Sarsfield"
+      },
+      {
+        "id": "ar-argentinos-juniors",
+        "name": "Argentinos Juniors"
+      },
+      {
+        "id": "ar-aldosivi",
+        "name": "Aldosivi"
+      },
+      {
+        "id": "ar-atletico-tucuman",
+        "name": "Atlético Tucumán"
+      },
+      {
+        "id": "ar-banfield",
+        "name": "Banfield"
+      },
+      {
+        "id": "ar-barracas-central",
+        "name": "Barracas Central"
+      },
+      {
+        "id": "ar-belgrano",
+        "name": "Belgrano"
+      },
+      {
+        "id": "ar-river-plate",
+        "name": "River Plate"
+      },
+      {
+        "id": "ar-gimnasia-la-plata",
+        "name": "Gimnasia La Plata"
+      },
+      {
+        "id": "ar-estudiantes-de-rio-cuarto",
+        "name": "Estudiantes de Río Cuarto"
+      },
+      {
+        "id": "ar-independiente-rivadavia",
+        "name": "Independiente Rivadavia"
+      },
+      {
+        "id": "ar-huracan",
+        "name": "Huracán"
+      },
+      {
+        "id": "ar-racing-club",
+        "name": "Racing Club"
+      },
+      {
+        "id": "ar-rosario-central",
+        "name": "Rosario Central"
+      },
+      {
+        "id": "ar-sarmiento",
+        "name": "Sarmiento"
+      },
+      {
+        "id": "ar-tigre",
+        "name": "Tigre"
+      }
+    ]
+  },
+  {
+    "id": "en-1",
+    "name": "Premier League",
+    "edition": "2026/27",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "OpenFootball, participantes do calendário 2026/27",
+        "url": "https://raw.githubusercontent.com/openfootball/football.json/master/2026-27/en.1.json"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "en-afc-bournemouth",
+        "name": "AFC Bournemouth"
+      },
+      {
+        "id": "en-arsenal-fc",
+        "name": "Arsenal FC"
+      },
+      {
+        "id": "en-aston-villa-fc",
+        "name": "Aston Villa FC"
+      },
+      {
+        "id": "en-brentford-fc",
+        "name": "Brentford FC"
+      },
+      {
+        "id": "en-brighton-hove-albion-fc",
+        "name": "Brighton & Hove Albion FC"
+      },
+      {
+        "id": "en-chelsea-fc",
+        "name": "Chelsea FC"
+      },
+      {
+        "id": "en-coventry-city-fc",
+        "name": "Coventry City FC"
+      },
+      {
+        "id": "en-crystal-palace-fc",
+        "name": "Crystal Palace FC"
+      },
+      {
+        "id": "en-everton-fc",
+        "name": "Everton FC"
+      },
+      {
+        "id": "en-fulham-fc",
+        "name": "Fulham FC"
+      },
+      {
+        "id": "en-hull-city-afc",
+        "name": "Hull City AFC"
+      },
+      {
+        "id": "en-ipswich-town-fc",
+        "name": "Ipswich Town FC"
+      },
+      {
+        "id": "en-leeds-united-fc",
+        "name": "Leeds United FC"
+      },
+      {
+        "id": "en-liverpool-fc",
+        "name": "Liverpool FC"
+      },
+      {
+        "id": "en-manchester-city-fc",
+        "name": "Manchester City FC"
+      },
+      {
+        "id": "en-manchester-united-fc",
+        "name": "Manchester United FC"
+      },
+      {
+        "id": "en-newcastle-united-fc",
+        "name": "Newcastle United FC"
+      },
+      {
+        "id": "en-nottingham-forest-fc",
+        "name": "Nottingham Forest FC"
+      },
+      {
+        "id": "en-sunderland-afc",
+        "name": "Sunderland AFC"
+      },
+      {
+        "id": "en-tottenham-hotspur-fc",
+        "name": "Tottenham Hotspur FC"
+      }
+    ]
+  },
+  {
+    "id": "es-1",
+    "name": "La Liga",
+    "edition": "2026/27",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "OpenFootball, participantes do calendário 2026/27",
+        "url": "https://raw.githubusercontent.com/openfootball/football.json/master/2026-27/es.1.json"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "es-athletic-club",
+        "name": "Athletic Club"
+      },
+      {
+        "id": "es-ca-osasuna",
+        "name": "CA Osasuna"
+      },
+      {
+        "id": "es-club-atletico-de-madrid",
+        "name": "Club Atlético de Madrid"
+      },
+      {
+        "id": "es-deportivo-alaves",
+        "name": "Deportivo Alavés"
+      },
+      {
+        "id": "es-elche-cf",
+        "name": "Elche CF"
+      },
+      {
+        "id": "es-fc-barcelona",
+        "name": "FC Barcelona"
+      },
+      {
+        "id": "es-getafe-cf",
+        "name": "Getafe CF"
+      },
+      {
+        "id": "es-levante-ud",
+        "name": "Levante UD"
+      },
+      {
+        "id": "es-malaga-cf",
+        "name": "Málaga CF"
+      },
+      {
+        "id": "es-rc-celta-de-vigo",
+        "name": "RC Celta de Vigo"
+      },
+      {
+        "id": "es-rc-deportivo-la-coruna",
+        "name": "RC Deportivo La Coruña"
+      },
+      {
+        "id": "es-rcd-espanyol-de-barcelona",
+        "name": "RCD Espanyol de Barcelona"
+      },
+      {
+        "id": "es-rayo-vallecano-de-madrid",
+        "name": "Rayo Vallecano de Madrid"
+      },
+      {
+        "id": "es-real-betis-balompie",
+        "name": "Real Betis Balompié"
+      },
+      {
+        "id": "es-real-madrid-cf",
+        "name": "Real Madrid CF"
+      },
+      {
+        "id": "es-real-racing-club-de-santander",
+        "name": "Real Racing Club de Santander"
+      },
+      {
+        "id": "es-real-sociedad-de-futbol",
+        "name": "Real Sociedad de Fútbol"
+      },
+      {
+        "id": "es-sevilla-fc",
+        "name": "Sevilla FC"
+      },
+      {
+        "id": "es-valencia-cf",
+        "name": "Valencia CF"
+      },
+      {
+        "id": "es-villarreal-cf",
+        "name": "Villarreal CF"
+      }
+    ]
+  },
+  {
+    "id": "de-1",
+    "name": "Bundesliga",
+    "edition": "2026/27",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "OpenFootball, participantes do calendário 2026/27",
+        "url": "https://raw.githubusercontent.com/openfootball/football.json/master/2026-27/de.1.json"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "de-1-fc-koln",
+        "name": "1. FC Köln"
+      },
+      {
+        "id": "de-1-fc-union-berlin",
+        "name": "1. FC Union Berlin"
+      },
+      {
+        "id": "de-1-fsv-mainz-05",
+        "name": "1. FSV Mainz 05"
+      },
+      {
+        "id": "de-bayer-04-leverkusen",
+        "name": "Bayer 04 Leverkusen"
+      },
+      {
+        "id": "de-borussia-dortmund",
+        "name": "Borussia Dortmund"
+      },
+      {
+        "id": "de-borussia-monchengladbach",
+        "name": "Borussia Mönchengladbach"
+      },
+      {
+        "id": "de-eintracht-frankfurt",
+        "name": "Eintracht Frankfurt"
+      },
+      {
+        "id": "de-fc-augsburg",
+        "name": "FC Augsburg"
+      },
+      {
+        "id": "de-fc-bayern-munchen",
+        "name": "FC Bayern München"
+      },
+      {
+        "id": "de-fc-schalke-04",
+        "name": "FC Schalke 04"
+      },
+      {
+        "id": "de-hamburger-sv",
+        "name": "Hamburger SV"
+      },
+      {
+        "id": "de-rb-leipzig",
+        "name": "RB Leipzig"
+      },
+      {
+        "id": "de-sc-freiburg",
+        "name": "SC Freiburg"
+      },
+      {
+        "id": "de-sc-paderborn-07",
+        "name": "SC Paderborn 07"
+      },
+      {
+        "id": "de-sv-07-elversberg",
+        "name": "SV 07 Elversberg"
+      },
+      {
+        "id": "de-sv-werder-bremen",
+        "name": "SV Werder Bremen"
+      },
+      {
+        "id": "de-tsg-1899-hoffenheim",
+        "name": "TSG 1899 Hoffenheim"
+      },
+      {
+        "id": "de-vfb-stuttgart",
+        "name": "VfB Stuttgart"
+      }
+    ]
+  },
+  {
+    "id": "it-1",
+    "name": "Serie A italiana",
+    "edition": "2026/27",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "OpenFootball, participantes do calendário 2026/27",
+        "url": "https://raw.githubusercontent.com/openfootball/football.json/master/2026-27/it.1.json"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "it-ac-milan",
+        "name": "AC Milan"
+      },
+      {
+        "id": "it-ac-monza",
+        "name": "AC Monza"
+      },
+      {
+        "id": "it-acf-fiorentina",
+        "name": "ACF Fiorentina"
+      },
+      {
+        "id": "it-as-roma",
+        "name": "AS Roma"
+      },
+      {
+        "id": "it-atalanta-bc",
+        "name": "Atalanta BC"
+      },
+      {
+        "id": "it-bologna-fc-1909",
+        "name": "Bologna FC 1909"
+      },
+      {
+        "id": "it-cagliari-calcio",
+        "name": "Cagliari Calcio"
+      },
+      {
+        "id": "it-como-1907",
+        "name": "Como 1907"
+      },
+      {
+        "id": "it-fc-internazionale-milano",
+        "name": "FC Internazionale Milano"
+      },
+      {
+        "id": "it-frosinone-calcio",
+        "name": "Frosinone Calcio"
+      },
+      {
+        "id": "it-genoa-cfc",
+        "name": "Genoa CFC"
+      },
+      {
+        "id": "it-juventus-fc",
+        "name": "Juventus FC"
+      },
+      {
+        "id": "it-parma-calcio-1913",
+        "name": "Parma Calcio 1913"
+      },
+      {
+        "id": "it-ss-lazio",
+        "name": "SS Lazio"
+      },
+      {
+        "id": "it-ssc-napoli",
+        "name": "SSC Napoli"
+      },
+      {
+        "id": "it-torino-fc",
+        "name": "Torino FC"
+      },
+      {
+        "id": "it-us-lecce",
+        "name": "US Lecce"
+      },
+      {
+        "id": "it-us-sassuolo-calcio",
+        "name": "US Sassuolo Calcio"
+      },
+      {
+        "id": "it-udinese-calcio",
+        "name": "Udinese Calcio"
+      },
+      {
+        "id": "it-venezia-fc",
+        "name": "Venezia FC"
+      }
+    ]
+  },
+  {
+    "id": "fr-1",
+    "name": "Ligue 1",
+    "edition": "2026/27",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "OpenFootball, participantes do calendário 2026/27",
+        "url": "https://raw.githubusercontent.com/openfootball/football.json/master/2026-27/fr.1.json"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "fr-aj-auxerre",
+        "name": "AJ Auxerre"
+      },
+      {
+        "id": "fr-as-monaco-fc",
+        "name": "AS Monaco FC"
+      },
+      {
+        "id": "fr-angers-sco",
+        "name": "Angers SCO"
+      },
+      {
+        "id": "fr-es-troyes-ac",
+        "name": "ES Troyes AC"
+      },
+      {
+        "id": "fr-fc-lorient",
+        "name": "FC Lorient"
+      },
+      {
+        "id": "fr-le-havre-ac",
+        "name": "Le Havre AC"
+      },
+      {
+        "id": "fr-le-mans-fc",
+        "name": "Le Mans FC"
+      },
+      {
+        "id": "fr-lille-osc",
+        "name": "Lille OSC"
+      },
+      {
+        "id": "fr-ogc-nice",
+        "name": "OGC Nice"
+      },
+      {
+        "id": "fr-olympique-lyonnais",
+        "name": "Olympique Lyonnais"
+      },
+      {
+        "id": "fr-olympique-de-marseille",
+        "name": "Olympique de Marseille"
+      },
+      {
+        "id": "fr-paris-fc",
+        "name": "Paris FC"
+      },
+      {
+        "id": "fr-paris-saint-germain-fc",
+        "name": "Paris Saint-Germain FC"
+      },
+      {
+        "id": "fr-rc-strasbourg-alsace",
+        "name": "RC Strasbourg Alsace"
+      },
+      {
+        "id": "fr-racing-club-de-lens",
+        "name": "Racing Club de Lens"
+      },
+      {
+        "id": "fr-stade-brestois-29",
+        "name": "Stade Brestois 29"
+      },
+      {
+        "id": "fr-stade-rennais-fc-1901",
+        "name": "Stade Rennais FC 1901"
+      },
+      {
+        "id": "fr-toulouse-fc",
+        "name": "Toulouse FC"
+      }
+    ]
+  },
+  {
+    "id": "sa-1",
+    "name": "Saudi Pro League",
+    "edition": "2026/27",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "Saudi Pro League, edição da tabela",
+        "url": "https://www.spl.com.sa/en/standings"
+      },
+      {
+        "name": "Ninety Minutes Plus, lista de clubes da tabela",
+        "url": "https://www.ninetyminutesplus.com/league/saudi-pro-league/standings"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "sa-al-hilal",
+        "name": "Al Hilal"
+      },
+      {
+        "id": "sa-al-qadsiah",
+        "name": "Al-Qadsiah"
+      },
+      {
+        "id": "sa-al-nassr",
+        "name": "Al Nassr"
+      },
+      {
+        "id": "sa-al-ittihad",
+        "name": "Al Ittihad"
+      },
+      {
+        "id": "sa-neom-sc",
+        "name": "NEOM SC"
+      },
+      {
+        "id": "sa-al-ahli-saudi",
+        "name": "Al Ahli Saudi"
+      },
+      {
+        "id": "sa-al-ettifaq",
+        "name": "Al Ettifaq"
+      },
+      {
+        "id": "sa-al-diraiyah",
+        "name": "Al Diraiyah"
+      },
+      {
+        "id": "sa-al-khaleej",
+        "name": "Al Khaleej"
+      },
+      {
+        "id": "sa-al-shabab",
+        "name": "Al Shabab"
+      },
+      {
+        "id": "sa-al-kholood",
+        "name": "Al Kholood"
+      },
+      {
+        "id": "sa-al-riyadh",
+        "name": "Al Riyadh"
+      },
+      {
+        "id": "sa-al-fayha",
+        "name": "Al-Fayha"
+      },
+      {
+        "id": "sa-al-hazm",
+        "name": "Al Hazm"
+      },
+      {
+        "id": "sa-al-faisaly",
+        "name": "Al Faisaly"
+      },
+      {
+        "id": "sa-al-fateh",
+        "name": "Al Fateh"
+      },
+      {
+        "id": "sa-al-taawoun",
+        "name": "Al Taawoun"
+      },
+      {
+        "id": "sa-abha",
+        "name": "Abha"
+      }
+    ]
+  },
+  {
+    "id": "jp-1",
+    "name": "J1 League",
+    "edition": "2026/27",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "J.LEAGUE, tabela J1",
+        "url": "https://www.jleague.jp/en/j1/standings/"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "jp-fc-tokyo",
+        "name": "FC Tokyo"
+      },
+      {
+        "id": "jp-kashiwa-reysol",
+        "name": "Kashiwa Reysol"
+      },
+      {
+        "id": "jp-sanfrecce-hiroshima",
+        "name": "Sanfrecce Hiroshima"
+      },
+      {
+        "id": "jp-fc-machida-zelvia",
+        "name": "FC Machida Zelvia"
+      },
+      {
+        "id": "jp-vissel-kobe",
+        "name": "Vissel Kobe"
+      },
+      {
+        "id": "jp-kashima-antlers",
+        "name": "Kashima Antlers"
+      },
+      {
+        "id": "jp-yokohama-f-marinos",
+        "name": "Yokohama F. Marinos"
+      },
+      {
+        "id": "jp-kawasaki-frontale",
+        "name": "Kawasaki Frontale"
+      },
+      {
+        "id": "jp-urawa-reds",
+        "name": "Urawa Reds"
+      },
+      {
+        "id": "jp-fagiano-okayama",
+        "name": "Fagiano Okayama"
+      },
+      {
+        "id": "jp-cerezo-osaka",
+        "name": "Cerezo Osaka"
+      },
+      {
+        "id": "jp-kyoto-sanga",
+        "name": "Kyoto Sanga"
+      },
+      {
+        "id": "jp-nagoya-grampus",
+        "name": "Nagoya Grampus"
+      },
+      {
+        "id": "jp-tokyo-verdy",
+        "name": "Tokyo Verdy"
+      },
+      {
+        "id": "jp-shimizu-s-pulse",
+        "name": "Shimizu S-Pulse"
+      },
+      {
+        "id": "jp-v-varen-nagasaki",
+        "name": "V-Varen Nagasaki"
+      },
+      {
+        "id": "jp-jef-united-chiba",
+        "name": "JEF United Chiba"
+      },
+      {
+        "id": "jp-gamba-osaka",
+        "name": "Gamba Osaka"
+      },
+      {
+        "id": "jp-mito-hollyhock",
+        "name": "Mito Hollyhock"
+      },
+      {
+        "id": "jp-avispa-fukuoka",
+        "name": "Avispa Fukuoka"
+      }
+    ]
+  },
+  {
+    "id": "kr-1",
+    "name": "K League 1",
+    "edition": "2026",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "K League, classificação publicada no boletim da rodada 29",
+        "url": "https://www.kleague.com/match/pdfDownload.do?gameId=173&meetSeq=1&year=2026"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "kr-fc-seoul",
+        "name": "FC Seoul"
+      },
+      {
+        "id": "kr-ulsan-hd",
+        "name": "Ulsan HD"
+      },
+      {
+        "id": "kr-jeonbuk-hyundai-motors",
+        "name": "Jeonbuk Hyundai Motors"
+      },
+      {
+        "id": "kr-jeju-sk",
+        "name": "Jeju SK"
+      },
+      {
+        "id": "kr-gangwon-fc",
+        "name": "Gangwon FC"
+      },
+      {
+        "id": "kr-daejeon-hana-citizen",
+        "name": "Daejeon Hana Citizen"
+      },
+      {
+        "id": "kr-incheon-united",
+        "name": "Incheon United"
+      },
+      {
+        "id": "kr-pohang-steelers",
+        "name": "Pohang Steelers"
+      },
+      {
+        "id": "kr-fc-anyang",
+        "name": "FC Anyang"
+      },
+      {
+        "id": "kr-bucheon-fc-1995",
+        "name": "Bucheon FC 1995"
+      },
+      {
+        "id": "kr-gimcheon-sangmu",
+        "name": "Gimcheon Sangmu"
+      },
+      {
+        "id": "kr-gwangju-fc",
+        "name": "Gwangju FC"
+      }
+    ]
+  },
+  {
+    "id": "ae-1",
+    "name": "UAE Pro League",
+    "edition": "2026/27",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "UAE Pro League, tabela",
+        "url": "https://www.uaeproleague.ae/en/standings"
+      },
+      {
+        "name": "GOLTIKI, relação ADNOC Pro League 2026/27",
+        "url": "https://goltiki.com/en/competitions/uae-pro-league"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "ae-al-jazira",
+        "name": "Al Jazira"
+      },
+      {
+        "id": "ae-sharjah-fc",
+        "name": "Sharjah FC"
+      },
+      {
+        "id": "ae-al-ain",
+        "name": "Al Ain"
+      },
+      {
+        "id": "ae-shabab-al-ahli-dubai",
+        "name": "Shabab Al Ahli Dubai"
+      },
+      {
+        "id": "ae-al-wahda",
+        "name": "Al Wahda"
+      },
+      {
+        "id": "ae-al-wasl",
+        "name": "Al Wasl"
+      },
+      {
+        "id": "ae-al-nasr-dubai",
+        "name": "Al Nasr Dubai"
+      },
+      {
+        "id": "ae-ajman",
+        "name": "Ajman"
+      },
+      {
+        "id": "ae-kalba",
+        "name": "Kalba"
+      },
+      {
+        "id": "ae-khorfakkan",
+        "name": "Khorfakkan"
+      },
+      {
+        "id": "ae-united-fc",
+        "name": "United FC"
+      },
+      {
+        "id": "ae-al-dhafra",
+        "name": "Al Dhafra"
+      },
+      {
+        "id": "ae-hatta",
+        "name": "Hatta"
+      },
+      {
+        "id": "ae-baniyas",
+        "name": "Baniyas"
+      }
+    ]
+  },
+  {
+    "id": "qa-1",
+    "name": "Qatar Stars League",
+    "edition": "2026/27",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "Qatar Star League, conferência da tabela oficial",
+        "url": "https://qatarstarleague.com/league/table/"
+      },
+      {
+        "name": "QSL, confirmação da edição e presença de Lusail",
+        "url": "https://www.qsl.qa/index.php/en/news/doha-bank-stars-league-week-10-al-sadd-vs-lusail"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "qa-al-rayyan",
+        "name": "Al Rayyan"
+      },
+      {
+        "id": "qa-al-duhail",
+        "name": "Al Duhail"
+      },
+      {
+        "id": "qa-al-sadd",
+        "name": "Al Sadd"
+      },
+      {
+        "id": "qa-al-arabi-qatar",
+        "name": "Al Arabi Qatar"
+      },
+      {
+        "id": "qa-lusail",
+        "name": "Lusail"
+      },
+      {
+        "id": "qa-al-shamal",
+        "name": "Al Shamal"
+      },
+      {
+        "id": "qa-al-ahli-doha",
+        "name": "Al Ahli Doha"
+      },
+      {
+        "id": "qa-al-wakrah",
+        "name": "Al Wakrah"
+      },
+      {
+        "id": "qa-al-shahaniya",
+        "name": "Al Shahaniya"
+      },
+      {
+        "id": "qa-al-gharafa",
+        "name": "Al Gharafa"
+      },
+      {
+        "id": "qa-qatar-sc",
+        "name": "Qatar SC"
+      },
+      {
+        "id": "qa-al-sailiya",
+        "name": "Al Sailiya"
+      }
+    ]
+  },
+  {
+    "id": "cn-1",
+    "name": "Chinese Super League",
+    "edition": "2026",
+    "accessedOn": "2026-11-17",
+    "publishers": [
+      {
+        "name": "FootyLogos, participantes da classificação de 2026",
+        "url": "https://www.footylogos.com/competition/chinese-super-league"
+      }
+    ],
+    "clubs": [
+      {
+        "id": "cn-dalian-yingbo",
+        "name": "Dalian Yingbo"
+      },
+      {
+        "id": "cn-chengdu-rongcheng",
+        "name": "Chengdu Rongcheng"
+      },
+      {
+        "id": "cn-beijing-guoan",
+        "name": "Beijing Guoan"
+      },
+      {
+        "id": "cn-shandong-taishan",
+        "name": "Shandong Taishan"
+      },
+      {
+        "id": "cn-shanghai-port",
+        "name": "Shanghai Port"
+      },
+      {
+        "id": "cn-yunnan-yukun",
+        "name": "Yunnan Yukun"
+      },
+      {
+        "id": "cn-shanghai-shenhua",
+        "name": "Shanghai Shenhua"
+      },
+      {
+        "id": "cn-qingdao-west-coast",
+        "name": "Qingdao West Coast"
+      },
+      {
+        "id": "cn-zhejiang-professional",
+        "name": "Zhejiang Professional"
+      },
+      {
+        "id": "cn-chongqing-tonglianglong",
+        "name": "Chongqing Tonglianglong"
+      },
+      {
+        "id": "cn-shenzhen-xinpengcheng",
+        "name": "Shenzhen Xinpengcheng"
+      },
+      {
+        "id": "cn-tianjin-jinmen-tiger",
+        "name": "Tianjin Jinmen Tiger"
+      },
+      {
+        "id": "cn-liaoning-tieren",
+        "name": "Liaoning Tieren"
+      },
+      {
+        "id": "cn-henan-fc",
+        "name": "Henan FC"
+      },
+      {
+        "id": "cn-wuhan-three-towns",
+        "name": "Wuhan Three Towns"
+      },
+      {
+        "id": "cn-qingdao-hainiu",
+        "name": "Qingdao Hainiu"
+      }
+    ]
+  }
+]

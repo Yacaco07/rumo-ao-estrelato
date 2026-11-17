@@ -72,7 +72,7 @@ function searchOffers(career: MarketCareer, date: string): MarketState {
     (market.lastSearch && addDays(market.lastSearch, 14) > date)) return market;
 
   const seed = `${season.seed}:${date}:mercado`;
-  const candidates = season.clubs.filter(({ id }) => id !== contract.clubId)
+  const candidates = [...season.clubs, ...(season.brazilB ?? [])].filter(({ id }) => id !== contract.clubId)
     .map((club) => ({ club, rank: hash(`${seed}:${club.id}`) }))
     .sort((a, b) => a.rank - b.rank || a.club.id.localeCompare(b.club.id, "en")).slice(0, 3);
   const offers = candidates.map(({ club }, index): MarketOffer | null => {

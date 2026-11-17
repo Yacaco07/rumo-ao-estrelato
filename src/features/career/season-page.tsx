@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
 import { useAthlete } from "@/features/athlete/athlete-provider";
+import { upcomingWorldMatches } from "@/domain/career/world-competitions";
+import { brazilPlayoffs } from "@/domain/career/brazil-playoffs";
 import { MarketPanel } from "./market-panel";
 import { emptyMarket } from "@/domain/career/market";
 import { registrationAt } from "@/domain/career/registration";
@@ -71,8 +73,9 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
   const storedSeason = saved.season ?? createSeason(profile, catalog);
   if (!storedSeason) return <div className="notice notice-error" role="alert">O catálogo ainda não permite montar a temporada do seu clube.</div>;
 
-  const season = withTrainingPlan(storedSeason, saved.athlete);
-  const { rounds, next, last, standings, stats, overall, fatigue, condition, xp, attributes, potential, health, trust, selection } = readSeason(season);
+  const season = withTrainingPlan(!storedSeason.brazilB && catalog.brazilB
+    ? { ...storedSeason, brazilB: catalog.brazilB } : storedSeason, saved.athlete);
+  const { rounds, next, last, standings, stats, overall, fatigue, condition, xp, attributes, potential, health, trust, selection, divisions } = readSeason(season);
   const allowedAttributes = getPosition(season.player.position).attributes;
   const trainingFocus = focus && allowedAttributes.includes(focus) ? focus : defaultTrainingFocus(season.player.position);
   const lastMatch = last?.played;
@@ -81,13 +84,25 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
   const previousEdition = previous ? readSeason(previous) : null;
   const { position } = season.player;
   const { clubId, role } = registrationAt(season, season.rounds.length);
-  const currentClub = season.clubs.find(({ id }) => id === clubId)!.name;
+  const currentClub = [...season.clubs, ...(season.brazilB ?? [])].find(({ id }) => id === clubId)!.name;
+  const league = season.clubs.some(({ id }) => id === clubId) ? "Série A" : "Série B";
+  const schedule = [
+    ...rounds.filter((round) => !round.played).map(({ date, fixture, competition, number }) =>
+      ({ ...fixture, date, competition, phase: `Rodada ${number}`, id: `liga-${number}` })),
+    ...upcomingWorldMatches(season, date, clubId),
+    ...brazilPlayoffs(season, date, divisions.second).view.matches.filter((match) =>
+      !match.score && (match.home.id === clubId || match.away.id === clubId))
+      .map((match) => ({ ...match, competition: "Playoff de acesso" })),
+  ].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 4);
   const isKeeper = position === "GK";
 
   return <>
     <div className="page-heading">
-      <div><p className="eyebrow">SÉRIE A · TEMPORADA SIMULADA {seasonYear(season)}</p><h1>{saved.market?.freeAgent ? "Agente livre" : currentClub}<span className="lime-text">.</span></h1><p>{saved.athlete.name} · {season.rounds.length} de {SEASON_ROUNDS} rodadas disputadas</p><p>Data da carreira <time dateTime={date}>{formatDate(date)}</time></p></div>
-      <Link href="/propostas" className="button button-outline">Meu contrato<Icon name="right" size={17} /></Link>
+      <div><p className="eyebrow">{league.toLocaleUpperCase("pt-BR")} · TEMPORADA SIMULADA {seasonYear(season)}</p><h1>{saved.market?.freeAgent ? "Agente livre" : currentClub}<span className="lime-text">.</span></h1><p>{saved.athlete.name} · {season.rounds.length} de {SEASON_ROUNDS} rodadas disputadas</p><p>Data da carreira <time dateTime={date}>{formatDate(date)}</time></p></div>
+      <div className="inline-actions">
+        <Link href="/competicoes" className="button button-outline">Competições<Icon name="right" size={17} /></Link>
+        <Link href="/propostas" className="button button-outline">Meu contrato<Icon name="right" size={17} /></Link>
+      </div>
     </div>
     {failure && <div className="notice notice-error" role="alert">
       <p>{failure}</p>
@@ -125,7 +140,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
               {busy ? "Salvando…" : "Próxima semana"}<Icon name="right" size={17} />
             </button>
             <button className="button button-outline" disabled={busy} onClick={() => void action({ type: "advance", until: "next" })}>
-              Até o próximo jogo
+              Até o próximo compromisso
             </button>
           </div>
           <form className="calendar-advance" onSubmit={(e) => {
@@ -140,10 +155,13 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
             <button className="button button-outline" disabled={busy || !targetDate}>Avançar</button>
           </form>
         </> : <>
-          <h2 id="next-fixture">Temporada encerrada</h2>
+          <h2 id="next-fixture">{season.brazilB ? "Fim da fase regular" : "Temporada encerrada"}</h2>
           <p>Campeão simulado: <strong>{standings[0].club.name}</strong></p>
           <p>{currentClub} terminou em {standings.findIndex(({ club }) => club.id === clubId) + 1}º lugar.</p>
-          <button className="button button-lime" disabled={busy} onClick={() => void action({ type: "advance", until: "week" })}>Próxima semana</button>
+          <div className="inline-actions">
+            <button className="button button-lime" disabled={busy} onClick={() => void action({ type: "advance", until: "week" })}>Próxima semana</button>
+            <button className="button button-outline" disabled={busy} onClick={() => void action({ type: "advance", until: "next" })}>Até o próximo compromisso</button>
+          </div>
         </>}
       </section>
       <section className="panel season-card" aria-labelledby="season-athlete">
@@ -191,11 +209,11 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
         <ul>{lastMatch.results.map((match) => <li key={match.home.id}>{match.home.name} <strong>{match.homeGoals} × {match.awayGoals}</strong> {match.away.name}</li>)}</ul>
       </details>
     </section>}
-    {next && <section className="panel season-card season-section season-details" aria-labelledby="upcoming-matches">
+    {schedule.length > 0 && !saved.market?.freeAgent && <section className="panel season-card season-section season-details" aria-labelledby="upcoming-matches">
       <h2 id="upcoming-matches">Próximos compromissos</h2>
-      <ul>{rounds.slice(next.number - 1, next.number + 2).map(({ number, date, competition, fixture }) => <li key={number}>
+      <ul>{schedule.map(({ id, date, competition, phase, home, away }) => <li key={id}>
         <time dateTime={date}>{formatDate(date)}</time>
-        <span>{competition} · Rodada {number} · {fixture.home.name} × {fixture.away.name}</span>
+        <span>{competition} · {phase} · {home.name} × {away.name}</span>
       </li>)}</ul>
     </section>}
     <details className="panel season-card season-section season-details">
@@ -208,7 +226,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
       dispatch={(marketAction) => void action({ type: "market", action: marketAction })} />
     <section className="panel season-card season-section" aria-labelledby="league-table">
       <h2 id="league-table">Classificação simulada</h2>
-      <div className="season-table-wrap" tabIndex={0} role="region" aria-label="Tabela da Série A">
+      <div className="season-table-wrap" tabIndex={0} role="region" aria-label={`Tabela da ${league}`}>
         <table className="season-table">
           <thead><tr>{["Pos.", "Clube", "Pts", "J", "V", "E", "D", "GP", "GC", "SG"].map((label) => <th scope="col" key={label}>{label}</th>)}</tr></thead>
           <tbody>{standings.map((row, index) => <tr key={row.club.id} className={row.club.id === clubId ? "current" : ""}>
