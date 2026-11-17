@@ -121,9 +121,19 @@ export function createAthleteRepository(databaseName = "rumo-ao-estrelato") {
         if (!result.ok) throw new SaveError("invalid", result.message);
 
         return savedAthleteSchema.parse({
-          ...current, season: result.season, pastSeasons: result.pastSeasons, market: result.market, contract: result.contract, nationalityCareer: result.nationalityCareer, revision: current.revision + 1, updatedAt: new Date().toISOString(),
+          ...current, season: result.season, pastSeasons: result.pastSeasons, market: result.market, contract: result.contract, nationalityCareer: result.nationalityCareer,
+          ...(result.retiredOn ? { retiredOn: result.retiredOn } : {}), revision: current.revision + 1, updatedAt: new Date().toISOString(),
         });
       });
+    },
+    async restore(source: unknown, expectedRevision: number | null): Promise<SavedAthlete> {
+      const backup = savedAthleteSchema.safeParse(source);
+      if (!backup.success) throw new SaveError("invalid", "O arquivo não contém uma carreira compatível.");
+      return update(expectedRevision, (current) => ({
+        ...backup.data,
+        revision: Math.max(current?.revision ?? 0, backup.data.revision) + 1,
+        updatedAt: new Date().toISOString(),
+      }));
     },
     async remove(expectedRevision: number): Promise<void> {
       await update(expectedRevision, () => null);

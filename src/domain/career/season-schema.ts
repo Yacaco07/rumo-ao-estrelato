@@ -100,6 +100,7 @@ export type SeasonClub = z.infer<typeof clubSchema>;
 export const seasonActionSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("train"), training: trainingSchema, focus: attributeSchema.optional() }).strict(),
   z.object({ type: z.literal("play") }).strict(),
+  z.object({ type: z.literal("retire") }).strict(),
   z.object({ type: z.literal("market"), action: marketActionSchema }).strict(),
   z.object({ type: z.literal("advance"), until: z.union([z.literal("week"), z.literal("next"), z.iso.date()]) }).strict(),
 ]);

@@ -7,7 +7,7 @@ import { WorldExplorer } from "./world-explorer";
 
 export function CareerWorldExplorer({ world }: { world: WorldSnapshot }) {
   const { saved } = useAthlete();
-  return <WorldExplorer world={world} careerPlayer={saved?.contract && !saved.market?.freeAgent ? {
+  return <WorldExplorer world={world} careerPlayer={saved?.contract && !saved.retiredOn && !saved.market?.freeAgent ? {
     clubId: saved.market?.loan?.clubId ?? saved.contract.clubId,
     name: saved.athlete.name,
     position: getPosition(saved.athlete.position).label,

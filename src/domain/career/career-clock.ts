@@ -4,6 +4,7 @@ import { effectiveContract, emptyMarket, marketAfterRound, settleMarket, useMark
 import { upcomingWorldMatches, worldQualifiers } from "./world-competitions";
 import { brazilPlayoffEnd, brazilPlayoffs } from "./brazil-playoffs";
 import { registrationAt, switchRegistration } from "./registration";
+import { careerAge, RETIREMENT_MAXIMUM, RETIREMENT_MINIMUM } from "./history";
 import { advanceNationalCareer, nationalEligible, nextNationalMatch } from "./national";
 import type { NationalCareer } from "./national-schema";
 import { nextTrainingPlan, withTrainingPlan } from "./training";
@@ -43,7 +44,7 @@ export function latestAdvanceDate(season: Season): string {
 }
 
 export type ClockResult =
-  | ({ ok: true; pastSeasons: Season[]; nationalityCareer: NationalCareer } & MarketCareer)
+  | ({ ok: true; pastSeasons: Season[]; nationalityCareer: NationalCareer; retiredOn?: string } & MarketCareer)
   | { ok: false; message: string };
 
 export function applyCareerAction(
@@ -51,6 +52,7 @@ export function applyCareerAction(
   season: Season,
   input: SeasonAction,
 ): ClockResult {
+  if (profile.retiredOn) return { ok: false, message: "A carreira já foi encerrada." };
   const parsed = seasonActionSchema.safeParse(input);
   if (!parsed.success) return { ok: false, message: "Escolha um comando válido." };
   let pastSeasons = profile.pastSeasons ?? [];
@@ -61,6 +63,7 @@ export function applyCareerAction(
   let contract = profile.contract;
   let national = profile.nationalityCareer ?? { matches: [], trophies: [] };
   let nationalDate = careerDate(current);
+  let retiredOn: string | undefined;
 
   function processNational(until: string) {
     if (current.brazilB) {
@@ -72,8 +75,15 @@ export function applyCareerAction(
   function settle(date: string) {
     ({ season: current, contract, market } = settleMarket({ season: current, contract, market }, date));
   }
-  function success(): ClockResult { return { ok: true, season: current, pastSeasons, market, contract, nationalityCareer: national }; }
+  function success(): ClockResult { return { ok: true, season: current, pastSeasons, market, contract, nationalityCareer: national, ...(retiredOn ? { retiredOn } : {}) }; }
 
+  if (parsed.data.type === "retire") {
+    if (careerAge(profile.athlete, current) < RETIREMENT_MINIMUM) {
+      return { ok: false, message: `A aposentadoria fica disponível aos ${RETIREMENT_MINIMUM} anos no jogo.` };
+    }
+    retiredOn = careerDate(current);
+    return success();
+  }
   if (parsed.data.type === "market") {
     const result = useMarket({ season: current, market, contract }, parsed.data.action, careerDate(current));
     if (!result.ok) return result;
@@ -81,6 +91,10 @@ export function applyCareerAction(
   }
 
   function rollSeason() {
+    if (careerAge(profile.athlete, current) + 1 >= RETIREMENT_MAXIMUM) {
+      retiredOn = careerDate(current);
+      return true;
+    }
     const previous = readSeason(current);
     let clubs = current.clubs;
     let brazilB = current.brazilB;
@@ -119,6 +133,7 @@ export function applyCareerAction(
     settle(careerDate(current));
     if (current.brazilB && current.rounds.length === SEASON_ROUNDS) return { ok: false, message: "Aguarde o fim do playoff para preparar a edição seguinte." };
     if (current.rounds.length === SEASON_ROUNDS && !rollSeason()) return { ok: false, message: "A próxima temporada não pôde ser montada." };
+    if (retiredOn) return success();
     if (parsed.data.training !== "recovery" && readSeason(current).health.injury > 0) {
       return { ok: false, message: "Durante a lesão, escolha recuperação." };
     }
@@ -151,7 +166,7 @@ export function applyCareerAction(
   }
 
   if (!finishIfDue()) return { ok: false, message: "A próxima temporada não pôde ser montada." };
-  while (current.rounds.length < SEASON_ROUNDS && nextMatchDate(current) <= target) {
+  while (!retiredOn && current.rounds.length < SEASON_ROUNDS && nextMatchDate(current) <= target) {
     const matchDay = nextMatchDate(current);
     processNational(matchDay);
     settle(matchDay);
@@ -161,6 +176,7 @@ export function applyCareerAction(
     market = marketAfterRound({ season: current, market, contract }, matchDay, readSeason(current).last);
     if (!finishIfDue()) return { ok: false, message: "A próxima temporada não pôde ser montada." };
   }
+  if (retiredOn) return success();
   processNational(target);
   settle(target);
   current = { ...current, date: target };

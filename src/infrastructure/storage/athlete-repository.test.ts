@@ -132,6 +132,19 @@ describe("Persistência IndexedDB", () => {
     expect(await repository.read()).toBeNull();
   });
 
+  it("valida, recupera e protege o backup contra sobrescrita concorrente", async () => {
+    const data = await repository.save({ ...createEmptyDraft(), name: "Alex", allocation: { shooting: 10 } }, "ready", null);
+    const backup = JSON.parse(JSON.stringify(data));
+    await expect(repository.restore({ schemaVersion: 99 }, data.revision)).rejects.toMatchObject({ code: "invalid" });
+    await expect(repository.restore(backup, null)).rejects.toMatchObject({ code: "conflict" });
+    expect(await repository.read()).toEqual(data);
+    await repository.remove(data.revision);
+    const restored = await repository.restore(backup, null);
+    expect(restored.athlete).toEqual(data.athlete);
+    expect(restored.revision).toBeGreaterThan(data.revision);
+    expect(await repository.read()).toEqual(restored);
+  });
+
   it("informa indisponibilidade sem alegar sucesso", async () => {
     vi.stubGlobal("indexedDB", undefined);
     await expect(repository.read()).rejects.toMatchObject({ code: "unavailable" });

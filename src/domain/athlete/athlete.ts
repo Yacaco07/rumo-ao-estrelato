@@ -44,6 +44,7 @@ export const savedAthleteSchema = z.object({
   contract: signedContractSchema.optional(),
   season: seasonSchema.optional(),
   market: marketSchema.optional(),
+  retiredOn: z.iso.date().optional(),
   nationalityCareer: nationalCareerSchema.optional(),
   pastSeasons: z.array(seasonSchema).max(75).refine(
     (seasons) => seasons.every(({ rounds }) => rounds.length === SEASON_ROUNDS),
@@ -54,6 +55,14 @@ export const savedAthleteSchema = z.object({
   if (registration && (registration.clubId !== (save.market?.loan?.clubId ?? save.contract?.clubId) ||
     Boolean(registration.inactive) !== Boolean(save.market?.freeAgent))) {
     ctx.addIssue({ code: "custom", path: ["season"], message: "O clube contratado deve participar da temporada." });
+  }
+  if (save.retiredOn && !save.season) {
+    ctx.addIssue({ code: "custom", path: ["retiredOn"], message: "A aposentadoria requer uma carreira iniciada." });
+  }
+  const years = (save.pastSeasons ?? []).map(({ year }) => year ?? 2026);
+  if (years.some((year, index) => index > 0 && year <= years[index - 1]) ||
+    (years.length > 0 && (!save.season || (save.season.year ?? 2026) <= years[years.length - 1]))) {
+    ctx.addIssue({ code: "custom", path: ["pastSeasons"], message: "O histórico de temporadas precisa estar em ordem." });
   }
   if (save.contract && save.status !== "ready") {
     ctx.addIssue({ code: "custom", path: ["contract"], message: "O primeiro contrato requer um perfil concluído." });

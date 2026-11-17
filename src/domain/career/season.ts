@@ -43,7 +43,7 @@ export function createSeason(profile: SeasonProfile, catalog: SeasonCatalog, yea
 
 export function applySeasonAction(season: Season, input: SeasonAction): { ok: true; season: Season } | { ok: false; message: string } {
   const action = seasonActionSchema.safeParse(input);
-  if (!action.success || (action.data.type === "advance" || action.data.type === "market")) return { ok: false, message: "Escolha uma ação válida." };
+  if (!action.success || (action.data.type === "advance" || action.data.type === "market" || action.data.type === "retire")) return { ok: false, message: "Escolha uma ação válida." };
   if (season.rounds.length === SEASON_ROUNDS) return { ok: false, message: "A temporada já terminou." };
   if (action.data.type === "play") {
     const { selectedFocus, ...previous } = season;

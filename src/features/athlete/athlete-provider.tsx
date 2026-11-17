@@ -13,6 +13,7 @@ type ProfileContext = {
   saveProfile: (athlete: AthleteDraft, status: SavedAthlete["status"]) => Promise<SavedAthlete>;
   signContract: (offer: ContractOffer) => Promise<void>;
   playSeason: (action: SeasonAction, catalog: SeasonCatalog) => Promise<void>;
+  restoreProfile: (backup: unknown) => Promise<void>;
   removeProfile: () => Promise<void>;
 };
 
@@ -51,13 +52,19 @@ export function AthleteProvider({ children }: { children: ReactNode }) {
     setSaved(await athleteRepository.playSeason(action, catalog, saved));
   }
 
+  async function restoreProfile(backup: unknown) {
+    if (error) throw new Error(error);
+    setSaved(await athleteRepository.restore(backup, saved?.revision ?? null));
+    setDirty(false);
+  }
+
   async function removeProfile() {
     if (error) throw new Error(error);
     if (saved) await athleteRepository.remove(saved.revision);
     setSaved(null); setDirty(false);
   }
 
-  return <Context.Provider value={{ saved, loading, error, dirty, setDirty, saveProfile, signContract, playSeason, removeProfile }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ saved, loading, error, dirty, setDirty, saveProfile, signContract, playSeason, restoreProfile, removeProfile }}>{children}</Context.Provider>;
 }
 
 export function useAthlete() {

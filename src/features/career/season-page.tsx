@@ -70,6 +70,11 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
     <Link href="/propostas" className="button button-dark">Abrir propostas<Icon name="right" size={17} /></Link>
   </>;
 
+  if (saved.retiredOn) return <>
+    <div className="page-heading"><div><h1>Carreira encerrada</h1><p>{saved.athlete.name} se aposentou em {formatDate(saved.retiredOn)}.</p></div></div>
+    <Link href="/carreira" className="button button-dark">Ver histórico da carreira</Link>
+  </>;
+
   const profile = { ...saved, contract: saved.contract };
   const storedSeason = saved.season ?? createSeason(profile, catalog);
   if (!storedSeason) return <div className="notice notice-error" role="alert">O catálogo ainda não permite montar a temporada do seu clube.</div>;
@@ -106,6 +111,7 @@ export function SeasonPage({ catalog }: { catalog: SeasonCatalog }) {
     <div className="page-heading">
       <div><p className="eyebrow">{league.toLocaleUpperCase("pt-BR")} · TEMPORADA SIMULADA {seasonYear(season)}</p><h1>{saved.market?.freeAgent ? "Agente livre" : currentClub}<span className="lime-text">.</span></h1><p>{saved.athlete.name} · {season.rounds.length} de {SEASON_ROUNDS} rodadas disputadas</p><p>Data da carreira <time dateTime={date}>{formatDate(date)}</time></p></div>
       <div className="inline-actions">
+        <Link href="/carreira" className="button button-outline">Histórico</Link>
         <Link href="/competicoes" className="button button-outline">Competições<Icon name="right" size={17} /></Link>
         <Link href="/propostas" className="button button-outline">Meu contrato<Icon name="right" size={17} /></Link>
       </div>
